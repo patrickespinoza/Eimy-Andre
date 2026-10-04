@@ -2,42 +2,65 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 /* =========================================
-   GALERÍA EDITORIAL CLÁSICA
+   GALERÍA — NUESTRA HISTORIA
+   EIMY & SONI
+
+   - Fondo verde olivo
+   - Estilo clásico
+   - Sin degradados
+   - Imágenes precargadas
+   - Controles debajo
+   - Posición individual por fotografía
 ========================================= */
 
 const palette = {
-  ink: "#1D2733",
-  inkSoft: "#39434D",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#E4DDD1",
-  antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
-  warmGray: "#777168",
+  olive: "#3F4A2C",
+  oliveDark: "#303A22",
+  oliveLight: "#59643F",
+  ivory: "#F7F4EC",
+  beige: "#D7C8AA",
+  beigeDark: "#B7A581",
 };
+
+/* =========================================
+   IMÁGENES
+
+   position:
+   Primer valor  = horizontal
+   Segundo valor = vertical
+
+   Ejemplos:
+   "50% 50%" = centro
+   "50% 20%" = más arriba
+   "50% 80%" = más abajo
+   "30% 50%" = más izquierda
+   "70% 50%" = más derecha
+========================================= */
 
 const images = [
-  "/carrusel01.jpeg",
-  "/carusel02.jpeg",
-  "/carusel03.jpeg",
-  "/carusel04.jpeg",
-  "/carusel05.jpeg",
+  {
+    src: "/Carrusel01v.jpg",
+    position: "50% 50%",
+  },
+  {
+    src: "/Carrusel02.jpg",
+    position: "50% 50%",
+  },
+  {
+    src: "/Carrusel03.jpg",
+    position: "50% 50%",
+  },
+  {
+    src: "/Carrusel04.jpg",
+    position: "50% 50%",
+  },
+  {
+    src: "/Carrusel05.jpg",
+    position: "50% 50%",
+  },
 ];
 
-const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-  },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.95,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+const ease = [0.22, 1, 0.36, 1];
 
 /* =========================================
    ORNAMENTO DE ESQUINA
@@ -46,30 +69,35 @@ const fadeUp = {
 function CornerOrnament({ className = "" }) {
   return (
     <svg
-      viewBox="0 0 90 90"
+      viewBox="0 0 100 100"
       fill="none"
       aria-hidden="true"
       className={className}
     >
       <path
-        d="M5 85V30C5 16.2 16.2 5 30 5h55"
+        d="M5 95V34C5 18 18 5 34 5H95"
         stroke="currentColor"
         strokeWidth="1"
       />
 
       <path
-        d="M15 72V34c0-10.5 8.5-19 19-19h38"
+        d="M15 82V38C15 25.3 25.3 15 38 15H82"
         stroke="currentColor"
-        strokeWidth="0.65"
+        strokeWidth="0.7"
       />
 
       <path
-        d="M30 5C30 18.8 18.8 30 5 30"
+        d="M34 5C34 21 21 34 5 34"
         stroke="currentColor"
-        strokeWidth="0.75"
+        strokeWidth="0.8"
       />
 
-      <circle cx="15" cy="15" r="2" fill="currentColor" />
+      <circle
+        cx="15"
+        cy="15"
+        r="2"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -81,75 +109,47 @@ function CornerOrnament({ className = "" }) {
 function BotanicalBranch({ className = "" }) {
   return (
     <svg
-      viewBox="0 0 150 260"
+      viewBox="0 0 140 220"
       fill="none"
       aria-hidden="true"
       className={className}
     >
       <path
-        d="M76 252C80 192 78 130 71 12"
+        d="M25 207C47 172 61 135 70 96C78 61 91 32 114 13"
         stroke="currentColor"
         strokeWidth="1"
         strokeLinecap="round"
       />
 
       <path
-        d="M76 205C54 192 41 174 35 151"
+        d="M51 155C36 150 28 138 28 123C43 126 52 138 51 155Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
       />
 
       <path
-        d="M75 167C97 153 109 133 113 109"
+        d="M65 116C80 111 91 100 94 84C79 87 68 98 65 116Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
       />
 
       <path
-        d="M73 123C53 110 43 93 39 72"
+        d="M74 79C60 73 53 62 54 47C68 52 76 64 74 79Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
       />
 
       <path
-        d="M72 83C91 71 101 53 103 34"
+        d="M91 47C104 43 113 34 116 20C103 23 94 33 91 47Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M35 151C49 150 60 158 67 173C52 172 41 165 35 151Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M113 109C99 109 88 117 80 132C96 131 107 123 113 109Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M39 72C53 73 63 81 69 95C54 94 44 86 39 72Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M103 34C90 35 80 42 74 55C88 54 98 47 103 34Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
       />
     </svg>
   );
 }
 
 /* =========================================
-   SEPARADOR
+   SEPARADOR CLÁSICO
 ========================================= */
 
 function DecorativeDivider() {
@@ -158,23 +158,26 @@ function DecorativeDivider() {
       <span
         className="h-px w-10 sm:w-16"
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(247,244,236,0.52)",
         }}
       />
 
       <span
-        className="h-[5px] w-[5px] rotate-45 border"
+        className="
+          h-[5px]
+          w-[5px]
+          rotate-45
+          border
+        "
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: "rgba(247,244,236,0.72)",
         }}
       />
 
       <span
         className="h-px w-10 sm:w-16"
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(247,244,236,0.52)",
         }}
       />
     </div>
@@ -182,7 +185,7 @@ function DecorativeDivider() {
 }
 
 /* =========================================
-   ICONOS
+   ICONO ANTERIOR
 ========================================= */
 
 function PreviousIcon() {
@@ -191,7 +194,7 @@ function PreviousIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.35"
+      strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -202,13 +205,17 @@ function PreviousIcon() {
   );
 }
 
+/* =========================================
+   ICONO SIGUIENTE
+========================================= */
+
 function NextIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.35"
+      strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -220,18 +227,68 @@ function NextIcon() {
 }
 
 /* =========================================
-   COMPONENTE
+   COMPONENTE PRINCIPAL
 ========================================= */
 
 export default function Galeria() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [isPaused, setIsPaused] = useState(false);
+  const [imagesReady, setImagesReady] = useState(false);
 
   const totalImages = images.length;
 
+  /* =========================================
+     PRECARGAR TODAS LAS FOTOGRAFÍAS
+  ========================================= */
+
   useEffect(() => {
-    if (isPaused) return undefined;
+    let mounted = true;
+
+    const preloadImages = async () => {
+      try {
+        await Promise.all(
+          images.map(
+            ({ src }) =>
+              new Promise((resolve) => {
+                const img = new Image();
+
+                img.src = src;
+
+                if (img.complete) {
+                  resolve();
+                  return;
+                }
+
+                img.onload = resolve;
+                img.onerror = resolve;
+              })
+          )
+        );
+      } finally {
+        if (mounted) {
+          setImagesReady(true);
+        }
+      }
+    };
+
+    preloadImages();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  /* =========================================
+     CAMBIO AUTOMÁTICO
+
+     Solo comienza cuando todas las imágenes
+     terminaron su precarga.
+  ========================================= */
+
+  useEffect(() => {
+    if (!imagesReady) {
+      return undefined;
+    }
 
     const intervalId = window.setInterval(() => {
       setDirection(1);
@@ -241,10 +298,18 @@ export default function Galeria() {
       });
     }, 4500);
 
-    return () => window.clearInterval(intervalId);
-  }, [isPaused, totalImages]);
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [imagesReady, totalImages]);
+
+  /* =========================================
+     SIGUIENTE
+  ========================================= */
 
   const nextImage = () => {
+    if (!imagesReady) return;
+
     setDirection(1);
 
     setIndex((previousIndex) => {
@@ -252,7 +317,13 @@ export default function Galeria() {
     });
   };
 
+  /* =========================================
+     ANTERIOR
+  ========================================= */
+
   const previousImage = () => {
+    if (!imagesReady) return;
+
     setDirection(-1);
 
     setIndex((previousIndex) => {
@@ -262,20 +333,20 @@ export default function Galeria() {
     });
   };
 
+  /* =========================================
+     IR DIRECTAMENTE A UNA FOTO
+  ========================================= */
+
   const goToImage = (imageIndex) => {
+    if (!imagesReady) return;
+    if (imageIndex === index) return;
+
     setDirection(imageIndex > index ? 1 : -1);
     setIndex(imageIndex);
   };
 
   return (
-    <motion.section
-      variants={fadeUp}
-      initial="hidden"
-      whileInView="show"
-      viewport={{
-        once: true,
-        amount: 0.12,
-      }}
+    <section
       className="
         relative
         w-full
@@ -288,168 +359,169 @@ export default function Galeria() {
         lg:py-32
       "
       style={{
-        background: `
-          linear-gradient(
-            180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 55%,
-            ${palette.paperDark} 100%
-          )
-        `,
+        backgroundColor: palette.olive,
       }}
     >
-      {/* TEXTURA DE PAPEL */}
+      {/* =====================================
+          MARCO EXTERIOR
+      ===================================== */}
 
       <div
         className="
           pointer-events-none
           absolute
-          inset-0
-          opacity-[0.16]
-        "
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(
-              0deg,
-              rgba(29,39,51,0.025) 0px,
-              rgba(29,39,51,0.025) 1px,
-              transparent 1px,
-              transparent 5px
-            )
-          `,
-        }}
-      />
-
-      {/* MARCO GENERAL */}
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-5
+          inset-4
           border
-          sm:inset-8
-          lg:inset-10
+          sm:inset-7
+          lg:inset-9
         "
         style={{
-          borderColor: "rgba(164,134,84,0.25)",
+          borderColor: "rgba(247,244,236,0.38)",
         }}
       />
+
+      {/* =====================================
+          MARCO INTERIOR
+      ===================================== */}
 
       <div
         className="
           pointer-events-none
           absolute
-          inset-[26px]
+          inset-[22px]
           border
-          sm:inset-[38px]
-          lg:inset-[46px]
+          sm:inset-[34px]
+          lg:inset-[42px]
         "
         style={{
-          borderColor: "rgba(164,134,84,0.1)",
+          borderColor: "rgba(247,244,236,0.11)",
         }}
       />
 
-      {/* ORNAMENTOS */}
+      {/* =====================================
+          ORNAMENTO SUPERIOR IZQUIERDO
+      ===================================== */}
 
       <CornerOrnament
         className="
           pointer-events-none
           absolute
-          left-6
-          top-6
+          left-5
+          top-5
           h-16
           w-16
-          text-[#A48654]/25
-          sm:left-9
-          sm:top-9
+          text-[#F7F4EC]/28
+          sm:left-8
+          sm:top-8
           sm:h-20
           sm:w-20
         "
       />
 
+      {/* =====================================
+          ORNAMENTO SUPERIOR DERECHO
+      ===================================== */}
+
       <CornerOrnament
         className="
           pointer-events-none
           absolute
-          right-6
-          top-6
+          right-5
+          top-5
           h-16
           w-16
           rotate-90
-          text-[#A48654]/25
-          sm:right-9
-          sm:top-9
+          text-[#F7F4EC]/28
+          sm:right-8
+          sm:top-8
           sm:h-20
           sm:w-20
         "
       />
 
+      {/* =====================================
+          ORNAMENTO INFERIOR IZQUIERDO
+      ===================================== */}
+
       <CornerOrnament
         className="
           pointer-events-none
           absolute
-          bottom-6
-          left-6
+          bottom-5
+          left-5
           h-16
           w-16
           -rotate-90
-          text-[#A48654]/25
-          sm:bottom-9
-          sm:left-9
+          text-[#F7F4EC]/28
+          sm:bottom-8
+          sm:left-8
           sm:h-20
           sm:w-20
         "
       />
 
+      {/* =====================================
+          ORNAMENTO INFERIOR DERECHO
+      ===================================== */}
+
       <CornerOrnament
         className="
           pointer-events-none
           absolute
-          bottom-6
-          right-6
+          bottom-5
+          right-5
           h-16
           w-16
           rotate-180
-          text-[#A48654]/25
-          sm:bottom-9
-          sm:right-9
+          text-[#F7F4EC]/28
+          sm:bottom-8
+          sm:right-8
           sm:h-20
           sm:w-20
         "
       />
+
+      {/* =====================================
+          BOTÁNICO INFERIOR
+      ===================================== */}
 
       <BotanicalBranch
         className="
           pointer-events-none
           absolute
-          -bottom-16
+          -bottom-12
           -left-8
-          h-[250px]
+          h-[230px]
           w-[145px]
           -rotate-12
-          text-[#A48654]/10
-          sm:h-[310px]
+          text-[#F7F4EC]/8
+          sm:h-[300px]
           sm:w-[180px]
-          lg:left-2
         "
       />
+
+      {/* =====================================
+          BOTÁNICO SUPERIOR
+      ===================================== */}
 
       <BotanicalBranch
         className="
           pointer-events-none
           absolute
           -right-8
-          -top-16
-          h-[250px]
+          -top-12
+          h-[230px]
           w-[145px]
           rotate-[168deg]
-          text-[#A48654]/10
-          sm:h-[310px]
+          text-[#F7F4EC]/8
+          sm:h-[300px]
           sm:w-[180px]
-          lg:right-2
         "
       />
+
+      {/* =====================================
+          CONTENIDO
+      ===================================== */}
 
       <div
         className="
@@ -457,106 +529,24 @@ export default function Galeria() {
           z-10
           mx-auto
           w-full
-          max-w-7xl
+          max-w-6xl
         "
       >
-        {/* ENCABEZADO */}
+        {/* =====================================
+            NUESTRA HISTORIA
+        ===================================== */}
 
         <motion.div
           className="
             mx-auto
             mb-14
-            flex
-            max-w-3xl
-            flex-col
-            items-center
+            max-w-[760px]
             text-center
             sm:mb-16
-            lg:mb-20
           "
           initial={{
             opacity: 0,
-            y: 18,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.9,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          <p
-            className="
-              text-[8px]
-              uppercase
-              tracking-[0.44em]
-              sm:text-[10px]
-              sm:tracking-[0.55em]
-            "
-            style={{
-              color: palette.antiqueGoldDark,
-            }}
-          >
-            Nuestros momentos
-          </p>
-
-          <div className="mt-5">
-            <DecorativeDivider />
-          </div>
-
-          <h2
-            className="
-              mt-7
-              font-serif
-              text-[40px]
-              font-normal
-              leading-tight
-              tracking-[-0.025em]
-              sm:text-[54px]
-              md:text-[64px]
-            "
-            style={{
-              color: palette.ink,
-            }}
-          >
-            Nuestra historia
-          </h2>
-
-          <p
-            className="
-              mx-auto
-              mt-5
-              max-w-2xl
-              font-serif
-              text-[14px]
-              italic
-              leading-7
-              sm:text-base
-            "
-            style={{
-              color: palette.warmGray,
-            }}
-          >
-            Un recorrido por los instantes que han dado forma a nuestra
-            historia y que hoy nos conducen hasta este día.
-          </p>
-        </motion.div>
-
-        {/* ÁLBUM PRINCIPAL */}
-
-        <motion.div
-          className="
-            relative
-            mx-auto
-            w-full
-            max-w-6xl
-          "
-          initial={{
-            opacity: 0,
-            y: 24,
+            y: 22,
           }}
           whileInView={{
             opacity: 1,
@@ -564,374 +554,569 @@ export default function Galeria() {
           }}
           viewport={{
             once: true,
-            amount: 0.12,
+            amount: 0.15,
           }}
           transition={{
-            duration: 1,
-            delay: 0.12,
-            ease: [0.22, 1, 0.36, 1],
+            duration: 0.9,
+            ease,
           }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
         >
-          {/* MARCO DE PAPEL */}
+
+
+          {/* TÍTULO */}
+
+          <h2
+            className="
+              mt-7
+              font-cursiveDancing
+              text-[46px]
+              font-normal
+              leading-none
+              sm:text-[60px]
+              md:text-[68px]
+            "
+            style={{
+              color: palette.ivory,
+            }}
+          >
+            Nuestra Historia
+          </h2>
+
+          {/* PRIMER PÁRRAFO */}
+
+          <p
+            className="
+              mx-auto
+              mt-8
+              max-w-[650px]
+              font-serif
+              text-[14px]
+              leading-[1.9]
+              sm:text-[16px]
+              sm:leading-[2]
+            "
+            style={{
+              color: "rgba(247,244,236,0.82)",
+            }}
+          >
+            Nuestra historia es hermosa, es de las que Dios escribe.
+            Hay una teoría que dice que si alguien está destinado a estar
+            en tu vida, lo vas a conocer dos veces.
+          </p>
+
+          {/* SEGUNDO PÁRRAFO */}
+
+          <p
+            className="
+              mx-auto
+              mt-5
+              max-w-[650px]
+              font-serif
+              text-[14px]
+              leading-[1.9]
+              sm:text-[16px]
+              sm:leading-[2]
+            "
+            style={{
+              color: "rgba(247,244,236,0.82)",
+            }}
+          >
+            La primera fue fugaz, en el momento incorrecto, como si el
+            universo solo quisiera presentarnos... Pero la segunda vez,
+            todo encaja, el corazón lo sabe, lo que es para ti regresa
+            sin que tengas que perseguirlo.
+          </p>
+
+          {/* TERCER PÁRRAFO */}
+
+          <p
+            className="
+              mx-auto
+              mt-5
+              max-w-[650px]
+              font-serif
+              text-[14px]
+              leading-[1.9]
+              sm:text-[16px]
+              sm:leading-[2]
+            "
+            style={{
+              color: "rgba(247,244,236,0.82)",
+            }}
+          >
+            Hoy, con el corazón lleno de felicidad, queremos dar el
+            siguiente paso y unir nuestras vidas para siempre, y nos
+            encantaría que nos acompañes en este día tan especial.
+          </p>
+
+          {/* FIRMA */}
+
+          <motion.p
+            className="
+              mt-8
+              font-cursiveDancing
+              text-[30px]
+              sm:text-[36px]
+            "
+            style={{
+              color: palette.beige,
+            }}
+            initial={{
+              opacity: 0,
+              y: 10,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.25,
+            }}
+          >
+            Con amor, Eimy & Soni
+          </motion.p>
+        </motion.div>
+
+        {/* =====================================
+            CARRUSEL
+        ===================================== */}
+
+        <motion.div
+          className="
+            mx-auto
+            w-full
+            max-w-3xl
+          "
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.1,
+          }}
+          transition={{
+            duration: 0.95,
+            delay: 0.1,
+            ease,
+          }}
+        >
+          {/* =================================
+              MARCO EXTERIOR FOTO
+          ================================= */}
 
           <div
             className="
               relative
               border
-              p-3
-              sm:p-5
-              lg:p-7
+              p-[7px]
+              sm:p-[9px]
             "
             style={{
-              backgroundColor: palette.paperLight,
-              borderColor: "rgba(164,134,84,0.34)",
-              boxShadow: "0 24px 65px rgba(29,39,51,0.1)",
+              borderColor: "rgba(247,244,236,0.52)",
             }}
           >
-            {/* BORDE INTERIOR */}
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                inset-[7px]
-                border
-              "
-              style={{
-                borderColor: "rgba(164,134,84,0.12)",
-              }}
-            />
-
-            {/* FOTOGRAFÍA */}
+            {/* MARCO INTERIOR */}
 
             <div
               className="
                 relative
-                h-[390px]
-                overflow-hidden
-                bg-[#E4DDD1]
-                sm:h-[540px]
-                md:h-[620px]
-                lg:h-[680px]
+                border
+                p-[5px]
               "
+              style={{
+                borderColor: "rgba(247,244,236,0.18)",
+              }}
             >
-              <AnimatePresence custom={direction} mode="wait">
-                <motion.img
-                  key={images[index]}
-                  custom={direction}
-                  src={images[index]}
-                  alt={`Momento ${index + 1} de ${totalImages}`}
-                  className="
-                    absolute
-                    inset-0
-                    h-full
-                    w-full
-                    object-cover
-                    object-center
-                  "
-                  initial={{
-                    opacity: 0,
-                    scale: 1.025,
-                    x: direction > 0 ? 18 : -18,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    x: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    scale: 1.012,
-                    x: direction > 0 ? -16 : 16,
-                  }}
-                  transition={{
-                    opacity: {
-                      duration: 0.65,
-                    },
-                    scale: {
-                      duration: 1.2,
-                      ease: [0.22, 1, 0.36, 1],
-                    },
-                    x: {
-                      duration: 0.8,
-                      ease: [0.22, 1, 0.36, 1],
-                    },
-                  }}
-                />
-              </AnimatePresence>
-
-              {/* OVERLAY MUY DISCRETO */}
+              {/* =================================
+                  ÁREA DE LA FOTOGRAFÍA
+              ================================= */}
 
               <div
                 className="
-                  pointer-events-none
-                  absolute
-                  inset-0
+                  relative
+                  h-[470px]
+                  w-full
+                  overflow-hidden
+                  sm:h-[620px]
+                  md:h-[680px]
+                  lg:h-[720px]
                 "
                 style={{
-                  background: `
-                    linear-gradient(
-                      180deg,
-                      transparent 55%,
-                      rgba(20,27,34,0.22) 100%
-                    )
-                  `,
-                }}
-              />
-
-              {/* NUMERACIÓN */}
-
-              <div
-                className="
-                  absolute
-                  bottom-4
-                  left-4
-                  z-20
-                  border
-                  bg-[#FBF9F4]/90
-                  px-4
-                  py-2
-                  sm:bottom-6
-                  sm:left-6
-                "
-                style={{
-                  borderColor: "rgba(164,134,84,0.34)",
+                  backgroundColor: palette.oliveDark,
                 }}
               >
-                <p
-                  className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.3em]
-                    sm:text-[9px]
-                  "
-                  style={{
-                    color: palette.inkSoft,
-                  }}
-                >
-                  Fotografía {String(index + 1).padStart(2, "0")}
-                </p>
-              </div>
+                {/* =================================
+                    FOTOGRAFÍA
 
-              {/* BOTÓN ANTERIOR */}
+                    IMPORTANTE:
+                    objectPosition toma el valor
+                    individual de cada fotografía.
+                ================================= */}
+
+                {imagesReady ? (
+                  <AnimatePresence
+                    custom={direction}
+                    initial={false}
+                    mode="sync"
+                  >
+                    <motion.img
+                      key={images[index].src}
+                      custom={direction}
+                      src={images[index].src}
+                      alt={`Fotografía ${index + 1} de ${totalImages}`}
+                      draggable="false"
+                      className="
+                        absolute
+                        inset-0
+                        h-full
+                        w-full
+                        select-none
+                        object-cover
+                      "
+                      style={{
+                        objectPosition: images[index].position,
+                      }}
+                      initial={{
+                        opacity: 0,
+                        scale: 1.015,
+                        x: direction > 0 ? 10 : -10,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        x: 0,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 1.008,
+                        x: direction > 0 ? -8 : 8,
+                      }}
+                      transition={{
+                        opacity: {
+                          duration: 0.45,
+                        },
+
+                        scale: {
+                          duration: 0.8,
+                          ease,
+                        },
+
+                        x: {
+                          duration: 0.55,
+                          ease,
+                        },
+                      }}
+                    />
+                  </AnimatePresence>
+                ) : (
+                  /* =================================
+                     CARGANDO FOTOGRAFÍAS
+                  ================================= */
+
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      flex
+                      items-center
+                      justify-center
+                    "
+                  >
+                    <motion.div
+                      className="
+                        h-7
+                        w-7
+                        rounded-full
+                        border
+                        border-[#F7F4EC]/25
+                        border-t-[#F7F4EC]
+                      "
+                      animate={{
+                        rotate: 360,
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* =================================
+                    NUMERACIÓN SOBRE FOTO
+                ================================= */}
+
+                {imagesReady && (
+                  <div
+                    className="
+                      absolute
+                      bottom-4
+                      right-4
+                      z-20
+                      border
+                      px-3
+                      py-2
+                      sm:bottom-5
+                      sm:right-5
+                    "
+                    style={{
+                      backgroundColor: "rgba(48,58,34,0.82)",
+                      borderColor: "rgba(247,244,236,0.38)",
+                    }}
+                  >
+                    <span
+                      className="
+                        font-serif
+                        text-[11px]
+                        tracking-[0.16em]
+                      "
+                      style={{
+                        color: palette.ivory,
+                      }}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                      {" / "}
+                      {String(totalImages).padStart(2, "0")}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* =================================
+              CONTROLES ABAJO
+          ================================= */}
+
+          <div
+            className="
+              mt-7
+              flex
+              flex-col
+              items-center
+              justify-center
+              gap-5
+            "
+          >
+            {/* =================================
+                FLECHAS + CONTADOR
+            ================================= */}
+
+            <div
+              className="
+                flex
+                items-center
+                justify-center
+                gap-5
+              "
+            >
+              {/* ANTERIOR */}
 
               <motion.button
                 type="button"
                 onClick={previousImage}
-                aria-label="Mostrar fotografía anterior"
+                disabled={!imagesReady}
+                aria-label="Fotografía anterior"
                 className="
-                  absolute
-                  left-3
-                  top-1/2
-                  z-30
                   flex
                   h-11
                   w-11
-                  -translate-y-1/2
                   items-center
                   justify-center
                   border
-                  bg-[#FBF9F4]/92
-                  sm:left-5
+                  disabled:cursor-default
+                  disabled:opacity-30
                   sm:h-12
                   sm:w-12
                 "
                 style={{
-                  borderColor: "rgba(164,134,84,0.4)",
-                  color: palette.ink,
-                  boxShadow: "0 8px 20px rgba(29,39,51,0.08)",
+                  borderColor: "rgba(247,244,236,0.58)",
+                  color: palette.ivory,
+                  backgroundColor: "transparent",
                 }}
-                whileHover={{
-                  y: "-50%",
-                  scale: 1.04,
-                  backgroundColor: palette.paperLight,
-                }}
-                whileTap={{
-                  scale: 0.97,
-                }}
+                whileHover={
+                  imagesReady
+                    ? {
+                        y: -2,
+                        backgroundColor: palette.ivory,
+                        color: palette.oliveDark,
+                      }
+                    : undefined
+                }
+                whileTap={
+                  imagesReady
+                    ? {
+                        scale: 0.96,
+                      }
+                    : undefined
+                }
               >
                 <PreviousIcon />
               </motion.button>
 
-              {/* BOTÓN SIGUIENTE */}
+              {/* CONTADOR */}
+
+              <p
+                className="
+                  min-w-[76px]
+                  text-center
+                  font-serif
+                  text-[14px]
+                  tracking-[0.16em]
+                "
+                style={{
+                  color: "rgba(247,244,236,0.78)",
+                }}
+              >
+                {String(index + 1).padStart(2, "0")}
+
+                <span
+                  className="mx-2"
+                  style={{
+                    color: "rgba(247,244,236,0.35)",
+                  }}
+                >
+                  /
+                </span>
+
+                {String(totalImages).padStart(2, "0")}
+              </p>
+
+              {/* SIGUIENTE */}
 
               <motion.button
                 type="button"
                 onClick={nextImage}
-                aria-label="Mostrar siguiente fotografía"
+                disabled={!imagesReady}
+                aria-label="Siguiente fotografía"
                 className="
-                  absolute
-                  right-3
-                  top-1/2
-                  z-30
                   flex
                   h-11
                   w-11
-                  -translate-y-1/2
                   items-center
                   justify-center
                   border
-                  bg-[#FBF9F4]/92
-                  sm:right-5
+                  disabled:cursor-default
+                  disabled:opacity-30
                   sm:h-12
                   sm:w-12
                 "
                 style={{
-                  borderColor: "rgba(164,134,84,0.4)",
-                  color: palette.ink,
-                  boxShadow: "0 8px 20px rgba(29,39,51,0.08)",
+                  borderColor: "rgba(247,244,236,0.58)",
+                  color: palette.ivory,
+                  backgroundColor: "transparent",
                 }}
-                whileHover={{
-                  y: "-50%",
-                  scale: 1.04,
-                  backgroundColor: palette.paperLight,
-                }}
-                whileTap={{
-                  scale: 0.97,
-                }}
+                whileHover={
+                  imagesReady
+                    ? {
+                        y: -2,
+                        backgroundColor: palette.ivory,
+                        color: palette.oliveDark,
+                      }
+                    : undefined
+                }
+                whileTap={
+                  imagesReady
+                    ? {
+                        scale: 0.96,
+                      }
+                    : undefined
+                }
               >
                 <NextIcon />
               </motion.button>
             </div>
 
-            {/* PIE DE FOTO */}
+            {/* =================================
+                INDICADORES
+            ================================= */}
 
             <div
               className="
-                relative
                 flex
-                flex-col
                 items-center
-                px-4
-                pb-3
-                pt-7
-                text-center
-                sm:px-8
-                sm:pb-5
-                sm:pt-9
+                justify-center
+                gap-2
               "
             >
-              <motion.p
-                key={`counter-${index}`}
-                className="
-                  font-serif
-                  text-[22px]
-                  sm:text-[26px]
-                "
-                style={{
-                  color: palette.ink,
-                }}
-                initial={{
-                  opacity: 0,
-                  y: 6,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  duration: 0.4,
-                }}
-              >
-                {String(index + 1).padStart(2, "0")}
-                <span
-                  className="
-                    mx-2
-                    text-sm
-                  "
-                  style={{
-                    color: palette.warmGray,
-                  }}
-                >
-                  /
-                </span>
-                <span
-                  className="
-                    text-base
-                    sm:text-lg
-                  "
-                  style={{
-                    color: palette.warmGray,
-                  }}
-                >
-                  {String(totalImages).padStart(2, "0")}
-                </span>
-              </motion.p>
+              {images.map((image, imageIndex) => {
+                const isActive = imageIndex === index;
 
-              {/* INDICADORES */}
+                return (
+                  <motion.button
+                    key={image.src}
+                    type="button"
+                    disabled={!imagesReady}
+                    onClick={() => goToImage(imageIndex)}
+                    aria-label={`Mostrar fotografía ${imageIndex + 1}`}
+                    aria-current={isActive ? "true" : undefined}
+                    className="
+                      h-[6px]
+                      border
+                      disabled:cursor-default
+                    "
+                    animate={{
+                      width: isActive ? 30 : 6,
+                    }}
+                    transition={{
+                      duration: 0.35,
+                      ease,
+                    }}
+                    style={{
+                      backgroundColor: isActive
+                        ? palette.ivory
+                        : "transparent",
 
-              <div
-                className="
-                  mt-5
-                  flex
-                  items-center
-                  justify-center
-                  gap-3
-                "
-              >
-                {images.map((_, imageIndex) => {
-                  const isActive = index === imageIndex;
-
-                  return (
-                    <motion.button
-                      key={`indicator-${imageIndex}`}
-                      type="button"
-                      onClick={() => goToImage(imageIndex)}
-                      aria-label={`Mostrar fotografía ${imageIndex + 1}`}
-                      aria-current={isActive ? "true" : undefined}
-                      className="
-                        h-[7px]
-                        border
-                      "
-                      animate={{
-                        width: isActive ? 32 : 7,
-                      }}
-                      transition={{
-                        duration: 0.4,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      style={{
-                        backgroundColor: isActive
-                          ? palette.ink
-                          : "transparent",
-                        borderColor: isActive
-                          ? palette.ink
-                          : "rgba(164,134,84,0.45)",
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              <p
-                className="
-                  mt-5
-                  text-[8px]
-                  uppercase
-                  tracking-[0.32em]
-                  sm:text-[9px]
-                "
-                style={{
-                  color: palette.warmGray,
-                }}
-              >
-                La galería avanza automáticamente
-              </p>
+                      borderColor: isActive
+                        ? palette.ivory
+                        : "rgba(247,244,236,0.45)",
+                    }}
+                  />
+                );
+              })}
             </div>
+
+            {/* TEXTO PEQUEÑO */}
+
+            <p
+              className="
+                text-center
+                text-[7px]
+                uppercase
+                tracking-[0.34em]
+                sm:text-[8px]
+              "
+              style={{
+                color: "rgba(247,244,236,0.48)",
+              }}
+            >
+              {imagesReady
+                ? "Nuestros momentos"
+                : "Preparando fotografías"}
+            </p>
           </div>
         </motion.div>
 
-        {/* CIERRE NARRATIVO */}
+        {/* =====================================
+            CIERRE
+        ===================================== */}
 
         <motion.div
           className="
             mx-auto
-            mt-12
-            max-w-xl
+            mt-14
+            max-w-[500px]
             text-center
-            sm:mt-14
           "
           initial={{
             opacity: 0,
@@ -941,41 +1126,34 @@ export default function Galeria() {
             opacity: 1,
             y: 0,
           }}
-          viewport={{ once: true }}
+          viewport={{
+            once: true,
+          }}
           transition={{
             duration: 0.9,
-            delay: 0.35,
+            delay: 0.2,
           }}
         >
-          <div
-            className="
-              mx-auto
-              mb-6
-              h-px
-              w-16
-            "
-            style={{
-              backgroundColor: "rgba(164,134,84,0.48)",
-            }}
-          />
+          <DecorativeDivider />
 
           <p
             className="
+              mt-6
               font-serif
-              text-[14px]
+              text-[13px]
               italic
               leading-7
-              sm:text-base
+              sm:text-[15px]
             "
             style={{
-              color: palette.warmGray,
+              color: "rgba(247,244,236,0.62)",
             }}
           >
-            Cada fotografía guarda un instante de nuestro camino y una parte
+            Cada fotografía guarda un instante
             de la historia que hoy celebramos.
           </p>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

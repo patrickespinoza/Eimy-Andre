@@ -10,6 +10,8 @@ import DressCodePremium from "./componentes-encabezado/codigovestimenta";
 import Galeria from "./componentes-encabezado/Galeria";
 import FraseModal from "./componentes-encabezado/Fraseintermedia";
 import Album from "./componentes-encabezado/albun";
+import Padres from "./componentes-encabezado/Padres";
+import FraseFinal from "./componentes-encabezado/FraseFinal"
 
 
 export default function PaginaPrincipal() {
@@ -47,7 +49,9 @@ export default function PaginaPrincipal() {
   return (
     <div >
 
-<FrasePremium/>
+<FraseModal/> 
+
+<Padres/>
 
 <EventoDireccion/>
 
@@ -55,7 +59,7 @@ export default function PaginaPrincipal() {
 
 <ItinerarioRelojCentral/>
   
-<FraseModal/> 
+<FrasePremium/>
 
 <DressCodePremium/>
 
@@ -66,6 +70,8 @@ export default function PaginaPrincipal() {
 <Regalos/>
 
 <Confirmacion/>
+
+<FraseFinal/>
   
 
       </div>      

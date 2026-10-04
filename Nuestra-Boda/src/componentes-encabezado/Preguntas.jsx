@@ -11,47 +11,81 @@ const API_URL =
   "https://script.google.com/macros/s/AKfycbxQTHIUXU3wWSw_mg7wvwbjwLbzskGcgGaGKzuY_yUK1r-RfPfXtSB7WD4CfZ6W7f5QJg/exec";
 
 const palette = {
-  ink: "#1D2733",
-  inkSoft: "#39434D",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
-  antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
-  warmGray: "#777168",
+  olive: "#3F4A2C",
+  oliveDark: "#303A22",
+  oliveLight: "#59643F",
+
+  white: "#FFFFFF",
+  ivory: "#F7F4EC",
+  ivoryLight: "#FBFAF6",
+
+  beige: "#D7C8AA",
+  beigeDark: "#B7A581",
+
+  ink: "#292B24",
+  gray: "#706E64",
 };
+
+/* =========================================
+   PREGUNTAS
+
+   correcta = posición de la respuesta correcta
+   0 = A
+   1 = B
+   2 = C
+   3 = D
+========================================= */
 
 const preguntas = [
   {
-    pregunta: "¿Dónde se conocieron Valeria y Alejandro?",
+    pregunta: "¿Dónde se conocieron Eimy y Soni?",
     opciones: [
-      "En la Universidad",
-      "En una Fiesta",
-      "En el trabajo",
-      "Por una app",
-      "En un viaje",
+      "Secundaria",
+      "Universidad",
+      "Trabajo",
+      "Por amigos",
     ],
     correcta: 0,
   },
   {
     pregunta: "¿Quién dijo “te amo” primero?",
-    opciones: ["Valeria", "Alejandro", "Ambos", "Nadie", "Fue un accidente"],
+    opciones: [
+      "Eimy",
+      "Soni",
+      "Los dos",
+      "Ninguno recuerda",
+    ],
     correcta: 1,
   },
   {
-    pregunta: "¿Cuál es su comida favorita?",
-    opciones: ["Pizza", "Sushi", "Tacos", "Pasta", "Hamburguesas"],
+    pregunta: "¿Dónde fue su primera cita?",
+    opciones: [
+      "Restaurante",
+      "Parque",
+      "Cine",
+      "Café",
+    ],
     correcta: 2,
   },
   {
-    pregunta: "¿Dónde fue su primera cita?",
-    opciones: ["Cine", "Restaurante", "Parque", "Café", "Playa"],
+    pregunta: "¿Cuál es su comida favorita?",
+    opciones: [
+      "Pizza",
+      "Tacos",
+      "Pasta",
+      "Pollo",
+    ],
     correcta: 3,
   },
   {
     pregunta: "¿Quién es más puntual?",
-    opciones: ["Valeria", "Alejandro", "Ambos", "Ninguno", "Depende del día"],
-    correcta: 0,
+    opciones: [
+      "Eimy",
+      "Soni",
+      "Los dos",
+      "Depende del día",
+    ],
+    correcta: 1,
   },
 ];
 
@@ -179,25 +213,31 @@ function DecorativeDivider({ compact = false }) {
   return (
     <div className="flex items-center justify-center gap-3">
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className={
+          compact
+            ? "h-px w-8 sm:w-12"
+            : "h-px w-10 sm:w-16"
+        }
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(63,74,44,0.42)",
         }}
       />
 
       <span
         className="h-[5px] w-[5px] rotate-45 border"
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: "rgba(63,74,44,0.58)",
         }}
       />
 
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className={
+          compact
+            ? "h-px w-8 sm:w-12"
+            : "h-px w-10 sm:w-16"
+        }
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(63,74,44,0.42)",
         }}
       />
     </div>
@@ -342,7 +382,7 @@ function PodiumPlace({ participant, place }) {
           tracking-[0.22em]
         "
         style={{
-          color: palette.warmGray,
+          color: palette.gray,
         }}
       >
         {participant.score} aciertos
@@ -360,14 +400,14 @@ function PodiumPlace({ participant, place }) {
           ${current.height}
         `}
         style={{
-          background:
+          backgroundColor:
             place === 1
-              ? "linear-gradient(180deg, #E6DDCE, #D7CAB5)"
-              : "linear-gradient(180deg, #F5F1E8, #E5DED2)",
+              ? palette.beige
+              : palette.ivory,
           borderColor:
             place === 1
-              ? "rgba(164,134,84,0.55)"
-              : "rgba(164,134,84,0.3)",
+              ? "rgba(63,74,44,0.50)"
+              : "rgba(63,74,44,0.25)",
         }}
       >
         <span
@@ -377,7 +417,10 @@ function PodiumPlace({ participant, place }) {
             sm:text-3xl
           "
           style={{
-            color: place === 1 ? palette.antiqueGoldDark : palette.inkSoft,
+            color:
+              place === 1
+                ? palette.oliveDark
+                : palette.olive,
           }}
         >
           {current.number}
@@ -393,7 +436,7 @@ function PodiumPlace({ participant, place }) {
           sm:text-[8px]
         "
         style={{
-          color: palette.antiqueGoldDark,
+          color: palette.olive,
         }}
       >
         {current.label}
@@ -482,12 +525,16 @@ const Preguntas = () => {
       const response = await fetch(API_URL);
 
       if (!response.ok) {
-        throw new Error("No fue posible obtener el ranking.");
+        throw new Error(
+          "No fue posible obtener el ranking."
+        );
       }
 
       const data = await response.json();
 
-      const normalizedData = Array.isArray(data) ? data : [];
+      const normalizedData = Array.isArray(data)
+        ? data
+        : [];
 
       const sortedRanking = normalizedData
         .map((participant) => ({
@@ -499,7 +546,11 @@ const Preguntas = () => {
 
       setRanking(sortedRanking);
     } catch (error) {
-      console.error("Error obteniendo el ranking:", error);
+      console.error(
+        "Error obteniendo el ranking:",
+        error
+      );
+
       setRanking([]);
     } finally {
       setCargandoRanking(false);
@@ -546,15 +597,21 @@ const Preguntas = () => {
     if (bloqueado) return;
 
     if (mostrarNombre && !nombre.trim()) {
-      window.alert("Escribe tu nombre para comenzar.");
+      window.alert(
+        "Escribe tu nombre para comenzar."
+      );
       return;
     }
 
     setBloqueado(true);
     setSeleccion(optionIndex);
 
-    const isCorrect = optionIndex === preguntas[paso].correcta;
-    const nextScore = isCorrect ? score + 1 : score;
+    const isCorrect =
+      optionIndex === preguntas[paso].correcta;
+
+    const nextScore = isCorrect
+      ? score + 1
+      : score;
 
     if (isCorrect) {
       setScore(nextScore);
@@ -568,7 +625,10 @@ const Preguntas = () => {
       }
 
       if (paso + 1 < preguntas.length) {
-        setPaso((previousStep) => previousStep + 1);
+        setPaso(
+          (previousStep) => previousStep + 1
+        );
+
         setBloqueado(false);
       } else {
         setFinalScore(nextScore);
@@ -583,34 +643,49 @@ const Preguntas = () => {
   ========================================= */
 
   const guardarResultado = async () => {
-    if (!resultadoRef.current || guardandoImagen) return;
+    if (
+      !resultadoRef.current ||
+      guardandoImagen
+    ) {
+      return;
+    }
 
     setGuardandoImagen(true);
 
     try {
-      const canvas = await html2canvas(resultadoRef.current, {
-        scale: 2,
-        backgroundColor: palette.paperLight,
-        useCORS: true,
-      });
+      const canvas = await html2canvas(
+        resultadoRef.current,
+        {
+          scale: 2,
+          backgroundColor: palette.white,
+          useCORS: true,
+        }
+      );
 
-      const link = document.createElement("a");
+      const link =
+        document.createElement("a");
 
       link.download = `resultado-${nombre
         .trim()
         .toLowerCase()
         .replace(/\s+/g, "-")}.png`;
 
-      link.href = canvas.toDataURL("image/png");
+      link.href =
+        canvas.toDataURL("image/png");
+
       link.click();
     } catch (error) {
-      console.error("No se pudo guardar el resultado:", error);
+      console.error(
+        "No se pudo guardar el resultado:",
+        error
+      );
     } finally {
       setGuardandoImagen(false);
     }
   };
 
-  const progress = ((paso + 1) / preguntas.length) * 100;
+  const progress =
+    ((paso + 1) / preguntas.length) * 100;
 
   return (
     <motion.section
@@ -637,51 +712,25 @@ const Preguntas = () => {
         lg:py-32
       "
       style={{
-        background: `
-          linear-gradient(
-            180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 56%,
-            ${palette.paperDark} 100%
-          )
-        `,
+        backgroundColor: palette.white,
       }}
     >
       {/* CONFETI */}
 
-      {showConfetti && windowSize.width > 0 && (
-        <Confetti
-          width={windowSize.width}
-          height={windowSize.height}
-          numberOfPieces={220}
-          recycle={false}
-          gravity={0.12}
-        />
-      )}
+      {showConfetti &&
+        windowSize.width > 0 && (
+          <Confetti
+            width={windowSize.width}
+            height={windowSize.height}
+            numberOfPieces={220}
+            recycle={false}
+            gravity={0.12}
+          />
+        )}
 
-      {/* TEXTURA */}
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.16]
-        "
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(
-              0deg,
-              rgba(29,39,51,0.025) 0px,
-              rgba(29,39,51,0.025) 1px,
-              transparent 1px,
-              transparent 5px
-            )
-          `,
-        }}
-      />
-
-      {/* MARCOS */}
+      {/* =========================================
+          MARCOS
+      ========================================= */}
 
       <div
         className="
@@ -693,7 +742,8 @@ const Preguntas = () => {
           lg:inset-10
         "
         style={{
-          borderColor: "rgba(164,134,84,0.25)",
+          borderColor:
+            "rgba(63,74,44,0.24)",
         }}
       />
 
@@ -707,11 +757,14 @@ const Preguntas = () => {
           lg:inset-[46px]
         "
         style={{
-          borderColor: "rgba(164,134,84,0.1)",
+          borderColor:
+            "rgba(63,74,44,0.09)",
         }}
       />
 
-      {/* ESQUINAS */}
+      {/* =========================================
+          ESQUINAS
+      ========================================= */}
 
       <CornerOrnament
         className="
@@ -721,7 +774,7 @@ const Preguntas = () => {
           top-6
           h-16
           w-16
-          text-[#A48654]/25
+          text-[#3F4A2C]/25
           sm:left-9
           sm:top-9
           sm:h-20
@@ -738,7 +791,7 @@ const Preguntas = () => {
           h-16
           w-16
           rotate-90
-          text-[#A48654]/25
+          text-[#3F4A2C]/25
           sm:right-9
           sm:top-9
           sm:h-20
@@ -755,7 +808,7 @@ const Preguntas = () => {
           h-16
           w-16
           -rotate-90
-          text-[#A48654]/25
+          text-[#3F4A2C]/25
           sm:bottom-9
           sm:left-9
           sm:h-20
@@ -772,7 +825,7 @@ const Preguntas = () => {
           h-16
           w-16
           rotate-180
-          text-[#A48654]/25
+          text-[#3F4A2C]/25
           sm:bottom-9
           sm:right-9
           sm:h-20
@@ -780,7 +833,9 @@ const Preguntas = () => {
         "
       />
 
-      {/* BOTÁNICOS */}
+      {/* =========================================
+          BOTÁNICOS
+      ========================================= */}
 
       <BotanicalBranch
         className="
@@ -791,7 +846,7 @@ const Preguntas = () => {
           h-[250px]
           w-[145px]
           -rotate-12
-          text-[#A48654]/10
+          text-[#3F4A2C]/[0.07]
           sm:h-[310px]
           sm:w-[180px]
           lg:left-2
@@ -807,14 +862,16 @@ const Preguntas = () => {
           h-[250px]
           w-[145px]
           rotate-[168deg]
-          text-[#A48654]/10
+          text-[#3F4A2C]/[0.07]
           sm:h-[310px]
           sm:w-[180px]
           lg:right-2
         "
       />
 
-      {/* CONTENIDO */}
+      {/* =========================================
+          CONTENIDO
+      ========================================= */}
 
       <div
         className="
@@ -862,11 +919,16 @@ const Preguntas = () => {
               border
             "
             style={{
-              color: palette.antiqueGoldDark,
-              borderColor: "rgba(164,134,84,0.42)",
+              color: palette.olive,
+              borderColor:
+                "rgba(63,74,44,0.38)",
             }}
           >
-            {terminado ? <TrophyIcon /> : <QuestionIcon />}
+            {terminado ? (
+              <TrophyIcon />
+            ) : (
+              <QuestionIcon />
+            )}
           </div>
 
           <p
@@ -879,10 +941,10 @@ const Preguntas = () => {
               sm:tracking-[0.55em]
             "
             style={{
-              color: palette.antiqueGoldDark,
+              color: palette.olive,
             }}
           >
-            Un detalle para compartir
+            Nuestra historia
           </p>
 
           <div className="mt-5">
@@ -919,15 +981,32 @@ const Preguntas = () => {
               sm:text-base
             "
             style={{
-              color: palette.warmGray,
+              color: palette.gray,
             }}
           >
-            Pon a prueba cuánto conoces nuestra historia y descubre tu lugar
-            entre nuestros invitados.
+            Pon a prueba cuánto conoces
+            nuestra historia y descubre tu
+            lugar entre nuestros invitados.
+          </p>
+
+          <p
+            className="
+              mt-5
+              font-cursiveDancing
+              text-[27px]
+              sm:text-[31px]
+            "
+            style={{
+              color: palette.olive,
+            }}
+          >
+            Eimy & Soni
           </p>
         </motion.div>
 
-        {/* JUEGO */}
+        {/* =========================================
+            JUEGO
+        ========================================= */}
 
         <div
           className="
@@ -938,11 +1017,18 @@ const Preguntas = () => {
             border
           "
           style={{
-            backgroundColor: "rgba(251,249,244,0.82)",
-            borderColor: "rgba(164,134,84,0.34)",
-            boxShadow: "0 24px 65px rgba(29,39,51,0.08)",
+            backgroundColor:
+              palette.ivoryLight,
+
+            borderColor:
+              "rgba(63,74,44,0.28)",
+
+            boxShadow:
+              "0 24px 65px rgba(48,58,34,0.08)",
           }}
         >
+          {/* DOBLE MARCO */}
+
           <div
             className="
               pointer-events-none
@@ -951,12 +1037,17 @@ const Preguntas = () => {
               border
             "
             style={{
-              borderColor: "rgba(164,134,84,0.12)",
+              borderColor:
+                "rgba(63,74,44,0.10)",
             }}
           />
 
           <AnimatePresence mode="wait">
             {!terminado ? (
+              /* =====================================
+                 PREGUNTAS
+              ===================================== */
+
               <motion.div
                 key={`question-${paso}`}
                 className="
@@ -987,13 +1078,25 @@ const Preguntas = () => {
                 }}
                 transition={{
                   duration: 0.45,
-                  ease: [0.22, 1, 0.36, 1],
+                  ease: [
+                    0.22,
+                    1,
+                    0.36,
+                    1,
+                  ],
                 }}
               >
                 {/* PROGRESO */}
 
                 <div className="w-full">
-                  <div className="flex items-center justify-between gap-4">
+                  <div
+                    className="
+                      flex
+                      items-center
+                      justify-between
+                      gap-4
+                    "
+                  >
                     <p
                       className="
                         text-[8px]
@@ -1002,10 +1105,14 @@ const Preguntas = () => {
                         sm:text-[9px]
                       "
                       style={{
-                        color: palette.antiqueGoldDark,
+                        color:
+                          palette.olive,
                       }}
                     >
-                      Pregunta {String(paso + 1).padStart(2, "0")}
+                      Pregunta{" "}
+                      {String(
+                        paso + 1
+                      ).padStart(2, "0")}
                     </p>
 
                     <p
@@ -1016,10 +1123,14 @@ const Preguntas = () => {
                         sm:text-[9px]
                       "
                       style={{
-                        color: palette.warmGray,
+                        color:
+                          palette.gray,
                       }}
                     >
-                      De {String(preguntas.length).padStart(2, "0")}
+                      De{" "}
+                      {String(
+                        preguntas.length
+                      ).padStart(2, "0")}
                     </p>
                   </div>
 
@@ -1031,26 +1142,35 @@ const Preguntas = () => {
                       overflow-hidden
                     "
                     style={{
-                      backgroundColor: "rgba(164,134,84,0.18)",
+                      backgroundColor:
+                        "rgba(63,74,44,0.14)",
                     }}
                   >
                     <motion.div
                       className="h-full"
                       style={{
-                        backgroundColor: palette.antiqueGold,
+                        backgroundColor:
+                          palette.olive,
                       }}
                       animate={{
                         width: `${progress}%`,
                       }}
                       transition={{
                         duration: 0.65,
-                        ease: [0.22, 1, 0.36, 1],
+                        ease: [
+                          0.22,
+                          1,
+                          0.36,
+                          1,
+                        ],
                       }}
                     />
                   </div>
                 </div>
 
-                {/* NOMBRE */}
+                {/* =================================
+                    NOMBRE
+                ================================= */}
 
                 <AnimatePresence>
                   {mostrarNombre && (
@@ -1082,7 +1202,8 @@ const Preguntas = () => {
                           sm:text-[9px]
                         "
                         style={{
-                          color: palette.warmGray,
+                          color:
+                            palette.gray,
                         }}
                       >
                         Escribe tu nombre
@@ -1092,14 +1213,19 @@ const Preguntas = () => {
                         id="quiz-name"
                         type="text"
                         value={nombre}
-                        onChange={(event) => setNombre(event.target.value)}
+                        onChange={(event) =>
+                          setNombre(
+                            event.target
+                              .value
+                          )
+                        }
                         placeholder="Tu nombre"
                         autoComplete="name"
                         className="
                           mt-4
                           w-full
                           border
-                          bg-[#FBF9F4]
+                          bg-white
                           px-5
                           py-4
                           text-center
@@ -1110,16 +1236,23 @@ const Preguntas = () => {
                           sm:text-lg
                         "
                         style={{
-                          color: palette.ink,
-                          borderColor: "rgba(164,134,84,0.34)",
+                          color:
+                            palette.ink,
+
+                          borderColor:
+                            "rgba(63,74,44,0.30)",
                         }}
-                        onFocus={(event) => {
+                        onFocus={(
+                          event
+                        ) => {
                           event.currentTarget.style.borderColor =
-                            palette.antiqueGold;
+                            palette.olive;
                         }}
-                        onBlur={(event) => {
+                        onBlur={(
+                          event
+                        ) => {
                           event.currentTarget.style.borderColor =
-                            "rgba(164,134,84,0.34)";
+                            "rgba(63,74,44,0.30)";
                         }}
                       />
                     </motion.div>
@@ -1130,7 +1263,9 @@ const Preguntas = () => {
                   <DecorativeDivider compact />
                 </div>
 
-                {/* PREGUNTA */}
+                {/* =================================
+                    PREGUNTA
+                ================================= */}
 
                 <h3
                   className="
@@ -1146,10 +1281,15 @@ const Preguntas = () => {
                     color: palette.ink,
                   }}
                 >
-                  {preguntas[paso].pregunta}
+                  {
+                    preguntas[paso]
+                      .pregunta
+                  }
                 </h3>
 
-                {/* RESPUESTAS */}
+                {/* =================================
+                    RESPUESTAS
+                ================================= */}
 
                 <div
                   className="
@@ -1161,81 +1301,112 @@ const Preguntas = () => {
                     sm:grid-cols-2
                   "
                 >
-                  {preguntas[paso].opciones.map((opcion, optionIndex) => {
-                    const isSelected = seleccion === optionIndex;
+                  {preguntas[
+                    paso
+                  ].opciones.map(
+                    (
+                      opcion,
+                      optionIndex
+                    ) => {
+                      const isSelected =
+                        seleccion ===
+                        optionIndex;
 
-                    return (
-                      <motion.button
-                        key={`${paso}-${opcion}`}
-                        type="button"
-                        onClick={() => manejarRespuesta(optionIndex)}
-                        disabled={bloqueado}
-                        className="
-                          relative
-                          min-h-[58px]
-                          border
-                          px-5
-                          py-4
-                          text-left
-                          disabled:cursor-not-allowed
-                        "
-                        style={{
-                          backgroundColor: isSelected
-                            ? palette.ink
-                            : palette.paperLight,
-                          borderColor: isSelected
-                            ? palette.ink
-                            : "rgba(164,134,84,0.3)",
-                          color: isSelected
-                            ? palette.paperLight
-                            : palette.inkSoft,
-                        }}
-                        whileHover={
-                          bloqueado
-                            ? undefined
-                            : {
-                                y: -2,
-                                borderColor: palette.antiqueGold,
-                              }
-                        }
-                        whileTap={
-                          bloqueado
-                            ? undefined
-                            : {
-                                scale: 0.985,
-                              }
-                        }
-                      >
-                        <span
+                      return (
+                        <motion.button
+                          key={`${paso}-${opcion}`}
+                          type="button"
+                          onClick={() =>
+                            manejarRespuesta(
+                              optionIndex
+                            )
+                          }
+                          disabled={
+                            bloqueado
+                          }
                           className="
-                            mr-3
-                            font-serif
-                            text-xs
+                            relative
+                            min-h-[62px]
+                            border
+                            px-5
+                            py-4
+                            text-left
+                            disabled:cursor-not-allowed
                           "
                           style={{
-                            color: isSelected
-                              ? "rgba(251,249,244,0.68)"
-                              : palette.antiqueGoldDark,
-                          }}
-                        >
-                          {String.fromCharCode(65 + optionIndex)}.
-                        </span>
+                            backgroundColor:
+                              isSelected
+                                ? palette.olive
+                                : palette.white,
 
-                        <span
-                          className="
-                            font-serif
-                            text-[14px]
-                            sm:text-[15px]
-                          "
+                            borderColor:
+                              isSelected
+                                ? palette.olive
+                                : "rgba(63,74,44,0.26)",
+
+                            color:
+                              isSelected
+                                ? palette.white
+                                : palette.ink,
+                          }}
+                          whileHover={
+                            bloqueado
+                              ? undefined
+                              : {
+                                  y: -2,
+                                  borderColor:
+                                    palette.olive,
+                                }
+                          }
+                          whileTap={
+                            bloqueado
+                              ? undefined
+                              : {
+                                  scale:
+                                    0.985,
+                                }
+                          }
                         >
-                          {opcion}
-                        </span>
-                      </motion.button>
-                    );
-                  })}
+                          <span
+                            className="
+                              mr-3
+                              font-serif
+                              text-xs
+                            "
+                            style={{
+                              color:
+                                isSelected
+                                  ? "rgba(255,255,255,0.70)"
+                                  : palette.olive,
+                            }}
+                          >
+                            {String.fromCharCode(
+                              65 +
+                                optionIndex
+                            )}
+                            .
+                          </span>
+
+                          <span
+                            className="
+                              font-serif
+                              text-[14px]
+                              sm:text-[15px]
+                            "
+                          >
+                            {opcion}
+                          </span>
+                        </motion.button>
+                      );
+                    }
+                  )}
                 </div>
               </motion.div>
             ) : (
+              /* =====================================
+                 RESULTADO
+              ===================================== */
+
               <motion.div
                 key="quiz-result"
                 ref={resultadoRef}
@@ -1254,7 +1425,8 @@ const Preguntas = () => {
                   md:px-14
                 "
                 style={{
-                  backgroundColor: palette.paperLight,
+                  backgroundColor:
+                    palette.white,
                 }}
                 initial={{
                   opacity: 0,
@@ -1266,7 +1438,12 @@ const Preguntas = () => {
                 }}
                 transition={{
                   duration: 0.65,
-                  ease: [0.22, 1, 0.36, 1],
+                  ease: [
+                    0.22,
+                    1,
+                    0.36,
+                    1,
+                  ],
                 }}
               >
                 <div
@@ -1280,8 +1457,11 @@ const Preguntas = () => {
                     border
                   "
                   style={{
-                    color: palette.antiqueGoldDark,
-                    borderColor: "rgba(164,134,84,0.42)",
+                    color:
+                      palette.olive,
+
+                    borderColor:
+                      "rgba(63,74,44,0.40)",
                   }}
                 >
                   <TrophyIcon />
@@ -1296,7 +1476,8 @@ const Preguntas = () => {
                     sm:text-[9px]
                   "
                   style={{
-                    color: palette.antiqueGoldDark,
+                    color:
+                      palette.olive,
                   }}
                 >
                   Resultado final
@@ -1319,7 +1500,8 @@ const Preguntas = () => {
                     color: palette.ink,
                   }}
                 >
-                  {nombre.trim()}, acertaste
+                  {nombre.trim()},
+                  acertaste
                 </h3>
 
                 <p
@@ -1332,7 +1514,8 @@ const Preguntas = () => {
                     sm:text-[92px]
                   "
                   style={{
-                    color: palette.ink,
+                    color:
+                      palette.olive,
                   }}
                 >
                   {finalScore}
@@ -1347,11 +1530,16 @@ const Preguntas = () => {
                     sm:text-[10px]
                   "
                   style={{
-                    color: palette.warmGray,
+                    color: palette.gray,
                   }}
                 >
-                  De {preguntas.length} preguntas
+                  De {preguntas.length}{" "}
+                  preguntas
                 </p>
+
+                {/* =================================
+                    RANKING
+                ================================= */}
 
                 <div
                   className="
@@ -1363,7 +1551,8 @@ const Preguntas = () => {
                     pt-9
                   "
                   style={{
-                    borderColor: "rgba(164,134,84,0.3)",
+                    borderColor:
+                      "rgba(63,74,44,0.25)",
                   }}
                 >
                   <p
@@ -1374,10 +1563,12 @@ const Preguntas = () => {
                       sm:text-[9px]
                     "
                     style={{
-                      color: palette.antiqueGoldDark,
+                      color:
+                        palette.olive,
                     }}
                   >
-                    Los invitados que mejor nos conocen
+                    Los invitados que
+                    mejor nos conocen
                   </p>
 
                   {cargandoRanking ? (
@@ -1389,12 +1580,15 @@ const Preguntas = () => {
                         italic
                       "
                       style={{
-                        color: palette.warmGray,
+                        color:
+                          palette.gray,
                       }}
                     >
-                      Actualizando resultados…
+                      Actualizando
+                      resultados…
                     </p>
-                  ) : ranking.length > 0 ? (
+                  ) : ranking.length >
+                    0 ? (
                     <div
                       className="
                         mt-9
@@ -1405,9 +1599,26 @@ const Preguntas = () => {
                         sm:gap-5
                       "
                     >
-                      <PodiumPlace participant={ranking[1]} place={2} />
-                      <PodiumPlace participant={ranking[0]} place={1} />
-                      <PodiumPlace participant={ranking[2]} place={3} />
+                      <PodiumPlace
+                        participant={
+                          ranking[1]
+                        }
+                        place={2}
+                      />
+
+                      <PodiumPlace
+                        participant={
+                          ranking[0]
+                        }
+                        place={1}
+                      />
+
+                      <PodiumPlace
+                        participant={
+                          ranking[2]
+                        }
+                        place={3}
+                      />
                     </div>
                   ) : (
                     <p
@@ -1419,19 +1630,30 @@ const Preguntas = () => {
                         leading-7
                       "
                       style={{
-                        color: palette.warmGray,
+                        color:
+                          palette.gray,
                       }}
                     >
-                      El ranking estará disponible cuando se registren los
+                      El ranking estará
+                      disponible cuando
+                      se registren los
                       primeros resultados.
                     </p>
                   )}
                 </div>
 
+                {/* =================================
+                    GUARDAR RESULTADO
+                ================================= */}
+
                 <motion.button
                   type="button"
-                  onClick={guardarResultado}
-                  disabled={guardandoImagen}
+                  onClick={
+                    guardarResultado
+                  }
+                  disabled={
+                    guardandoImagen
+                  }
                   className="
                     mt-11
                     inline-flex
@@ -1447,16 +1669,22 @@ const Preguntas = () => {
                     sm:min-w-[260px]
                   "
                   style={{
-                    backgroundColor: palette.ink,
-                    borderColor: palette.ink,
-                    color: palette.paperLight,
+                    backgroundColor:
+                      palette.olive,
+
+                    borderColor:
+                      palette.olive,
+
+                    color:
+                      palette.white,
                   }}
                   whileHover={
                     guardandoImagen
                       ? undefined
                       : {
                           y: -2,
-                          backgroundColor: palette.inkSoft,
+                          backgroundColor:
+                            palette.oliveDark,
                         }
                   }
                   whileTap={
@@ -1482,10 +1710,29 @@ const Preguntas = () => {
                       : "Guardar resultado"}
                   </span>
                 </motion.button>
+
+                <p
+                  className="
+                    mt-8
+                    font-cursiveDancing
+                    text-[27px]
+                    sm:text-[31px]
+                  "
+                  style={{
+                    color:
+                      palette.olive,
+                  }}
+                >
+                  Eimy & Soni
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
+
+        {/* =========================================
+            TEXTO FINAL
+        ========================================= */}
 
         <motion.p
           className="
@@ -1501,7 +1748,7 @@ const Preguntas = () => {
             sm:text-base
           "
           style={{
-            color: palette.warmGray,
+            color: palette.gray,
           }}
           initial={{
             opacity: 0,
@@ -1511,14 +1758,17 @@ const Preguntas = () => {
             opacity: 1,
             y: 0,
           }}
-          viewport={{ once: true }}
+          viewport={{
+            once: true,
+          }}
           transition={{
             duration: 0.85,
             delay: 0.25,
           }}
         >
-          Gracias por formar parte de nuestra historia y compartir este momento
-          con nosotros.
+          Gracias por formar parte de
+          nuestra historia y compartir
+          este momento con nosotros.
         </motion.p>
       </div>
     </motion.section>

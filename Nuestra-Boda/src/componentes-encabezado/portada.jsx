@@ -1,1517 +1,2578 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
+
+
+
 import Countdown from "./encabeza-cuenta";
 
+import MusicaModal from "./MusicaModal";
+
+
+
 /* =========================================
-   PORTADA CLÁSICA EDITORIAL
+
+   PALETA
+
+
+
+   IMPORTANTE:
+
+   Colores planos. No usamos degradados.
+
 ========================================= */
 
+
+
 const palette = {
-  ink: "#1D2733",
-  inkSoft: "#35404B",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#DED6C8",
-  antiqueGold: "#A48654",
-  antiqueGoldDark: "#755E39",
-  warmGray: "#777168",
-  line: "#C8BDAA",
+
+  olive: "#3F4A2C",
+
+  oliveDark: "#303A22",
+
+  oliveLight: "#59643F",
+
+
+
+  ivory: "#F7F4EC",
+
+  white: "#FFFFFF",
+
+
+
+  beige: "#D7C8AA",
+
+  beigeDark: "#B7A581",
+
+
+
+  ink: "#292B24",
+
+  gray: "#706E64",
+
 };
+
+
 
 const transition = {
+
   duration: 0.9,
+
   ease: [0.22, 1, 0.36, 1],
+
 };
 
-function CornerOrnament({ className = "" }) {
+
+
+/* =========================================
+
+   ADORNO BOTÁNICO
+
+========================================= */
+
+
+
+function BotanicalBranch({ className = "" }) {
+
   return (
+
     <svg
-      viewBox="0 0 80 80"
+
+      viewBox="0 0 120 70"
+
       fill="none"
+
       aria-hidden="true"
+
       className={className}
+
     >
+
       <path
-        d="M4 76V25C4 13.4 13.4 4 25 4h51"
+
+        d="M10 59C35 46 52 32 78 11"
+
         stroke="currentColor"
+
         strokeWidth="1"
+
       />
+
+
 
       <path
-        d="M13 64V29c0-8.8 7.2-16 16-16h35"
+
+        d="M30 47C25 35 28 27 38 23C40 34 37 41 30 47Z"
+
         stroke="currentColor"
-        strokeWidth="0.65"
+
+        strokeWidth="0.9"
+
       />
+
+
 
       <path
-        d="M25 4c0 11.6-9.4 21-21 21"
+
+        d="M47 36C43 25 47 17 57 14C58 24 55 31 47 36Z"
+
         stroke="currentColor"
-        strokeWidth="0.7"
+
+        strokeWidth="0.9"
+
       />
 
-      <circle cx="13" cy="13" r="1.8" fill="currentColor" />
+
 
       <path
-        d="M18 18c10 3 17 10 20 20"
+
+        d="M59 27C68 24 75 27 78 36C69 37 63 34 59 27Z"
+
         stroke="currentColor"
-        strokeWidth="0.65"
+
+        strokeWidth="0.9"
+
       />
+
+
+
+      <path
+
+        d="M74 14C82 10 90 12 94 20C86 22 79 20 74 14Z"
+
+        stroke="currentColor"
+
+        strokeWidth="0.9"
+
+      />
+
     </svg>
+
   );
+
 }
 
-function DecorativeDivider({ dark = false }) {
-  return (
-    <div className="flex w-full items-center justify-center gap-3">
-      <span
-        className="h-px w-10 sm:w-16"
-        style={{
-          background: dark
-            ? "linear-gradient(to right, transparent, rgba(164,134,84,0.8))"
-            : "linear-gradient(to right, transparent, rgba(164,134,84,0.65))",
-        }}
-      />
 
-      <span
-        className="h-[5px] w-[5px] rotate-45 border"
-        style={{
-          borderColor: dark
-            ? "rgba(164,134,84,0.85)"
-            : "rgba(164,134,84,0.7)",
-        }}
-      />
 
-      <span
-        className="h-px w-10 sm:w-16"
-        style={{
-          background: dark
-            ? "linear-gradient(to left, transparent, rgba(164,134,84,0.8))"
-            : "linear-gradient(to left, transparent, rgba(164,134,84,0.65))",
-        }}
-      />
-    </div>
-  );
+/* =========================================
+
+   DESCIFRAR ID DEL GENERADOR
+
+========================================= */
+
+
+
+function decodificarInvitacion(id) {
+
+  if (!id) return null;
+
+
+
+  try {
+
+    /*
+
+      El generador crea:
+
+
+
+      JSON
+
+        ↓
+
+      invertir texto
+
+        ↓
+
+      Base64
+
+        ↓
+
+      Base64 seguro para URL
+
+
+
+      Aquí hacemos exactamente lo contrario.
+
+    */
+
+
+
+    const idNormalizado = decodeURIComponent(id)
+
+      .replace(/-/g, "+")
+
+      .replace(/_/g, "/");
+
+
+
+    const paddingFaltante = idNormalizado.length % 4;
+
+
+
+    const idConPadding =
+
+      paddingFaltante === 0
+
+        ? idNormalizado
+
+        : idNormalizado + "=".repeat(4 - paddingFaltante);
+
+
+
+    const textoInvertido = atob(idConPadding);
+
+
+
+    const textoOriginal = textoInvertido
+
+      .split("")
+
+      .reverse()
+
+      .join("");
+
+
+
+    return JSON.parse(textoOriginal);
+
+  } catch (error) {
+
+    console.error(
+
+      "No se pudieron descifrar los datos de la invitación:",
+
+      error
+
+    );
+
+
+
+    return null;
+
+  }
+
 }
+
+
+
+/* =========================================
+
+   PORTADA
+
+========================================= */
+
+
 
 export default function Portada() {
-  const audioRef = useRef(null);
 
   const [introActiva, setIntroActiva] = useState(true);
-  const [mostrarContenido, setMostrarContenido] = useState(false);
-  const [abrirSobre, setAbrirSobre] = useState(false);
-  const [procesandoApertura, setProcesandoApertura] = useState(false);
 
-  const [invitados, setInvitados] = useState("Invitado");
+
+
+  const [abrirSobre, setAbrirSobre] = useState(false);
+
+
+
+  const [mostrarContenido, setMostrarContenido] =
+
+    useState(false);
+
+
+
+  const [procesandoApertura, setProcesandoApertura] =
+
+    useState(false);
+
+
+
+  const [mostrarMusica, setMostrarMusica] =
+
+    useState(true);
+
+
+
+  /* Datos provenientes del generador */
+
+
+
+  const [invitados, setInvitados] =
+
+    useState("Invitado");
+
+
+
   const [pases, setPases] = useState(1);
 
+
+
   /* =========================================
-     DATOS PERSONALIZADOS DESDE LA URL
+
+     LEER URL DEL GENERADOR
+
+  ========================================= */
+
+
+
+  useEffect(() => {
+
+    const params = new URLSearchParams(
+
+      window.location.search
+
+    );
+
+
+
+    const id = params.get("id");
+
+
+
+    if (!id) {
+
+      setInvitados("Invitado");
+
+      setPases(1);
+
+      return;
+
+    }
+
+
+
+    const datos = decodificarInvitacion(id);
+
+
+
+    if (!datos) {
+
+      setInvitados("Invitado");
+
+      setPases(1);
+
+      return;
+
+    }
+
+
+
+    const nombre =
+
+      typeof datos.nombre === "string"
+
+        ? datos.nombre.trim()
+
+        : "";
+
+
+
+    const cantidadPases = Number.parseInt(
+
+      datos.pases,
+
+      10
+
+    );
+
+
+
+    if (nombre) {
+
+      setInvitados(nombre);
+
+    }
+
+
+
+    if (
+
+      !Number.isNaN(cantidadPases) &&
+
+      cantidadPases > 0
+
+    ) {
+
+      setPases(cantidadPases);
+
+    }
+
+  }, []);
+
+
+
+  /* =========================================
+
+     PRECARGAR FOTO DE PORTADA
+
+     Se descarga mientras el invitado ve el modal
+     de música y el sobre para que aparezca rápido.
+
   ========================================= */
 
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-
-  if (!id) {
-    setInvitados("Invitado");
-    setPases(1);
-    return;
-  }
-
-  try {
-    // Recuperar caracteres que pudieron cambiar dentro de la URL.
-    const idNormalizado = decodeURIComponent(id)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
-
-    // Agregar padding de Base64 cuando sea necesario.
-    const paddingFaltante = idNormalizado.length % 4;
-    const idConPadding =
-      paddingFaltante === 0
-        ? idNormalizado
-        : idNormalizado + "=".repeat(4 - paddingFaltante);
-
-    // Decodificar Base64.
-    const textoInvertido = atob(idConPadding);
-
-    // Volver al orden original.
-    const textoOriginal = textoInvertido
-      .split("")
-      .reverse()
-      .join("");
-
-    // Recuperar los datos.
-    const datos = JSON.parse(textoOriginal);
-
-    const nombreDecodificado =
-      typeof datos.nombre === "string"
-        ? datos.nombre.trim()
-        : "";
-
-    const pasesDecodificados = Number.parseInt(datos.pases, 10);
-
-    if (nombreDecodificado) {
-      setInvitados(nombreDecodificado);
-    }
-
-    if (
-      !Number.isNaN(pasesDecodificados) &&
-      pasesDecodificados > 0
-    ) {
-      setPases(pasesDecodificados);
-    }
-  } catch (error) {
-    console.error(
-      "No se pudieron decodificar los datos de la invitación:",
-      error
-    );
-
-    setInvitados("Invitado");
-    setPases("");
-  }
-}, []);
+    const imagenPortada = new Image();
+    imagenPortada.src = "/portada.jpg";
+  }, []);
 
 
-useEffect(() => {
-  if (!introActiva) return;
 
-  const scrollAnterior = window.scrollY;
-
-  document.body.style.overflow = "hidden";
-  document.documentElement.style.overflow = "hidden";
-
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "auto",
-  });
-
-  return () => {
-    document.body.style.overflow = "";
-    document.documentElement.style.overflow = "";
-
-    window.scrollTo({
-      top: scrollAnterior > 0 ? 0 : scrollAnterior,
-      left: 0,
-      behavior: "auto",
-    });
-  };
-}, [introActiva]);
   /* =========================================
-     ABRIR INVITACIÓN
+
+     BLOQUEAR SCROLL DURANTE EL SOBRE
+
   ========================================= */
 
-  const iniciarExperiencia = () => {
-  if (procesandoApertura || abrirSobre) return;
 
-  setProcesandoApertura(true);
 
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "auto",
-  });
+  useEffect(() => {
 
-  setAbrirSobre(true);
+    if (!introActiva) return;
 
-  window.setTimeout(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.45;
 
-      audioRef.current.play().catch((error) => {
-        console.warn("No se pudo reproducir el audio:", error);
-      });
-    }
-  }, 400);
 
-  window.setTimeout(() => {
+    document.body.style.overflow = "hidden";
+
+    document.documentElement.style.overflow = "hidden";
+
+
+
     window.scrollTo({
+
       top: 0,
+
       left: 0,
+
       behavior: "auto",
+
     });
 
-    setIntroActiva(false);
-    setMostrarContenido(true);
-    setProcesandoApertura(false);
-  }, 1900);
-};
+
+
+    return () => {
+
+      document.body.style.overflow = "";
+
+      document.documentElement.style.overflow = "";
+
+    };
+
+  }, [introActiva]);
+
+
+
+  /* =========================================
+
+     ABRIR INVITACIÓN
+
+
+
+     IMPORTANTE:
+
+     AQUÍ YA NO REPRODUCIMOS AUDIO.
+
+  ========================================= */
+
+
+
+  const iniciarExperiencia = () => {
+
+    if (procesandoApertura || abrirSobre) return;
+
+
+
+    setProcesandoApertura(true);
+
+
+
+    window.scrollTo({
+
+      top: 0,
+
+      left: 0,
+
+      behavior: "auto",
+
+    });
+
+
+
+    // La animación comienza inmediatamente al tocar el sobre.
+    setAbrirSobre(true);
+
+
+
+    // La portada empieza a aparecer mientras termina la apertura.
+    window.setTimeout(() => {
+
+      setMostrarContenido(true);
+
+    }, 650);
+
+
+
+    // Retiramos el intro rápidamente sin cortar la animación.
+    window.setTimeout(() => {
+
+      setIntroActiva(false);
+
+      setProcesandoApertura(false);
+
+
+
+      window.scrollTo({
+
+        top: 0,
+
+        left: 0,
+
+        behavior: "auto",
+
+      });
+
+    }, 950);
+
+  };
+
+
 
   return (
+
     <div
+
       className="
+
         relative
+
         min-h-screen
+
         w-full
+
         overflow-hidden
+
       "
+
       style={{
-        backgroundColor: palette.paperLight,
+
+        backgroundColor: palette.ivory,
+
         color: palette.ink,
+
       }}
+
     >
-      {/* AUDIO */}
 
-      <audio ref={audioRef} loop preload="auto">
-        <source src="/TylerShaw.mp3" type="audio/mpeg" />
-      </audio>
+      {/* =====================================
 
-      {/* =========================================
-          INTRO DEL SOBRE
-      ========================================= */}
+          SOBRE DE APERTURA
+
+      ===================================== */}
+
+
 
       <AnimatePresence mode="wait">
+
         {introActiva && (
+
           <motion.section
-  key="intro-clasica"
-  className="
-    fixed
-    inset-0
-    z-[9999]
-    flex
-    h-[100dvh]
-    w-full
-    items-center
-    justify-center
-    overflow-hidden
-    overscroll-none
-    px-4
-    py-3
-    sm:px-8
-    lg:px-12
-  "
-  style={{
-    backgroundColor: palette.paperLight,
-    backgroundImage: `
-      repeating-linear-gradient(
-        0deg,
-        rgba(53,64,75,0.018) 0px,
-        rgba(53,64,75,0.018) 1px,
-        transparent 1px,
-        transparent 5px
-      )
-    `,
-    touchAction: "none",
-  }}
-  initial={{ opacity: 1 }}
-  exit={{
-    opacity: 0,
-    scale: 1.01,
-  }}
-  transition={{
-    duration: 0.75,
-    ease: [0.22, 1, 0.36, 1],
-  }}
->
-            {/* MARCO EXTERIOR */}
+
+            key="intro"
+
+            className="
+
+              fixed inset-0
+
+              z-[9999]
+
+              h-[100dvh]
+
+              w-full
+
+              overflow-y-auto
+
+              overscroll-none
+
+            "
+
+            style={{
+
+              backgroundColor: palette.ivory,
+
+            }}
+
+            initial={{ opacity: 1 }}
+
+            exit={{
+
+              opacity: 0,
+
+            }}
+
+            transition={{
+
+              duration: 0.7,
+
+            }}
+
+          >
+
+            {/* MARCO */}
+
+
 
             <div
+
               className="
+
                 pointer-events-none
-                absolute
+
+                fixed
+
                 inset-4
+
                 border
+
                 sm:inset-7
-                lg:inset-9
+
               "
+
               style={{
-                borderColor: "rgba(164,134,84,0.3)",
+
+                borderColor: "rgba(63,74,44,0.25)",
+
               }}
+
             />
+
+
 
             <div
-              className="
-                pointer-events-none
-                absolute
-                inset-[21px]
-                border
-                sm:inset-[34px]
-                lg:inset-[42px]
-              "
-              style={{
-                borderColor: "rgba(164,134,84,0.12)",
-              }}
-            />
 
-            <CornerOrnament
               className="
-                pointer-events-none
-                absolute
-                left-5
-                top-5
-                h-16
-                w-16
-                text-[#A48654]/50
-                sm:left-8
-                sm:top-8
-                sm:h-20
-                sm:w-20
-              "
-            />
 
-            <CornerOrnament
-              className="
-                pointer-events-none
-                absolute
-                right-5
-                top-5
-                h-16
-                w-16
-                rotate-90
-                text-[#A48654]/50
-                sm:right-8
-                sm:top-8
-                sm:h-20
-                sm:w-20
-              "
-            />
-
-            <CornerOrnament
-              className="
-                pointer-events-none
-                absolute
-                bottom-5
-                left-5
-                h-16
-                w-16
-                -rotate-90
-                text-[#A48654]/50
-                sm:bottom-8
-                sm:left-8
-                sm:h-20
-                sm:w-20
-              "
-            />
-
-            <CornerOrnament
-              className="
-                pointer-events-none
-                absolute
-                bottom-5
-                right-5
-                h-16
-                w-16
-                rotate-180
-                text-[#A48654]/50
-                sm:bottom-8
-                sm:right-8
-                sm:h-20
-                sm:w-20
-              "
-            />
-
-            <div
-              className="
                 relative
+
                 z-10
+
                 mx-auto
-                grid
+
+                flex
+
+                min-h-[100dvh]
+
                 w-full
-                max-w-6xl
+
+                max-w-[620px]
+
+                flex-col
+
                 items-center
-                gap-4
-                sm:gap-8
-                lg:grid-cols-[0.95fr_1.05fr]
-                lg:gap-16
-                xl:gap-24
+
+                justify-center
+
+                px-7
+
+                py-12
+
+                text-center
+
+                sm:px-12
+
               "
+
             >
-              {/* PRESENTACIÓN */}
+
+              {/* ENCABEZADO */}
+
+
+
+              <motion.p
+
+                className="
+
+                  text-[9px]
+
+                  uppercase
+
+                  tracking-[0.48em]
+
+                  sm:text-[10px]
+
+                "
+
+                style={{
+
+                  color: palette.olive,
+
+                }}
+
+                initial={{
+
+                  opacity: 0,
+
+                  y: 12,
+
+                }}
+
+                animate={{
+
+                  opacity: 1,
+
+                  y: 0,
+
+                }}
+
+                transition={{
+
+                  ...transition,
+
+                  delay: 0.1,
+
+                }}
+
+              >
+
+                Invitación de boda
+
+              </motion.p>
+
+
+
+              <div
+
+                className="
+
+                  mt-5
+
+                  h-px
+
+                  w-14
+
+                "
+
+                style={{
+
+                  backgroundColor: palette.beigeDark,
+
+                }}
+
+              />
+
+
+
+              {/* SAVE THE DATE */}
+
+
 
               <motion.div
-                className="
-                  order-1
-                  flex
-                  flex-col
-                  items-center
-                  text-center
-                  lg:items-start
-                  lg:text-left
-                "
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  ...transition,
-                  delay: 0.1,
+
+                className="mt-7"
+
+                initial={{
+
+                  opacity: 0,
+
+                  y: 18,
+
                 }}
+
+                animate={{
+
+                  opacity: 1,
+
+                  y: 0,
+
+                }}
+
+                transition={{
+
+                  ...transition,
+
+                  delay: 0.2,
+
+                }}
+
               >
-                <p
-                  className="
-                    text-[9px]
-                    uppercase
-                    tracking-[0.42em]
-                    sm:text-[10px]
-                  "
-                  style={{ color: palette.antiqueGoldDark }}
-                >
-                  Invitación de boda
-                </p>
-
-                <div
-                  className="
-                    mt-3
-                    sm:mt-6
-                    h-px
-                    w-16
-                    lg:w-20
-                  "
-                  style={{
-                    backgroundColor: "rgba(164,134,84,0.7)",
-                  }}
-                />
 
                 <p
-                  className="
-                    mt-3
-                    sm:mt-7
-                    font-serif
-                    text-[10px]
-                    uppercase
-                    tracking-[0.22em]
-                    sm:text-sm
-                  "
-                  style={{ color: palette.warmGray }}
-                >
-                  Junto con nuestras familias
-                </p>
 
-                <h1
                   className="
-                    mt-3
-                    sm:mt-6
-                    font-serif
-                    text-[34px]
-                    font-normal
-                    leading-[0.95]
-                    tracking-[-0.025em]
-                    sm:text-[60px]
-                    md:text-[68px]
-                    lg:text-[62px]
-                    xl:text-[76px]
-                  "
-                  style={{ color: palette.ink }}
-                >
-                  Valeria
-                </h1>
 
-                <span
-                  className="
-                    my-1
-                    sm:my-2
                     font-cursiveDancing
-                    text-2xl
-                    sm:text-4xl
-                  "
-                  style={{ color: palette.antiqueGold }}
-                >
-                  &
-                </span>
 
-                <h1
-                  className="
-                    font-serif
-                    text-[34px]
-                    font-normal
-                    leading-[0.95]
-                    tracking-[-0.025em]
-                    sm:text-[60px]
-                    md:text-[68px]
-                    lg:text-[62px]
-                    xl:text-[76px]
-                  "
-                  style={{ color: palette.ink }}
-                >
-                  Alejandro
-                </h1>
+                    text-[38px]
 
-                <div className="mt-4 w-full max-w-[220px] sm:mt-8 sm:max-w-[260px]">
-                  <DecorativeDivider />
-                </div>
+                    leading-none
 
-                <p
-                  className="
-                    mt-3
-                    sm:mt-6
-                    font-serif
-                    text-[10px]
-                    uppercase
-                    tracking-[0.32em]
-                    sm:text-sm
+                    sm:text-[48px]
+
                   "
-                  style={{ color: palette.inkSoft }}
+
+                  style={{
+
+                    color: palette.oliveDark,
+
+                  }}
+
                 >
-                  11 · Junio · 2027
+
+                  Save the Date
+
                 </p>
 
+
+
                 <p
+
                   className="
-                    mt-3
-                    sm:mt-5
-                    max-w-md
+
+                    mt-4
+
                     font-serif
-                    text-[12px]
-                    italic
-                    leading-5
-                    sm:text-base
-                    sm:leading-7
+
+                    text-[17px]
+
+                    tracking-[0.22em]
+
+                    sm:text-xl
+
                   "
-                  style={{ color: palette.warmGray }}
+
+                  style={{
+
+                    color: palette.ink,
+
+                  }}
+
                 >
-                  Hay momentos que cambian nuestra historia para siempre.
-                  Queremos compartir este con ustedes.
+
+                  27 · 11 · 2026
+
                 </p>
+
               </motion.div>
 
-              {/* SOBRE E INFORMACIÓN DEL INVITADO */}
+
+
+              {/* MENSAJE */}
+
+
+
+              <motion.p
+
+                className="
+
+                  mt-7
+
+                  max-w-[390px]
+
+                  font-serif
+
+                  text-[14px]
+
+                  leading-[1.9]
+
+                  sm:text-[16px]
+
+                "
+
+                style={{
+
+                  color: palette.gray,
+
+                }}
+
+                initial={{
+
+                  opacity: 0,
+
+                  y: 16,
+
+                }}
+
+                animate={{
+
+                  opacity: 1,
+
+                  y: 0,
+
+                }}
+
+                transition={{
+
+                  ...transition,
+
+                  delay: 0.3,
+
+                }}
+
+              >
+
+                Con mucha ilusión queremos vivir este
+
+                momento rodeados de personas que han
+
+                formado parte de nuestra historia.
+
+                <br />
+
+                Será un honor contar con tu presencia.
+
+              </motion.p>
+
+
+
+              <BotanicalBranch
+
+                className="
+
+                  mt-5
+
+                  h-10
+
+                  w-20
+
+                "
+
+                style={{
+
+                  color: palette.olive,
+
+                }}
+
+              />
+
+
+
+              {/* =================================
+
+                  SOBRE
+
+              ================================= */}
+
+
 
               <motion.div
+
                 className="
-                  order-2
+
+                  mt-7
+
                   flex
+
                   w-full
+
                   flex-col
+
                   items-center
-                  justify-center
+
                 "
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  ...transition,
-                  delay: 0.25,
+
+                initial={{
+
+                  opacity: 0,
+
+                  y: 25,
+
                 }}
+
+                animate={{
+
+                  opacity: 1,
+
+                  y: 0,
+
+                }}
+
+                transition={{
+
+                  ...transition,
+
+                  delay: 0.4,
+
+                }}
+
               >
+
                 <div
+
                   onClick={iniciarExperiencia}
+
                   onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
+
+                    if (
+
+                      event.key === "Enter" ||
+
+                      event.key === " "
+
+                    ) {
+
                       iniciarExperiencia();
+
                     }
+
                   }}
+
                   role="button"
+
                   tabIndex={0}
+
                   aria-label="Abrir invitación"
+
                   className="
-                    group
+
                     relative
+
                     aspect-[350/235]
-                    w-[76vw]
-                    max-w-[300px]
-                    sm:w-[88vw]
-                    sm:max-w-[420px]
+
+                    w-[82vw]
+
+                    max-w-[390px]
+
                     cursor-pointer
+
                     outline-none
-                    lg:w-full
-                    lg:max-w-[430px]
+
                   "
+
                   style={{
-                    perspective: 2200,
+
+                    perspective: 1800,
+
                   }}
+
                 >
-                  {/* SOMBRA DEL SOBRE */}
 
-                  <div
-                    className="
-                      absolute
-                      -bottom-7
-                      left-1/2
-                      h-12
-                      w-[72%]
-                      -translate-x-1/2
-                      rounded-full
-                      bg-black/15
-                      blur-2xl
-                    "
-                  />
+                  {/* CARTA */}
 
-                  {/* CARTA INTERIOR */}
+
 
                   <motion.div
+
                     className="
+
                       absolute
+
                       left-1/2
-                      top-[9%]
+
+                      top-[8%]
+
                       z-10
+
                       flex
+
                       h-[78%]
+
                       w-[82%]
+
                       -translate-x-1/2
+
                       flex-col
+
                       items-center
+
                       justify-center
-                      overflow-hidden
+
                       border
-                      px-5
-                      py-5
+
+                      px-4
+
                       text-center
+
                     "
+
                     style={{
-                      backgroundColor: palette.paperLight,
-                      borderColor: "rgba(164,134,84,0.32)",
-                      boxShadow: "0 14px 30px rgba(29,39,51,0.13)",
+
+                      backgroundColor: palette.ivory,
+
+                      borderColor: palette.beige,
+
+                      boxShadow:
+
+                        "0 10px 24px rgba(0,0,0,0.12)",
+
                     }}
+
                     animate={
+
                       abrirSobre
+
                         ? {
-                            y: -82,
-                            scale: 1.015,
+
+                            y: -72,
+
                           }
+
                         : {
+
                             y: 0,
-                            scale: 1,
+
                           }
+
                     }
+
                     transition={{
-                      duration: 1.15,
-                      delay: abrirSobre ? 0.3 : 0,
+
+                      duration: 0.65,
+
+                      delay: abrirSobre ? 0.08 : 0,
+
                       ease: [0.22, 1, 0.36, 1],
+
                     }}
+
                   >
-                    <CornerOrnament
-                      className="
-                        absolute
-                        left-2
-                        top-2
-                        h-10
-                        w-10
-                        text-[#A48654]/35
-                      "
-                    />
-
-                    <CornerOrnament
-                      className="
-                        absolute
-                        bottom-2
-                        right-2
-                        h-10
-                        w-10
-                        rotate-180
-                        text-[#A48654]/35
-                      "
-                    />
 
                     <p
+
                       className="
+
                         text-[7px]
+
                         uppercase
-                        tracking-[0.38em]
-                        sm:text-[8px]
+
+                        tracking-[0.35em]
+
                       "
-                      style={{ color: palette.antiqueGoldDark }}
+
+                      style={{
+
+                        color: palette.olive,
+
+                      }}
+
                     >
-                      The wedding of
+
+                      Nuestra boda
+
                     </p>
 
-                    <div
-                      className="
-                        my-4
-                        h-px
-                        w-12
-                      "
-                      style={{
-                        backgroundColor: "rgba(164,134,84,0.65)",
-                      }}
-                    />
+
 
                     <p
+
                       className="
+
+                        mt-4
+
                         font-serif
-                        text-[21px]
+
+                        text-[22px]
+
                         leading-tight
-                        sm:text-[25px]
+
                       "
-                      style={{ color: palette.ink }}
+
+                      style={{
+
+                        color: palette.ink,
+
+                      }}
+
                     >
-                      Valeria
+
+                      Eimy Edith
+
                     </p>
+
+
 
                     <span
+
                       className="
-                        my-0.5
+
+                        my-1
+
                         font-cursiveDancing
-                        text-lg
-                        sm:text-xl
+
+                        text-xl
+
                       "
-                      style={{ color: palette.antiqueGold }}
+
+                      style={{
+
+                        color: palette.olive,
+
+                      }}
+
                     >
+
                       &
+
                     </span>
 
+
+
                     <p
+
                       className="
+
                         font-serif
-                        text-[21px]
+
+                        text-[22px]
+
                         leading-tight
-                        sm:text-[25px]
+
                       "
-                      style={{ color: palette.ink }}
+
+                      style={{
+
+                        color: palette.ink,
+
+                      }}
+
                     >
-                      Alejandro
+
+                      Andre Soni
+
                     </p>
+
+
 
                     <p
+
                       className="
+
                         mt-4
+
                         text-[7px]
+
                         uppercase
-                        tracking-[0.25em]
-                        sm:text-[8px]
+
+                        tracking-[0.26em]
+
                       "
-                      style={{ color: palette.warmGray }}
+
+                      style={{
+
+                        color: palette.gray,
+
+                      }}
+
                     >
-                      11 · 06 · 2027
+
+                      27 · 11 · 2026
+
                     </p>
+
                   </motion.div>
 
-                  {/* CUERPO DEL SOBRE */}
+
+
+                  {/* CUERPO VERDE OLIVO */}
+
+
 
                   <motion.div
+
                     className="
+
                       absolute
+
                       inset-0
+
                       overflow-hidden
+
                       border
+
                     "
+
                     style={{
-                      background: `
-                        linear-gradient(
-                          145deg,
-                          #E8E0D2 0%,
-                          #DCD2C1 52%,
-                          #CFC3B0 100%
-                        )
-                      `,
-                      borderColor: "rgba(117,94,57,0.25)",
-                      boxShadow: `
-                        0 28px 55px rgba(29,39,51,0.16),
-                        inset 0 1px 0 rgba(255,255,255,0.65)
-                      `,
+
+                      backgroundColor: palette.olive,
+
+                      borderColor: palette.oliveDark,
+
+                      boxShadow:
+
+                        "0 20px 45px rgba(0,0,0,0.16)",
+
                     }}
+
                     animate={
+
                       abrirSobre
+
                         ? {
-                            scale: 1.012,
-                            y: 6,
+
+                            scale: 1.01,
+
+                            y: 5,
+
                           }
+
                         : {
+
                             scale: 1,
+
                             y: 0,
+
                           }
+
                     }
+
                     transition={{
-                      duration: 1.1,
-                      ease: [0.22, 1, 0.36, 1],
+
+                      duration: 0.65,
+
                     }}
+
                   >
-                    {/* TEXTURA DE PAPEL */}
+
+                    {/* SOLAPA IZQUIERDA */}
+
+
 
                     <div
-                      className="absolute inset-0 opacity-[0.15]"
-                      style={{
-                        backgroundImage: `
-                          repeating-linear-gradient(
-                            90deg,
-                            rgba(53,64,75,0.08) 0px,
-                            rgba(53,64,75,0.08) 1px,
-                            transparent 1px,
-                            transparent 5px
-                          )
-                        `,
-                      }}
-                    />
 
-                    {/* SOLAPAS INFERIORES */}
-
-                    <div
                       className="
+
                         absolute
+
                         bottom-0
+
                         left-0
+
                         h-[72%]
+
                         w-[53%]
+
                         border-t
+
                       "
+
                       style={{
-                        clipPath: "polygon(0 0, 100% 100%, 0 100%)",
-                        borderColor: "rgba(117,94,57,0.15)",
-                        background:
-                          "linear-gradient(145deg, rgba(255,255,255,0.16), transparent)",
+
+                        clipPath:
+
+                          "polygon(0 0, 100% 100%, 0 100%)",
+
+                        backgroundColor:
+
+                          palette.oliveLight,
+
+                        borderColor:
+
+                          "rgba(247,244,236,0.18)",
+
                       }}
+
                     />
 
+
+
+                    {/* SOLAPA DERECHA */}
+
+
+
                     <div
+
                       className="
+
                         absolute
+
                         bottom-0
+
                         right-0
+
                         h-[72%]
+
                         w-[53%]
+
                         border-t
+
                       "
+
                       style={{
-                        clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
-                        borderColor: "rgba(117,94,57,0.15)",
-                        background:
-                          "linear-gradient(215deg, rgba(255,255,255,0.12), transparent)",
+
+                        clipPath:
+
+                          "polygon(100% 0, 100% 100%, 0 100%)",
+
+                        backgroundColor:
+
+                          palette.oliveDark,
+
+                        borderColor:
+
+                          "rgba(247,244,236,0.16)",
+
                       }}
+
                     />
+
                   </motion.div>
 
-                  {/* TAPA DEL SOBRE */}
+
+
+                  {/* TAPA */}
+
+
 
                   <motion.div
+
                     className="
+
                       absolute
+
                       left-0
+
                       top-0
+
                       z-20
+
                       h-[54%]
+
                       w-full
+
                       origin-top
-                      overflow-hidden
+
                     "
+
                     style={{
-                      clipPath: "polygon(0 0, 50% 100%, 100% 0)",
-                      background: `
-                        linear-gradient(
-                          180deg,
-                          #E6DDCE 0%,
-                          #D5C9B7 100%
-                        )
-                      `,
-                      boxShadow: "0 13px 24px rgba(29,39,51,0.12)",
+
+                      clipPath:
+
+                        "polygon(0 0, 50% 100%, 100% 0)",
+
+                      backgroundColor:
+
+                        palette.oliveLight,
+
                       backfaceVisibility: "hidden",
+
                     }}
+
                     animate={
+
                       abrirSobre
+
                         ? {
+
                             rotateX: -182,
-                            y: -3,
+
+                            y: -2,
+
                           }
+
                         : {
+
                             rotateX: 0,
+
                             y: 0,
+
                           }
+
                     }
+
                     transition={{
-                      duration: 1.2,
+
+                      duration: 0.65,
+
                       ease: [0.22, 1, 0.36, 1],
+
                     }}
+
                   />
 
-                  {/* SELLO CLÁSICO */}
+
+
+                  {/* SELLO */}
+
+
 
                   <motion.div
+
                     className="
+
                       pointer-events-none
+
                       absolute
+
                       inset-0
+
                       z-30
+
                       flex
+
                       items-center
+
                       justify-center
+
                     "
+
                     animate={
+
                       abrirSobre
+
                         ? {
+
                             scale: 0.7,
+
                             opacity: 0,
-                            y: -16,
+
                           }
+
                         : {
+
                             scale: 1,
+
                             opacity: 1,
-                            y: 0,
+
                           }
+
                     }
+
                     transition={{
-                      duration: 0.55,
+
+                      duration: 0.45,
+
                     }}
+
                   >
+
                     <div
+
                       className="
+
                         relative
+
                         flex
-                        h-[72px]
-                        w-[72px]
+
+                        h-[76px]
+
+                        w-[76px]
+
                         items-center
+
                         justify-center
+
                         rounded-full
-                        sm:h-[86px]
-                        sm:w-[86px]
+
+                        border
+
                       "
+
                       style={{
-                        background: `
-                          radial-gradient(
-                            circle at 35% 28%,
-                            #B59A68 0%,
-                            #927545 45%,
-                            #6D5532 100%
-                          )
-                        `,
-                        boxShadow: `
-                          inset 0 2px 4px rgba(255,255,255,0.24),
-                          inset 0 -5px 9px rgba(45,34,19,0.28),
-                          0 10px 18px rgba(29,39,51,0.17)
-                        `,
+
+                        backgroundColor:
+
+                          palette.beigeDark,
+
+                        borderColor: palette.beige,
+
+                        boxShadow:
+
+                          "0 7px 15px rgba(0,0,0,0.18)",
+
                       }}
+
                     >
+
                       <div
+
                         className="
+
                           absolute
-                          inset-[7px]
+
+                          inset-[6px]
+
                           rounded-full
+
                           border
+
                         "
+
                         style={{
-                          borderColor: "rgba(245,241,232,0.28)",
+
+                          borderColor:
+
+                            "rgba(247,244,236,0.45)",
+
                         }}
+
                       />
 
-                      <div
+
+
+                      <span
+
                         className="
+
                           relative
+
                           z-10
+
                           font-serif
+
                           text-lg
+
                           italic
-                          sm:text-2xl
+
                         "
+
                         style={{
-                          color: "#E8DDCA",
-                          textShadow: "0 1px 2px rgba(29,39,51,0.35)",
+
+                          color: palette.ivory,
+
                         }}
+
                       >
-                        V
-                        <span className="mx-1 text-[11px] sm:text-sm">
+
+                        E
+
+                        <span className="mx-1 text-xs">
+
                           &
+
                         </span>
+
                         A
-                      </div>
+
+                      </span>
+
                     </div>
+
                   </motion.div>
 
-                  {/* TEXTO ABRIR */}
+
+
+                  {/* ABRIR */}
+
+
 
                   <motion.p
+
                     className="
+
                       pointer-events-none
+
                       absolute
+
                       inset-x-0
+
                       top-4
+
                       z-40
+
                       text-center
+
                       text-[8px]
+
                       uppercase
+
                       tracking-[0.4em]
-                      sm:text-[9px]
+
                     "
-                    style={{ color: palette.inkSoft }}
-                    animate={{
-                      opacity: abrirSobre ? 0 : 0.75,
+
+                    style={{
+
+                      color: palette.ivory,
+
                     }}
-                    transition={{ duration: 0.35 }}
+
+                    animate={{
+
+                      opacity: abrirSobre ? 0 : 0.8,
+
+                    }}
+
                   >
+
                     Abrir
+
                   </motion.p>
+
                 </div>
 
+
+
                 <motion.p
+
                   className="
-                    mt-3
-                    text-center
+
+                    mt-6
+
                     text-[8px]
+
                     uppercase
-                    tracking-[0.28em]
-                    sm:mt-7
-                    sm:text-[10px]
+
+                    tracking-[0.32em]
+
+                    sm:text-[9px]
+
                   "
-                  style={{ color: palette.warmGray }}
-                  animate={{
-                    opacity: abrirSobre ? 0 : 1,
+
+                  style={{
+
+                    color: palette.olive,
+
                   }}
-                  transition={{ duration: 0.35 }}
+
+                  animate={{
+
+                    opacity: abrirSobre ? 0 : 1,
+
+                  }}
+
                 >
+
                   Toca el sobre para comenzar
+
                 </motion.p>
 
-                {/* DATOS DEL INVITADO */}
+
+
+                {/* INVITADO */}
+
+
 
                 <motion.div
+
                   className="
-                    mt-3
+
+                    mt-6
+
                     w-full
-                    max-w-[330px]
-                    border-y
-                    px-3
-                    py-3
+
+                    max-w-[390px]
+
+                    border-t
+
+                    pt-5
+
                     text-center
-                    sm:mt-10
-                    sm:max-w-[390px]
-                    sm:px-7
-                    sm:py-5
+
                   "
+
                   style={{
-                    borderColor: "rgba(164,134,84,0.35)",
+
+                    borderColor:
+
+                      "rgba(63,74,44,0.22)",
+
                   }}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    ...transition,
-                    delay: 0.45,
+
+                  animate={{
+
+                    opacity: abrirSobre ? 0 : 1,
+
                   }}
+
                 >
+
                   <p
+
                     className="
+
                       text-[8px]
+
                       uppercase
-                      tracking-[0.33em]
-                      sm:text-[9px]
-                    "
-                    style={{ color: palette.warmGray }}
-                  >
-                    Reservado especialmente para
-                  </p>
 
-                  <p
-                    className="
-                      mt-2
-                      sm:mt-3
-                      break-words
-                      font-serif
-                      text-lg
-                      sm:text-2xl
-                    "
-                    style={{ color: palette.ink }}
-                  >
-                    {invitados}
-                  </p>
+                      tracking-[0.32em]
 
-                  <div
-                    className="
-                      mx-auto
-                      my-2
-                      sm:my-4
-                      h-px
-                      w-12
                     "
+
                     style={{
-                      backgroundColor: "rgba(164,134,84,0.6)",
+
+                      color: palette.gray,
+
                     }}
-                  />
+
+                  >
+
+                    Reservado especialmente para
+
+                  </p>
+
+
 
                   <p
+
                     className="
+
+                      mt-2
+
+                      break-words
+
                       font-serif
-                      text-xs
-                      tracking-[0.08em]
-                      sm:text-base
+
+                      text-xl
+
                     "
-                    style={{ color: palette.inkSoft }}
+
+                    style={{
+
+                      color: palette.ink,
+
+                    }}
+
                   >
-                    {pases}{" "}
-                    {pases === 1
-                      ? "lugar reservado"
-                      : "lugares reservados"}
+
+                    {invitados}
+
                   </p>
+
+
+
+                  <p
+
+                    className="
+
+                      mt-2
+
+                      font-serif
+
+                      text-xs
+
+                    "
+
+                    style={{
+
+                      color: palette.olive,
+
+                    }}
+
+                  >
+
+                    {pases}{" "}
+
+                    {pases === 1
+
+                      ? "lugar reservado"
+
+                      : "lugares reservados"}
+
+                  </p>
+
                 </motion.div>
+
               </motion.div>
+
             </div>
+
           </motion.section>
+
         )}
+
       </AnimatePresence>
 
-      {/* =========================================
+
+
+      {/* =====================================
+
           PORTADA PRINCIPAL
-      ========================================= */}
+
+      ===================================== */}
+
+
 
       <section
+
         className="
+
           relative
+
           min-h-[100dvh]
+
           w-full
+
           overflow-hidden
+
         "
-        style={{ backgroundColor: palette.ink }}
+
+        style={{
+
+          backgroundColor: palette.oliveDark,
+
+        }}
+
       >
-        {/* FOTOGRAFÍA */}
+
+        {/* FOTO */}
+
+
 
         <motion.img
-          src="/portada.png"
-          alt="Valeria y Alejandro"
+
+          src="/portada.jpg"
+
+          alt="Eimy Edith y Andre Soni"
+
           className="
+
             absolute
+
             inset-0
+
             h-full
+
             w-full
+
             object-cover
+
             object-center
+
           "
+
           initial={{
+
             opacity: 0,
-            scale: 1.035,
+
+            scale: 1.025,
+
           }}
+
           animate={
+
             mostrarContenido
+
               ? {
+
                   opacity: 1,
+
                   scale: 1,
+
                 }
+
               : {
+
                   opacity: 0,
-                  scale: 1.035,
+
+                  scale: 1.025,
+
                 }
+
           }
+
           transition={{
-            opacity: { duration: 1.2 },
-            scale: {
-              duration: 7,
-              ease: "easeOut",
+
+            opacity: {
+
+              duration: 1.1,
+
             },
+
+            scale: {
+
+              duration: 7,
+
+              ease: "easeOut",
+
+            },
+
           }}
+
         />
 
-        {/* OVERLAY CINEMATOGRÁFICO DISCRETO */}
+
+
+        {/* OSCURECIMIENTO PLANO
+
+
+
+            No es un degradado.
+
+            Es una sola capa uniforme.
+
+        */}
+
+
 
         <motion.div
-          className="absolute inset-0"
-          style={{
-            background: `
-              linear-gradient(
-                180deg,
-                rgba(18,24,31,0.46) 0%,
-                rgba(18,24,31,0.12) 32%,
-                rgba(18,24,31,0.20) 54%,
-                rgba(18,24,31,0.82) 100%
-              ),
-              linear-gradient(
-                90deg,
-                rgba(18,24,31,0.18) 0%,
-                transparent 35%,
-                transparent 65%,
-                rgba(18,24,31,0.18) 100%
-              )
-            `,
-          }}
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: mostrarContenido ? 1 : 0,
-          }}
-          transition={{ duration: 1 }}
-        />
 
-        {/* GRANO EDITORIAL */}
-
-        <div
           className="
-            pointer-events-none
+
             absolute
+
             inset-0
-            opacity-[0.07]
+
+            bg-black/35
+
           "
-          style={{
-            backgroundImage: `
-              radial-gradient(
-                rgba(255,255,255,0.32) 0.5px,
-                transparent 0.5px
-              )
-            `,
-            backgroundSize: "5px 5px",
+
+          initial={{ opacity: 0 }}
+
+          animate={{
+
+            opacity: mostrarContenido ? 1 : 0,
+
           }}
+
+          transition={{
+
+            duration: 1,
+
+          }}
+
         />
+
+
 
         {/* MARCO */}
 
+
+
         <motion.div
+
           className="
+
             pointer-events-none
+
             absolute
+
             inset-4
+
             z-10
+
             border
+
             sm:inset-7
-            lg:inset-9
+
           "
+
           style={{
-            borderColor: "rgba(245,241,232,0.34)",
+
+            borderColor:
+
+              "rgba(247,244,236,0.50)",
+
           }}
+
           initial={{ opacity: 0 }}
+
           animate={{
+
             opacity: mostrarContenido ? 1 : 0,
+
           }}
+
           transition={{
+
             duration: 1,
-            delay: 0.35,
+
+            delay: 0.3,
+
           }}
+
         />
+
+
 
         {/* CONTENIDO */}
 
+
+
         <motion.div
+
           className="
-relative
-z-20
-flex
-min-h-[100dvh]
-w-full
-flex-col
-items-center
-justify-start
-px-5
-pt-8
-pb-5
-text-center
-sm:px-12
-sm:pt-16
-lg:px-16
-lg:pt-20
-"
-          initial={{ opacity: 0 }}
+
+            relative
+
+            z-20
+
+            flex
+
+            min-h-[100dvh]
+
+            w-full
+
+            flex-col
+
+            items-center
+
+            px-7
+
+            pb-8
+
+            pt-10
+
+            text-center
+
+            sm:px-12
+
+            sm:pt-14
+
+          "
+
+          initial={{
+
+            opacity: 0,
+
+          }}
+
           animate={{
+
             opacity: mostrarContenido ? 1 : 0,
+
           }}
+
           transition={{
+
             duration: 1,
+
             delay: 0.2,
+
           }}
+
         >
-          {/* ENCABEZADO */}
+
+          {/* LOGO */}
+
+
 
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={
-              mostrarContenido
-                ? {
-                    opacity: 1,
-                    y: 0,
-                  }
-                : {
-                    opacity: 0,
-                    y: -12,
-                  }
-            }
-            transition={{
-              ...transition,
-              delay: 0.5,
-            }}
-          >
-           
-            <div
-              className="
-                mx-auto
-                mt-2
-                sm:mt-4
-                h-px
-                w-14
-              "
-              style={{
-                backgroundColor: "rgba(245,241,232,0.7)",
-              }}
-            />
 
+            className="mt-3"
+
+            initial={{
+
+              opacity: 0,
+
+              y: -15,
+
+            }}
+
+            animate={
+
+              mostrarContenido
+
+                ? {
+
+                    opacity: 1,
+
+                    y: 0,
+
+                  }
+
+                : {
+
+                    opacity: 0,
+
+                    y: -15,
+
+                  }
+
+            }
+
+            transition={{
+
+              ...transition,
+
+              delay: 0.45,
+
+            }}
+
+          >
+
+            <div
+
+              className="
+
+                relative
+
+                mx-auto
+
+                flex
+
+                h-[100px]
+
+                w-[120px]
+
+                items-center
+
+                justify-center
+
+                sm:h-[125px]
+
+                sm:w-[150px]
+
+              "
+
+              style={{
+
+                color: palette.white,
+
+              }}
+
+            >
+
+              {/* E */}
+
+
+
+              <span
+
+                className="
+
+                  absolute
+
+                  left-[15px]
+
+                  top-0
+
+                  font-serif
+
+                  text-[88px]
+
+                  font-normal
+
+                  leading-none
+
+                  sm:text-[108px]
+
+                "
+
+              >
+
+                E
+
+              </span>
+
+
+
+              {/* A */}
+
+
+
+              <span
+
+                className="
+
+                  absolute
+
+                  right-[10px]
+
+                  top-0
+
+                  font-serif
+
+                  text-[88px]
+
+                  font-normal
+
+                  leading-none
+
+                  sm:text-[108px]
+
+                "
+
+              >
+
+                A
+
+              </span>
+
+
+
+            </div>
 
           </motion.div>
+
+
 
           {/* NOMBRES */}
 
-          <motion.div
+
+
+          <motion.h1
+
             className="
-              flex
-              max-w-4xl
-              flex-col
-              items-center
-              
+
+              mt-1
+
+              font-cursiveDancing
+
+              text-[38px]
+
+              leading-tight
+
+              sm:text-[52px]
+
             "
-            initial={{ opacity: 0, y: 24 }}
-            animate={
-              mostrarContenido
-                ? {
-                    opacity: 1,
-                    y: 0,
-                  }
-                : {
-                    opacity: 0,
-                    y: 24,
-                  }
-            }
-            transition={{
-              duration: 1.1,
-              delay: 0.65,
-              ease: [0.22, 1, 0.36, 1],
+
+            style={{
+
+              color: palette.white,
+
+              textShadow:
+
+                "0 2px 12px rgba(0,0,0,0.30)",
+
             }}
+
+            initial={{
+
+              opacity: 0,
+
+              y: 15,
+
+            }}
+
+            animate={
+
+              mostrarContenido
+
+                ? {
+
+                    opacity: 1,
+
+                    y: 0,
+
+                  }
+
+                : {
+
+                    opacity: 0,
+
+                    y: 15,
+
+                  }
+
+            }
+
+            transition={{
+
+              ...transition,
+
+              delay: 0.65,
+
+            }}
+
           >
 
+            Eimy Edith & Andre Soni
 
-            <h1
-              className="
-                font-serif
-                text-[40px]
-                font-normal
-                leading-[0.9]
-                tracking-[-0.035em]
-                text-[#FBF9F4]
-                sm:text-[72px]
-                md:text-[88px]
-                lg:text-[104px]
-              "
-              style={{
-                textShadow: "0 4px 24px rgba(0,0,0,0.32)",
-              }}
-            >
-              Valeria
-            </h1>
+          </motion.h1>
 
-            <div className="my-2 flex items-center gap-3 sm:my-4 sm:gap-6">
-              <span
-                className="
-                  h-px
-                  w-12
-                  sm:w-20
-                "
-                style={{
-                  background:
-                    "linear-gradient(to right, transparent, rgba(216,198,166,0.8))",
-                }}
-              />
 
-              <span
-                className="
-                  font-cursiveDancing
-                  text-2xl
-                  text-[#D8C6A6]
-                  sm:text-4xl
-                "
-              >
-                &
-              </span>
 
-              <span
-                className="
-                  h-px
-                  w-12
-                  sm:w-20
-                "
-                style={{
-                  background:
-                    "linear-gradient(to left, transparent, rgba(216,198,166,0.8))",
-                }}
-              />
-            </div>
+          {/* FRASE */}
 
-            <h1
-              className="
-                font-serif
-                text-[40px]
-                font-normal
-                leading-[0.9]
-                tracking-[-0.035em]
-                text-[#FBF9F4]
-                sm:text-[72px]
-                md:text-[88px]
-                lg:text-[104px]
-              "
-              style={{
-                textShadow: "0 4px 24px rgba(0,0,0,0.32)",
-              }}
-            >
-              Alejandro
-            </h1>
 
-          </motion.div>
+
+          <motion.p
+
+            className="
+
+              mt-5
+
+              max-w-[330px]
+
+              font-serif
+
+              text-[15px]
+
+              italic
+
+              leading-6
+
+              sm:text-[17px]
+
+            "
+
+            style={{
+
+              color: palette.white,
+
+              textShadow:
+
+                "0 2px 8px rgba(0,0,0,0.35)",
+
+            }}
+
+            initial={{
+
+              opacity: 0,
+
+              y: 12,
+
+            }}
+
+            animate={
+
+              mostrarContenido
+
+                ? {
+
+                    opacity: 1,
+
+                    y: 0,
+
+                  }
+
+                : {
+
+                    opacity: 0,
+
+                    y: 12,
+
+                  }
+
+            }
+
+            transition={{
+
+              ...transition,
+
+              delay: 0.8,
+
+            }}
+
+          >
+
+            ¡Te elijo hoy y por el resto de mi vida!
+
+          </motion.p>
+
+
+
+          {/* ESPACIADOR */}
+
+
+
+          <div className="flex-1" />
+
+
 
           {/* CONTADOR */}
 
+
+
           <motion.div
+
             className="
+
               w-full
-              max-w-4xl
-              mt-auto
-              pt-3
-              pb-1
-              sm:pt-6
-              sm:pb-4
+
+              max-w-[520px]
+
             "
-            initial={{ opacity: 0, y: 18 }}
-            animate={
-              mostrarContenido
-                ? {
-                    opacity: 1,
-                    y: 0,
-                  }
-                : {
-                    opacity: 0,
-                    y: 18,
-                  }
-            }
-            transition={{
-              duration: 1,
-              delay: 0.9,
+
+            initial={{
+
+              opacity: 0,
+
+              y: 20,
+
             }}
+
+            animate={
+
+              mostrarContenido
+
+                ? {
+
+                    opacity: 1,
+
+                    y: 0,
+
+                  }
+
+                : {
+
+                    opacity: 0,
+
+                    y: 20,
+
+                  }
+
+            }
+
+            transition={{
+
+              ...transition,
+
+              delay: 1,
+
+            }}
+
           >
 
-            <Countdown targetDate="2027-06-11T00:00:00" />
+            <Countdown
 
-            <motion.div
-              className="
-                mt-4
-                flex
-                flex-col
-                items-center
-                sm:mt-10
-              "
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: mostrarContenido ? 1 : 0,
-              }}
-              transition={{
-                duration: 1,
-                delay: 1.1,
-              }}
-            >
-              <p
-                className="
-                  text-[8px]
-                  uppercase
-                  tracking-[0.38em]
-                  text-[#F5F1E8]/65
-                  sm:text-[9px]
-                "
-              >
-                Desliza para continuar
-              </p>
+              targetDate="2026-11-27T17:00:00"
 
-              <div
-                className="
-                  mt-2
-                  sm:mt-4
-                  h-6
-                  sm:h-9
-                  w-px
-                  overflow-hidden
-                  bg-[#F5F1E8]/25
-                "
-              >
-                <motion.span
-                  className="
-                    block
-                    h-4
-                    w-px
-                    bg-[#F5F1E8]/80
-                  "
-                  animate={{
-                    y: [-16, 36],
-                  }}
-                  transition={{
-                    duration: 1.8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    repeatDelay: 0.25,
-                  }}
-                />
-              </div>
-            </motion.div>
+            />
+
           </motion.div>
+
+
+
+          <motion.p
+
+            className="
+
+              mt-6
+
+              text-[8px]
+
+              uppercase
+
+              tracking-[0.42em]
+
+              sm:text-[9px]
+
+            "
+
+            style={{
+
+              color: palette.white,
+
+            }}
+
+            initial={{
+
+              opacity: 0,
+
+            }}
+
+            animate={{
+
+              opacity: mostrarContenido ? 0.9 : 0,
+
+            }}
+
+            transition={{
+
+              duration: 1,
+
+              delay: 1.15,
+
+            }}
+
+          >
+
+            Desliza para continuar
+
+          </motion.p>
+
         </motion.div>
+
       </section>
+
+
+
+      {/* =====================================
+
+          MODAL DE MÚSICA
+
+      ===================================== */}
+
+
+
+      <MusicaModal
+
+        mostrar={mostrarMusica}
+
+        onElegir={() => setMostrarMusica(false)}
+
+        src="/musica.mp3"
+
+      />
+
     </div>
+
   );
+
 }

@@ -1,19 +1,28 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 /* =========================================
-   MESA DE REGALOS — ESTILO CLÁSICO
+   MESA DE REGALOS — EIMY & SONI
 ========================================= */
 
 const palette = {
-  ink: "#1D2733",
-  inkSoft: "#39434D",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
-  antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
-  warmGray: "#777168",
+  olive: "#3F4A2C",
+  oliveDark: "#303A22",
+  oliveLight: "#59643F",
+  white: "#FFFFFF",
+  ivory: "#F7F4EC",
+  ivoryLight: "#FBFAF6",
+  beige: "#D7C8AA",
+  beigeDark: "#B7A581",
+  ink: "#292B24",
+  gray: "#706E64",
+};
+
+const DATOS_BANCARIOS = {
+  banco: "Banregio",
+  cuenta: "4741 7429 8520 9983",
+  titular: "Andre Soni Rubio Hdz",
+  concepto: "Boda E y S",
 };
 
 const fadeUp = {
@@ -150,23 +159,21 @@ function DecorativeDivider({ compact = false }) {
       <span
         className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(63,74,44,0.42)",
         }}
       />
 
       <span
         className="h-[5px] w-[5px] rotate-45 border"
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: "rgba(63,74,44,0.58)",
         }}
       />
 
       <span
         className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(63,74,44,0.42)",
         }}
       />
     </div>
@@ -177,60 +184,269 @@ function DecorativeDivider({ compact = false }) {
    ICONOS
 ========================================= */
 
-function GiftIcon({ className = "h-6 w-6" }) {
+function EnvelopeIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.25"
+      strokeWidth="1.15"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={className}
+      className="h-7 w-7"
     >
-      <rect x="3" y="8" width="18" height="13" />
-      <path d="M12 8v13" />
-      <path d="M3 12h18" />
-      <path d="M7.5 8C5.6 8 4 6.7 4 5.2 4 4 5 3 6.3 3 9.2 3 12 8 12 8" />
-      <path d="M16.5 8C18.4 8 20 6.7 20 5.2 20 4 19 3 17.7 3 14.8 3 12 8 12 8" />
+      <rect x="3" y="5.5" width="18" height="13" rx="0.5" />
+      <path d="m3 7 9 7 9-7" />
     </svg>
   );
 }
 
-function ExternalLinkIcon() {
+function BankIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.3"
+      strokeWidth="1.15"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="h-4 w-4"
+      className="h-7 w-7"
     >
-      <path d="M14 5h5v5" />
-      <path d="m19 5-8 8" />
-      <path d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" />
+      <path d="M3 9h18" />
+      <path d="M5 9v8" />
+      <path d="M9.5 9v8" />
+      <path d="M14.5 9v8" />
+      <path d="M19 9v8" />
+      <path d="M3 18h18" />
+      <path d="M2 21h20" />
+      <path d="m12 3 9 4H3l9-4Z" />
     </svg>
   );
 }
 
-function CloseIcon() {
+function EyeIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.4"
+      strokeWidth="1.5"
       strokeLinecap="round"
-      aria-hidden="true"
-      className="h-5 w-5"
+      strokeLinejoin="round"
+      className="h-[18px] w-[18px]"
     >
-      <path d="m6 6 12 12" />
-      <path d="M18 6 6 18" />
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+      <circle cx="12" cy="12" r="2.5" />
     </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[18px] w-[18px]"
+    >
+      <path d="m3 3 18 18" />
+      <path d="M10.6 6.15A10.7 10.7 0 0 1 12 6c6 0 9.5 6 9.5 6a15.5 15.5 0 0 1-2.1 2.8" />
+      <path d="M6.2 6.2C3.8 7.8 2.5 12 2.5 12s3.5 6 9.5 6a9.8 9.8 0 0 0 3.4-.6" />
+      <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+    </svg>
+  );
+}
+
+function CopyIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[17px] w-[17px]"
+    >
+      <rect x="8" y="8" width="11" height="11" rx="1" />
+      <path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[17px] w-[17px]"
+    >
+      <path d="m5 12 4 4L19 6" />
+    </svg>
+  );
+}
+
+/* =========================================
+   BOTÓN PEQUEÑO
+========================================= */
+
+function ActionButton({
+  children,
+  onClick,
+  title,
+  active = false,
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      title={title}
+      aria-label={title}
+      className="
+        flex
+        h-10
+        w-10
+        shrink-0
+        items-center
+        justify-center
+        border
+      "
+      style={{
+        backgroundColor: active
+          ? palette.olive
+          : palette.white,
+        borderColor: "rgba(63,74,44,0.28)",
+        color: active
+          ? palette.white
+          : palette.olive,
+      }}
+      whileHover={{
+        y: -1,
+        borderColor: palette.olive,
+      }}
+      whileTap={{
+        scale: 0.94,
+      }}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+/* =========================================
+   FILA DE DATOS
+========================================= */
+
+function DataRow({
+  label,
+  children,
+  onCopy,
+  copied,
+  extraButton = null,
+}) {
+  return (
+    <div
+      className="
+        border-b
+        py-5
+        last:border-b-0
+      "
+      style={{
+        borderColor: "rgba(63,74,44,0.14)",
+      }}
+    >
+      <p
+        className="
+          text-[8px]
+          uppercase
+          tracking-[0.3em]
+        "
+        style={{
+          color: palette.gray,
+        }}
+      >
+        {label}
+      </p>
+
+      <div
+        className="
+          mt-3
+          flex
+          items-center
+          justify-between
+          gap-3
+        "
+      >
+        <div
+          className="
+            min-w-0
+            flex-1
+            text-left
+          "
+        >
+          {children}
+        </div>
+
+        <div
+          className="
+            flex
+            shrink-0
+            items-center
+            gap-2
+          "
+        >
+          {extraButton}
+
+          {onCopy && (
+            <ActionButton
+              onClick={onCopy}
+              title={
+                copied
+                  ? "Copiado"
+                  : `Copiar ${label.toLowerCase()}`
+              }
+              active={copied}
+            >
+              {copied ? <CheckIcon /> : <CopyIcon />}
+            </ActionButton>
+          )}
+        </div>
+      </div>
+
+      {copied && (
+        <motion.p
+          initial={{
+            opacity: 0,
+            y: -3,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          className="
+            mt-2
+            text-right
+            text-[7px]
+            uppercase
+            tracking-[0.2em]
+          "
+          style={{
+            color: palette.olive,
+          }}
+        >
+          Copiado
+        </motion.p>
+      )}
+    </div>
   );
 }
 
@@ -238,291 +454,267 @@ function CloseIcon() {
    COMPONENTE PRINCIPAL
 ========================================= */
 
-const Regalos = () => {
-  const [mostrarModal, setMostrarModal] = useState(false);
+export default function Regalos() {
+  const [mostrarCuenta, setMostrarCuenta] = useState(false);
 
-  const numeroEvento = "12345678";
+  const [copiado, setCopiado] = useState(null);
 
-  const linkLiverpool = `https://www.liverpool.com.mx/tienda/giftregistry/giftRegistryDetail.jsp?eventNo=${numeroEvento}`;
+  /* =========================================
+     COPIAR
+  ========================================= */
 
-  /* BLOQUEAR SCROLL CUANDO EL MODAL ESTÁ ABIERTO */
+  const copiarTexto = async (texto, tipo) => {
+    try {
+      if (
+        navigator.clipboard &&
+        window.isSecureContext
+      ) {
+        await navigator.clipboard.writeText(texto);
+      } else {
+        const textarea = document.createElement("textarea");
 
-  useEffect(() => {
-    if (!mostrarModal) return undefined;
+        textarea.value = texto;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
 
-    const bodyOverflowAnterior = document.body.style.overflow;
-    const htmlOverflowAnterior = document.documentElement.style.overflow;
+        document.body.appendChild(textarea);
 
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
+        textarea.focus();
+        textarea.select();
 
-    return () => {
-      document.body.style.overflow = bodyOverflowAnterior;
-      document.documentElement.style.overflow = htmlOverflowAnterior;
-    };
-  }, [mostrarModal]);
+        document.execCommand("copy");
 
-  /* CERRAR CON ESCAPE */
-
-  useEffect(() => {
-    if (!mostrarModal) return undefined;
-
-    const cerrarConEscape = (event) => {
-      if (event.key === "Escape") {
-        setMostrarModal(false);
+        document.body.removeChild(textarea);
       }
-    };
 
-    window.addEventListener("keydown", cerrarConEscape);
+      setCopiado(tipo);
+    } catch (error) {
+      console.error("No fue posible copiar:", error);
+    }
+  };
+
+  /* =========================================
+     QUITAR AVISO COPIADO
+  ========================================= */
+
+  useEffect(() => {
+    if (!copiado) return undefined;
+
+    const timer = window.setTimeout(() => {
+      setCopiado(null);
+    }, 1800);
 
     return () => {
-      window.removeEventListener("keydown", cerrarConEscape);
+      window.clearTimeout(timer);
     };
-  }, [mostrarModal]);
+  }, [copiado]);
 
   return (
-    <>
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{
+        once: true,
+        amount: 0.08,
+      }}
+      className="
+        relative
+        w-full
+        overflow-hidden
+        px-5
+        py-24
+        sm:px-8
+        sm:py-28
+        lg:px-12
+        lg:py-32
+      "
+      style={{
+        backgroundColor: palette.white,
+      }}
+    >
       {/* =========================================
-          SECCIÓN PRINCIPAL
+          MARCOS
       ========================================= */}
 
-      <motion.section
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{
-          once: true,
-          amount: 0.12,
-        }}
+      <div
         className="
-          relative
-          flex
-          min-h-[680px]
-          w-full
-          items-center
-          justify-center
-          overflow-hidden
-          px-5
-          py-24
-          sm:px-8
-          sm:py-28
-          lg:px-12
-          lg:py-32
+          pointer-events-none
+          absolute
+          inset-5
+          border
+          sm:inset-8
+          lg:inset-10
         "
         style={{
-          background: `
-            linear-gradient(
-              180deg,
-              ${palette.paperLight} 0%,
-              ${palette.paper} 56%,
-              ${palette.paperDark} 100%
-            )
-          `,
+          borderColor: "rgba(63,74,44,0.26)",
         }}
+      />
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-[26px]
+          border
+          sm:inset-[38px]
+          lg:inset-[46px]
+        "
+        style={{
+          borderColor: "rgba(63,74,44,0.10)",
+        }}
+      />
+
+      {/* =========================================
+          ESQUINAS
+      ========================================= */}
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          left-6
+          top-6
+          h-16
+          w-16
+          text-[#3F4A2C]/25
+          sm:left-9
+          sm:top-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          right-6
+          top-6
+          h-16
+          w-16
+          rotate-90
+          text-[#3F4A2C]/25
+          sm:right-9
+          sm:top-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          bottom-6
+          left-6
+          h-16
+          w-16
+          -rotate-90
+          text-[#3F4A2C]/25
+          sm:bottom-9
+          sm:left-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          bottom-6
+          right-6
+          h-16
+          w-16
+          rotate-180
+          text-[#3F4A2C]/25
+          sm:bottom-9
+          sm:right-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      {/* =========================================
+          BOTÁNICOS
+      ========================================= */}
+
+      <BotanicalBranch
+        className="
+          pointer-events-none
+          absolute
+          -bottom-16
+          -left-8
+          h-[250px]
+          w-[145px]
+          -rotate-12
+          text-[#3F4A2C]/[0.07]
+          sm:h-[310px]
+          sm:w-[180px]
+          lg:left-2
+        "
+      />
+
+      <BotanicalBranch
+        className="
+          pointer-events-none
+          absolute
+          -right-8
+          -top-16
+          h-[250px]
+          w-[145px]
+          rotate-[168deg]
+          text-[#3F4A2C]/[0.07]
+          sm:h-[310px]
+          sm:w-[180px]
+          lg:right-2
+        "
+      />
+
+      {/* =========================================
+          CONTENIDO
+      ========================================= */}
+
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          w-full
+          max-w-5xl
+        "
       >
-        {/* TEXTURA DE PAPEL */}
+        {/* =====================================
+            ENCABEZADO
+        ===================================== */}
 
-        <div
+        <motion.div
           className="
-            pointer-events-none
-            absolute
-            inset-0
-            opacity-[0.16]
-          "
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(
-                0deg,
-                rgba(29,39,51,0.025) 0px,
-                rgba(29,39,51,0.025) 1px,
-                transparent 1px,
-                transparent 5px
-              )
-            `,
-          }}
-        />
-
-        {/* MARCOS */}
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-5
-            border
-            sm:inset-8
-            lg:inset-10
-          "
-          style={{
-            borderColor: "rgba(164,134,84,0.25)",
-          }}
-        />
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-[26px]
-            border
-            sm:inset-[38px]
-            lg:inset-[46px]
-          "
-          style={{
-            borderColor: "rgba(164,134,84,0.1)",
-          }}
-        />
-
-        {/* ORNAMENTOS */}
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            left-6
-            top-6
-            h-16
-            w-16
-            text-[#A48654]/25
-            sm:left-9
-            sm:top-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            right-6
-            top-6
-            h-16
-            w-16
-            rotate-90
-            text-[#A48654]/25
-            sm:right-9
-            sm:top-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            bottom-6
-            left-6
-            h-16
-            w-16
-            -rotate-90
-            text-[#A48654]/25
-            sm:bottom-9
-            sm:left-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            bottom-6
-            right-6
-            h-16
-            w-16
-            rotate-180
-            text-[#A48654]/25
-            sm:bottom-9
-            sm:right-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <BotanicalBranch
-          className="
-            pointer-events-none
-            absolute
-            -bottom-16
-            -left-8
-            h-[250px]
-            w-[145px]
-            -rotate-12
-            text-[#A48654]/10
-            sm:h-[310px]
-            sm:w-[180px]
-            lg:left-2
-          "
-        />
-
-        <BotanicalBranch
-          className="
-            pointer-events-none
-            absolute
-            -right-8
-            -top-16
-            h-[250px]
-            w-[145px]
-            rotate-[168deg]
-            text-[#A48654]/10
-            sm:h-[310px]
-            sm:w-[180px]
-            lg:right-2
-          "
-        />
-
-        {/* CONTENIDO */}
-
-        <div
-          className="
-            relative
-            z-10
             mx-auto
             flex
-            w-full
-            max-w-4xl
+            max-w-3xl
             flex-col
             items-center
             text-center
           "
+          initial={{
+            opacity: 0,
+            y: 18,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.9,
+          }}
         >
-          <motion.div
+          <p
             className="
-              flex
-              h-16
-              w-16
-              items-center
-              justify-center
-              rounded-full
-              border
-              sm:h-20
-              sm:w-20
-            "
-            style={{
-              color: palette.antiqueGoldDark,
-              borderColor: "rgba(164,134,84,0.42)",
-            }}
-            initial={{
-              opacity: 0,
-              scale: 0.92,
-            }}
-            whileInView={{
-              opacity: 1,
-              scale: 1,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-            }}
-          >
-            <GiftIcon className="h-7 w-7 sm:h-8 sm:w-8" />
-          </motion.div>
-
-          <motion.p
-            className="
-              mt-7
               text-[8px]
               uppercase
               tracking-[0.44em]
@@ -530,61 +722,34 @@ const Regalos = () => {
               sm:tracking-[0.55em]
             "
             style={{
-              color: palette.antiqueGoldDark,
-            }}
-            initial={{
-              opacity: 0,
-              y: 10,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-              delay: 0.08,
+              color: palette.olive,
             }}
           >
             Un detalle para nuestro hogar
-          </motion.p>
+          </p>
 
           <div className="mt-5">
             <DecorativeDivider />
           </div>
 
-          <motion.h2
+          <h2
             className="
-              mt-8
-              font-serif
-              text-[40px]
+              mt-7
+              font-cursiveDancing
+              text-[46px]
               font-normal
-              leading-tight
-              tracking-[-0.025em]
-              sm:text-[54px]
-              md:text-[64px]
+              leading-none
+              sm:text-[60px]
+              md:text-[68px]
             "
             style={{
-              color: palette.ink,
-            }}
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.12,
+              color: palette.oliveDark,
             }}
           >
             Mesa de regalos
-          </motion.h2>
+          </h2>
 
-          <motion.p
+          <p
             className="
               mx-auto
               mt-6
@@ -592,504 +757,557 @@ const Regalos = () => {
               font-serif
               text-[15px]
               italic
-              leading-7
+              leading-8
               sm:text-[17px]
-              sm:leading-8
             "
             style={{
-              color: palette.warmGray,
-            }}
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.18,
+              color: palette.gray,
             }}
           >
-            Su presencia en este día es el regalo más importante para nosotros.
-            Para quienes deseen tener un detalle adicional, hemos preparado una
-            mesa de regalos en Liverpool.
-          </motion.p>
+            Su presencia en este día es el regalo más
+            importante para nosotros.
+          </p>
+        </motion.div>
 
-          {/* INFORMACIÓN BREVE */}
+        {/* =====================================
+            TARJETAS
+        ===================================== */}
 
-          <motion.div
+        <div
+          className="
+            mx-auto
+            mt-14
+            grid
+            w-full
+            max-w-4xl
+            gap-6
+            md:grid-cols-2
+            md:items-start
+          "
+        >
+          {/* =================================
+              LLUVIA DE SOBRES
+          ================================= */}
+
+          <motion.article
             className="
-              mx-auto
-              mt-10
-              w-full
-              max-w-xl
-              border-y
-              px-5
-              py-7
-              sm:mt-12
-              sm:px-10
+              relative
+              flex
+              min-h-[560px]
+              flex-col
+              items-center
+              overflow-hidden
+              border
+              px-6
+              py-11
+              text-center
+              sm:px-8
+              sm:py-12
             "
             style={{
-              borderColor: "rgba(164,134,84,0.3)",
+              backgroundColor: palette.ivory,
+              borderColor: "rgba(63,74,44,0.30)",
             }}
             initial={{
               opacity: 0,
-              y: 14,
+              y: 24,
             }}
             whileInView={{
               opacity: 1,
               y: 0,
             }}
-            viewport={{ once: true }}
+            viewport={{
+              once: true,
+            }}
             transition={{
               duration: 0.85,
-              delay: 0.24,
+              delay: 0.08,
             }}
           >
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-[7px]
+                border
+              "
+              style={{
+                borderColor: "rgba(63,74,44,0.10)",
+              }}
+            />
+
+            <div
+              className="
+                relative
+                z-10
+                flex
+                h-16
+                w-16
+                items-center
+                justify-center
+                rounded-full
+                border
+              "
+              style={{
+                color: palette.olive,
+                borderColor: "rgba(63,74,44,0.40)",
+              }}
+            >
+              <EnvelopeIcon />
+            </div>
+
             <p
               className="
+                relative
+                z-10
+                mt-7
                 text-[8px]
                 uppercase
                 tracking-[0.38em]
-                sm:text-[9px]
               "
               style={{
-                color: palette.antiqueGoldDark,
+                color: palette.olive,
               }}
             >
-              Liverpool
+              Opción 01
+            </p>
+
+            <div className="relative z-10 mt-5">
+              <DecorativeDivider compact />
+            </div>
+
+            <h3
+              className="
+                relative
+                z-10
+                mt-7
+                font-cursiveDancing
+                text-[40px]
+                leading-tight
+                sm:text-[46px]
+              "
+              style={{
+                color: palette.oliveDark,
+              }}
+            >
+              Lluvia de Sobres
+            </h3>
+
+            <p
+              className="
+                relative
+                z-10
+                mt-7
+                font-serif
+                text-[15px]
+                leading-8
+                sm:text-base
+              "
+              style={{
+                color: palette.ink,
+              }}
+            >
+              Su presencia en este día es el regalo más
+              importante para nosotros.
             </p>
 
             <p
               className="
+                relative
+                z-10
                 mt-4
                 font-serif
                 text-[15px]
-                leading-7
+                leading-8
                 sm:text-base
               "
               style={{
-                color: palette.inkSoft,
+                color: palette.gray,
               }}
             >
-              Consulta el número de evento y el acceso directo dentro de
-              nuestra tarjeta de regalos.
+              Si desean tener un detalle adicional,
+              contaremos con un espacio destinado para
+              quienes deseen hacernos llegar su obsequio
+              en físico o en efectivo el día de la
+              celebración.
             </p>
-          </motion.div>
 
-          {/* BOTÓN */}
+            <div className="relative z-10 mt-auto pt-9">
+              <DecorativeDivider compact />
 
-          <motion.button
-            type="button"
-            onClick={() => setMostrarModal(true)}
+              <p
+                className="
+                  mt-5
+                  font-cursiveDancing
+                  text-[25px]
+                  sm:text-[28px]
+                "
+                style={{
+                  color: palette.olive,
+                }}
+              >
+                Con cariño, Eimy & Soni
+              </p>
+            </div>
+          </motion.article>
+
+          {/* =================================
+              TRANSFERENCIA
+          ================================= */}
+
+          <motion.article
             className="
-              mt-10
-              inline-flex
-              min-w-[240px]
-              items-center
-              justify-center
-              gap-3
+              relative
+              overflow-hidden
               border
-              px-8
-              py-4
-              sm:min-w-[280px]
-              sm:px-10
+              px-5
+              py-10
+              sm:px-8
+              sm:py-12
             "
             style={{
-              backgroundColor: palette.ink,
-              borderColor: palette.ink,
-              color: palette.paperLight,
-              boxShadow: "0 12px 28px rgba(29,39,51,0.12)",
+              backgroundColor: palette.ivory,
+              borderColor: "rgba(63,74,44,0.30)",
             }}
-            whileHover={{
-              y: -2,
-              backgroundColor: palette.inkSoft,
-            }}
-            whileTap={{
-              scale: 0.985,
-            }}
-          >
-            <GiftIcon className="h-4 w-4" />
-
-            <span
-              className="
-                text-[9px]
-                uppercase
-                tracking-[0.28em]
-                sm:text-[10px]
-                sm:tracking-[0.34em]
-              "
-            >
-              Ver mesa de regalos
-            </span>
-          </motion.button>
-        </div>
-      </motion.section>
-
-      {/* =========================================
-          MODAL
-      ========================================= */}
-
-      <AnimatePresence>
-        {mostrarModal && (
-          <motion.div
-            className="
-              fixed
-              inset-0
-              z-[9999]
-              flex
-              h-[100dvh]
-              w-full
-              items-center
-              justify-center
-              overflow-hidden
-              bg-[#111820]/78
-              px-4
-              py-5
-              backdrop-blur-sm
-              sm:px-8
-            "
             initial={{
               opacity: 0,
+              y: 24,
             }}
-            animate={{
+            whileInView={{
               opacity: 1,
+              y: 0,
             }}
-            exit={{
-              opacity: 0,
+            viewport={{
+              once: true,
             }}
             transition={{
-              duration: 0.3,
+              duration: 0.85,
+              delay: 0.16,
             }}
-            onMouseDown={(event) => {
-              if (event.target === event.currentTarget) {
-                setMostrarModal(false);
-              }
-            }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="gift-modal-title"
           >
-            <motion.div
+            <div
               className="
-                relative
-                max-h-[92dvh]
-                w-full
-                max-w-2xl
-                overflow-y-auto
+                pointer-events-none
+                absolute
+                inset-[7px]
                 border
-                px-6
-                py-14
-                text-center
-                sm:px-10
-                sm:py-16
-                md:px-14
               "
               style={{
-                backgroundColor: palette.paperLight,
-                borderColor: "rgba(164,134,84,0.48)",
-                boxShadow: "0 30px 100px rgba(0,0,0,0.34)",
+                borderColor: "rgba(63,74,44,0.10)",
               }}
-              initial={{
-                opacity: 0,
-                y: 24,
-                scale: 0.97,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: 1,
-              }}
-              exit={{
-                opacity: 0,
-                y: 16,
-                scale: 0.98,
-              }}
-              transition={{
-                duration: 0.45,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+            />
+
+            <div
+              className="
+                relative
+                z-10
+                flex
+                flex-col
+                items-center
+                text-center
+              "
             >
-              {/* TEXTURA */}
-
               <div
                 className="
-                  pointer-events-none
-                  absolute
-                  inset-0
-                  opacity-[0.14]
-                "
-                style={{
-                  backgroundImage: `
-                    repeating-linear-gradient(
-                      0deg,
-                      rgba(29,39,51,0.025) 0px,
-                      rgba(29,39,51,0.025) 1px,
-                      transparent 1px,
-                      transparent 5px
-                    )
-                  `,
-                }}
-              />
-
-              {/* BORDE INTERIOR */}
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-[7px]
-                  border
-                "
-                style={{
-                  borderColor: "rgba(164,134,84,0.15)",
-                }}
-              />
-
-              {/* CERRAR */}
-
-              <motion.button
-                type="button"
-                onClick={() => setMostrarModal(false)}
-                aria-label="Cerrar mesa de regalos"
-                className="
-                  absolute
-                  right-4
-                  top-4
-                  z-30
                   flex
-                  h-10
-                  w-10
+                  h-16
+                  w-16
                   items-center
                   justify-center
+                  rounded-full
                   border
-                  bg-[#FBF9F4]
-                  sm:right-6
-                  sm:top-6
                 "
                 style={{
-                  color: palette.ink,
-                  borderColor: "rgba(164,134,84,0.42)",
-                }}
-                whileHover={{
-                  scale: 1.04,
-                  backgroundColor: palette.paper,
-                }}
-                whileTap={{
-                  scale: 0.96,
+                  color: palette.olive,
+                  borderColor: "rgba(63,74,44,0.40)",
                 }}
               >
-                <CloseIcon />
-              </motion.button>
+                <BankIcon />
+              </div>
 
-              {/* CONTENIDO */}
+              <p
+                className="
+                  mt-7
+                  text-[8px]
+                  uppercase
+                  tracking-[0.38em]
+                "
+                style={{
+                  color: palette.olive,
+                }}
+              >
+                Opción 02
+              </p>
+
+              <div className="mt-5">
+                <DecorativeDivider compact />
+              </div>
+
+              <h3
+                className="
+                  mt-7
+                  font-cursiveDancing
+                  text-[40px]
+                  leading-tight
+                  sm:text-[46px]
+                "
+                style={{
+                  color: palette.oliveDark,
+                }}
+              >
+                Transferencia
+              </h3>
+
+              <p
+                className="
+                  mt-5
+                  max-w-sm
+                  font-serif
+                  text-[14px]
+                  leading-7
+                  sm:text-[15px]
+                "
+                style={{
+                  color: palette.gray,
+                }}
+              >
+                Si prefieren hacernos llegar su obsequio
+                mediante transferencia, ponemos a su
+                disposición los siguientes datos.
+              </p>
+            </div>
+
+            {/* =================================
+                DATOS BANCARIOS
+            ================================= */}
+
+            <div
+              className="
+                relative
+                z-10
+                mt-8
+                border-y
+                px-1
+                sm:px-2
+              "
+              style={{
+                borderColor: "rgba(63,74,44,0.20)",
+              }}
+            >
+              {/* BANCO */}
 
               <div
                 className="
-                  relative
-                  z-10
-                  flex
-                  w-full
-                  flex-col
-                  items-center
+                  border-b
+                  py-5
                 "
+                style={{
+                  borderColor: "rgba(63,74,44,0.14)",
+                }}
               >
-                <div
+                <p
                   className="
-                    flex
-                    h-14
-                    w-14
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
+                    text-[8px]
+                    uppercase
+                    tracking-[0.3em]
                   "
                   style={{
-                    color: palette.antiqueGoldDark,
-                    borderColor: "rgba(164,134,84,0.42)",
+                    color: palette.gray,
                   }}
                 >
-                  <GiftIcon />
-                </div>
+                  Banco
+                </p>
 
                 <p
                   className="
-                    mt-6
-                    text-[8px]
-                    uppercase
-                    tracking-[0.42em]
-                    sm:text-[9px]
+                    mt-3
+                    font-serif
+                    text-[19px]
+                    sm:text-[20px]
                   "
                   style={{
-                    color: palette.antiqueGoldDark,
+                    color: palette.oliveDark,
                   }}
                 >
-                  Mesa de regalos
+                  {DATOS_BANCARIOS.banco}
                 </p>
+              </div>
 
-                <div className="mt-5">
-                  <DecorativeDivider />
-                </div>
+              {/* CUENTA / TARJETA */}
 
-                <h2
-                  id="gift-modal-title"
+              <DataRow
+                label="Cuenta / Tarjeta"
+                copied={copiado === "cuenta"}
+                onCopy={() =>
+                  copiarTexto(
+                    DATOS_BANCARIOS.cuenta.replace(/\s/g, ""),
+                    "cuenta"
+                  )
+                }
+                extraButton={
+                  <ActionButton
+                    onClick={() =>
+                      setMostrarCuenta(
+                        (valorActual) => !valorActual
+                      )
+                    }
+                    title={
+                      mostrarCuenta
+                        ? "Ocultar número"
+                        : "Mostrar número"
+                    }
+                  >
+                    {mostrarCuenta ? (
+                      <EyeOffIcon />
+                    ) : (
+                      <EyeIcon />
+                    )}
+                  </ActionButton>
+                }
+              >
+                <p
                   className="
-                    mt-7
                     font-serif
-                    text-[36px]
-                    font-normal
-                    tracking-[-0.02em]
-                    sm:text-[46px]
+                    text-[17px]
+                    tracking-[0.035em]
+                    sm:text-[19px]
+                  "
+                  style={{
+                    color: palette.oliveDark,
+                  }}
+                >
+                  {mostrarCuenta
+                    ? DATOS_BANCARIOS.cuenta
+                    : "•••• •••• •••• ••••"}
+                </p>
+              </DataRow>
+
+              {/* TITULAR */}
+
+              <DataRow
+                label="Titular"
+                copied={copiado === "titular"}
+                onCopy={() =>
+                  copiarTexto(
+                    DATOS_BANCARIOS.titular,
+                    "titular"
+                  )
+                }
+              >
+                <p
+                  className="
+                    font-serif
+                    text-[16px]
+                    leading-6
+                    sm:text-[17px]
                   "
                   style={{
                     color: palette.ink,
                   }}
                 >
-                  Liverpool
-                </h2>
-
-                <p
-                  className="
-                    mx-auto
-                    mt-5
-                    max-w-lg
-                    font-serif
-                    text-[14px]
-                    italic
-                    leading-7
-                    sm:text-base
-                  "
-                  style={{
-                    color: palette.warmGray,
-                  }}
-                >
-                  Hemos seleccionado algunos detalles que serán parte del hogar
-                  y de la nueva etapa que comenzaremos juntos.
+                  {DATOS_BANCARIOS.titular}
                 </p>
+              </DataRow>
 
-                {/* NÚMERO DE EVENTO */}
+              {/* CONCEPTO */}
 
+              <DataRow
+                label="Concepto sugerido"
+                copied={copiado === "concepto"}
+                onCopy={() =>
+                  copiarTexto(
+                    DATOS_BANCARIOS.concepto,
+                    "concepto"
+                  )
+                }
+              >
                 <div
                   className="
-                    mx-auto
-                    mt-10
-                    w-full
-                    max-w-md
-                    border-y
-                    px-5
-                    py-8
-                  "
-                  style={{
-                    borderColor: "rgba(164,134,84,0.32)",
-                  }}
-                >
-                  <p
-                    className="
-                      text-[8px]
-                      uppercase
-                      tracking-[0.38em]
-                      sm:text-[9px]
-                    "
-                    style={{
-                      color: palette.warmGray,
-                    }}
-                  >
-                    Número de evento
-                  </p>
-
-                  <p
-                    className="
-                      mt-4
-                      break-all
-                      font-serif
-                      text-[32px]
-                      tracking-[0.12em]
-                      sm:text-[40px]
-                      sm:tracking-[0.18em]
-                    "
-                    style={{
-                      color: palette.ink,
-                    }}
-                  >
-                    {numeroEvento}
-                  </p>
-                </div>
-
-                {/* BOTÓN LIVERPOOL */}
-
-                <motion.a
-                  href={linkLiverpool}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    mt-10
-                    inline-flex
-                    min-w-[230px]
-                    items-center
-                    justify-center
-                    gap-3
-                    border
-                    px-8
-                    py-4
-                    sm:min-w-[270px]
-                  "
-                  style={{
-                    backgroundColor: palette.ink,
-                    borderColor: palette.ink,
-                    color: palette.paperLight,
-                  }}
-                  whileHover={{
-                    y: -2,
-                    backgroundColor: palette.inkSoft,
-                  }}
-                  whileTap={{
-                    scale: 0.985,
-                  }}
-                >
-                  <ExternalLinkIcon />
-
-                  <span
-                    className="
-                      text-[9px]
-                      uppercase
-                      tracking-[0.28em]
-                      sm:text-[10px]
-                    "
-                  >
-                    Abrir mesa en Liverpool
-                  </span>
-                </motion.a>
-
-                <div className="mt-10">
-                  <DecorativeDivider compact />
-                </div>
-
-                <p
-                  className="
-                    mt-6
-                    max-w-lg
                     font-serif
-                    text-[14px]
-                    italic
-                    leading-7
+                    text-[15px]
+                    leading-6
+                    sm:text-[16px]
                   "
                   style={{
-                    color: palette.inkSoft,
+                    color: palette.ink,
                   }}
                 >
-                  Gracias por acompañarnos y por formar parte de este nuevo
-                  capítulo de nuestra historia.
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
 
-export default Regalos;
+
+
+                  <p>Boda E y S</p>
+                </div>
+              </DataRow>
+            </div>
+
+            <p
+              className="
+                relative
+                z-10
+                mt-7
+                text-center
+                font-cursiveDancing
+                text-[25px]
+                sm:text-[28px]
+              "
+              style={{
+                color: palette.olive,
+              }}
+            >
+              Gracias por su cariño
+            </p>
+          </motion.article>
+        </div>
+
+        {/* =====================================
+            CIERRE
+        ===================================== */}
+
+        <motion.div
+          className="
+            mx-auto
+            mt-14
+            max-w-2xl
+            text-center
+          "
+          initial={{
+            opacity: 0,
+            y: 12,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.85,
+            delay: 0.22,
+          }}
+        >
+          <DecorativeDivider />
+
+          <p
+            className="
+              mt-7
+              font-serif
+              text-[14px]
+              italic
+              leading-7
+              sm:text-base
+            "
+            style={{
+              color: palette.gray,
+            }}
+          >
+            Gracias por acompañarnos y por formar parte
+            de este nuevo capítulo de nuestra historia.
+          </p>
+
+
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}

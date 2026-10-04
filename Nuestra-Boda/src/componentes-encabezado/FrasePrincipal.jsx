@@ -1,508 +1,405 @@
 import { motion } from "framer-motion";
 
 /* =========================================
-   FRASE EDITORIAL CLÁSICA
+   FRASE BÍBLICA — MATEO 19:5-6
+
+   Imagen:
+   public/frase.jpg
+
+   Estilo:
+   - Clásico
+   - Elegante
+   - Verde olivo / marfil
+   - Sin degradados
 ========================================= */
 
 const palette = {
-  ink: "#1D2733",
-  inkSoft: "#39434D",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
-  antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
-  warmGray: "#777168",
-  line: "#C9BEAC",
+  olive: "#3F4A2C",
+  oliveDark: "#303A22",
+  ivory: "#F7F4EC",
+  beige: "#D7C8AA",
+  white: "#FFFFFF",
 };
 
-const reveal = {
-  hidden: {
-    opacity: 0,
-    y: 24,
-  },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.95,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+const ease = [0.22, 1, 0.36, 1];
 
-function BotanicalDetail({ className = "" }) {
+/* =========================================
+   ADORNO BOTÁNICO
+========================================= */
+
+function BotanicalCorner({ className = "" }) {
   return (
     <svg
-      viewBox="0 0 130 210"
+      viewBox="0 0 130 180"
       fill="none"
       aria-hidden="true"
       className={className}
     >
       <path
-        d="M66 203C70 158 70 112 65 17"
+        d="M18 166C42 137 60 105 73 68C82 43 91 24 109 10"
         stroke="currentColor"
         strokeWidth="1"
         strokeLinecap="round"
       />
 
       <path
-        d="M66 164C49 153 39 139 34 121"
+        d="M48 126C32 121 25 110 25 96C40 99 49 109 48 126Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
       />
 
       <path
-        d="M66 139C82 128 92 113 96 94"
+        d="M62 96C76 91 86 80 89 66C75 68 65 78 62 96Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
       />
 
       <path
-        d="M65 103C50 92 42 79 39 64"
+        d="M74 66C60 60 54 49 55 36C68 40 76 51 74 66Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
       />
 
       <path
-        d="M65 76C80 66 87 52 89 38"
+        d="M88 39C101 36 109 28 112 17C100 19 91 27 88 39Z"
         stroke="currentColor"
         strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M34 121C44 120 52 126 57 137C46 137 38 132 34 121Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M96 94C86 94 78 100 72 111C84 111 92 105 96 94Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M39 64C49 65 57 71 61 82C50 81 42 75 39 64Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M89 38C80 39 73 45 68 55C79 54 86 49 89 38Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
       />
 
       <circle
-        cx="65"
-        cy="16"
-        r="3"
+        cx="110"
+        cy="10"
+        r="2.5"
         stroke="currentColor"
-        strokeWidth="0.7"
+        strokeWidth="0.8"
       />
     </svg>
   );
 }
 
-function SmallDivider() {
+/* =========================================
+   SEPARADOR
+========================================= */
+
+function Divider() {
   return (
     <div className="flex items-center justify-center gap-3">
       <span
         className="h-px w-10 sm:w-14"
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(247,244,236,0.65)",
         }}
       />
 
       <span
-        className="h-[5px] w-[5px] rotate-45 border"
+        className="
+          h-[5px]
+          w-[5px]
+          rotate-45
+          border
+        "
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: "rgba(247,244,236,0.75)",
         }}
       />
 
       <span
         className="h-px w-10 sm:w-14"
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: "rgba(247,244,236,0.65)",
         }}
       />
     </div>
   );
 }
 
-export default function FrasePremium() {
+/* =========================================
+   COMPONENTE
+========================================= */
+
+export default function FraseModal() {
   return (
-    <motion.section
-      variants={reveal}
-      initial="hidden"
-      whileInView="show"
-      viewport={{
-        once: true,
-        amount: 0.18,
-      }}
+    <section
       className="
         relative
-        flex
-        min-h-[620px]
         w-full
-        items-center
-        justify-center
         overflow-hidden
-        px-5
-        py-24
-        text-center
-        sm:min-h-[700px]
-        sm:px-8
-        sm:py-28
-        lg:min-h-[680px]
-        lg:px-12
-        lg:py-32
+        bg-[#303A22]
       "
-      style={{
-        background: `
-          linear-gradient(
-            180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 55%,
-            ${palette.paperDark} 100%
-          )
-        `,
-      }}
     >
-      {/* TEXTURA DE PAPEL */}
+      {/* =====================================
+          IMAGEN
+      ===================================== */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.16]
-        "
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(
-              0deg,
-              rgba(29,39,51,0.025) 0px,
-              rgba(29,39,51,0.025) 1px,
-              transparent 1px,
-              transparent 5px
-            )
-          `,
-        }}
-      />
-
-      {/* MARCO EXTERIOR */}
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-5
-          border
-          sm:inset-8
-          lg:inset-10
-        "
-        style={{
-          borderColor: "rgba(164,134,84,0.26)",
-        }}
-      />
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-[26px]
-          border
-          sm:inset-[38px]
-          lg:inset-[46px]
-        "
-        style={{
-          borderColor: "rgba(164,134,84,0.1)",
-        }}
-      />
-
-      {/* DETALLES BOTÁNICOS */}
-
-      <BotanicalDetail
-        className="
-          pointer-events-none
-          absolute
-          -bottom-8
-          -left-5
-          h-[210px]
-          w-[130px]
-          -rotate-12
-          text-[#A48654]/20
-          sm:-left-1
-          sm:h-[260px]
-          sm:w-[160px]
-          lg:left-8
-          lg:h-[310px]
-          lg:w-[190px]
-        "
-      />
-
-      <BotanicalDetail
-        className="
-          pointer-events-none
-          absolute
-          -right-5
-          -top-10
-          h-[210px]
-          w-[130px]
-          rotate-[168deg]
-          text-[#A48654]/20
-          sm:-right-1
-          sm:h-[260px]
-          sm:w-[160px]
-          lg:right-8
-          lg:h-[310px]
-          lg:w-[190px]
-        "
-      />
-
-      {/* CONTENIDO */}
-
-      <div
+      <motion.div
         className="
           relative
-          z-10
-          mx-auto
-          flex
+          min-h-[720px]
           w-full
-          max-w-5xl
-          flex-col
-          items-center
+          overflow-hidden
+          sm:min-h-[780px]
+          md:min-h-[820px]
         "
+        initial={{
+          opacity: 0,
+        }}
+        whileInView={{
+          opacity: 1,
+        }}
+        viewport={{
+          once: true,
+          amount: 0.15,
+        }}
+        transition={{
+          duration: 1.1,
+          ease,
+        }}
       >
-        {/* ETIQUETA */}
-
-        <motion.div
+        <motion.img
+          src="/frase.jpg"
+          alt="Frase bíblica de Mateo 19:5-6"
+          loading="lazy"
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            object-center
+          "
           initial={{
-            opacity: 0,
-            y: -10,
+            scale: 1.04,
           }}
           whileInView={{
-            opacity: 1,
-            y: 0,
+            scale: 1,
           }}
-          viewport={{ once: true }}
+          viewport={{
+            once: true,
+          }}
           transition={{
-            duration: 0.8,
-            ease: [0.22, 1, 0.36, 1],
+            duration: 5,
+            ease: "easeOut",
           }}
-        >
-          <p
-            className="
-              text-[8px]
-              uppercase
-              tracking-[0.42em]
-              sm:text-[10px]
-              sm:tracking-[0.52em]
-            "
-            style={{
-              color: palette.antiqueGoldDark,
-            }}
-          >
-            Una historia de amor
-          </p>
+        />
 
-          <div className="mt-5">
-            <SmallDivider />
-          </div>
-        </motion.div>
+        {/* =====================================
+            OSCURECIMIENTO PLANO
 
-        {/* COMILLA */}
+            No es degradado.
+        ===================================== */}
 
-        <motion.span
+        <div
           className="
-            mt-8
-            block
-            font-serif
-            text-[68px]
-            font-light
-            leading-[0.65]
-            sm:mt-10
-            sm:text-[86px]
+            absolute
+            inset-0
           "
           style={{
-            color: "rgba(164,134,84,0.28)",
+            backgroundColor: "rgba(25, 30, 19, 0.48)",
           }}
-          initial={{
-            opacity: 0,
-            y: 12,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.9,
-            delay: 0.12,
-          }}
-        >
-          “
-        </motion.span>
+        />
 
-        {/* FRASE */}
+        {/* =====================================
+            MARCO EXTERIOR
+        ===================================== */}
 
-        <motion.blockquote
+        <div
           className="
-            mx-auto
-            mt-3
-            max-w-4xl
-            font-serif
-            text-[26px]
-            font-normal
-            leading-[1.55]
-            tracking-[-0.015em]
-            sm:text-[35px]
-            sm:leading-[1.5]
-            md:text-[41px]
-            lg:text-[46px]
-            lg:leading-[1.42]
+            pointer-events-none
+            absolute
+            inset-4
+            z-10
+            border
+            sm:inset-7
+            md:inset-9
           "
           style={{
-            color: palette.ink,
+            borderColor: "rgba(247,244,236,0.58)",
           }}
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 1,
-            delay: 0.18,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          Te quiero no por quien eres,
-          <span className="block">
-            sino por quien soy
-          </span>
-          <span className="block">
-            cuando estoy contigo.
-          </span>
-        </motion.blockquote>
+        />
 
-        {/* SEPARADOR */}
+        {/* MARCO INTERIOR */}
 
-        <motion.div
+        <div
           className="
-            my-9
-            sm:my-11
-          "
-          initial={{
-            opacity: 0,
-            scaleX: 0.65,
-          }}
-          whileInView={{
-            opacity: 1,
-            scaleX: 1,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.9,
-            delay: 0.32,
-          }}
-        >
-          <SmallDivider />
-        </motion.div>
-
-        {/* AUTOR */}
-
-        <motion.p
-          className="
-            text-[9px]
-            uppercase
-            tracking-[0.28em]
-            sm:text-[11px]
-            sm:tracking-[0.4em]
+            pointer-events-none
+            absolute
+            inset-[22px]
+            z-10
+            border
+            sm:inset-[34px]
+            md:inset-[42px]
           "
           style={{
-            color: palette.warmGray,
+            borderColor: "rgba(247,244,236,0.18)",
           }}
-          initial={{
-            opacity: 0,
-            y: 10,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.85,
-            delay: 0.4,
-          }}
-        >
-          Gabriel García Márquez
-        </motion.p>
+        />
 
-        {/* CIERRE NARRATIVO */}
+        {/* =====================================
+            BOTÁNICOS
+        ===================================== */}
 
-        <motion.div
+        <BotanicalCorner
           className="
-            mt-12
-            max-w-lg
-            sm:mt-14
+            pointer-events-none
+            absolute
+            -bottom-4
+            -left-2
+            z-10
+            h-[170px]
+            w-[120px]
+            text-[#F7F4EC]/35
+            sm:h-[220px]
+            sm:w-[150px]
           "
-          initial={{
-            opacity: 0,
-            y: 12,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.9,
-            delay: 0.5,
-          }}
-        >
-          <div
-            className="
-              mx-auto
-              mb-6
-              h-px
-              w-16
-            "
-            style={{
-              backgroundColor: "rgba(164,134,84,0.48)",
-            }}
-          />
+        />
 
-          <p
-            className="
-              font-serif
-              text-[14px]
-              italic
-              leading-7
-              sm:text-base
-            "
-            style={{
-              color: palette.inkSoft,
-            }}
-          >
-            Desde que nuestros caminos se encontraron, aprendimos que el amor
-            también se construye en los pequeños momentos.
-          </p>
-        </motion.div>
-      </div>
-    </motion.section>
+        <BotanicalCorner
+          className="
+            pointer-events-none
+            absolute
+            -right-2
+            -top-4
+            z-10
+            h-[170px]
+            w-[120px]
+            rotate-180
+            text-[#F7F4EC]/35
+            sm:h-[220px]
+            sm:w-[150px]
+          "
+        />
+
+        {/* =====================================
+            CONTENIDO
+        ===================================== */}
+
+        
+
+          {/* =====================================
+    CONTENIDO
+    TODO AGRUPADO EN LA PARTE INFERIOR
+===================================== */}
+
+<div
+  className="
+    relative
+    z-20
+    mx-auto
+    flex
+    min-h-[720px]
+    w-full
+    max-w-[900px]
+    flex-col
+    items-center
+    justify-end
+    px-8
+    pb-16
+    pt-20
+    text-center
+    sm:min-h-[780px]
+    sm:px-14
+    sm:pb-20
+    md:min-h-[820px]
+    md:px-20
+    md:pb-24
+  "
+>
+  {/* BLOQUE COMPLETO */}
+
+  <motion.div
+    className="
+      flex
+      w-full
+      max-w-[680px]
+      flex-col
+      items-center
+    "
+    initial={{
+      opacity: 0,
+      y: 30,
+    }}
+    whileInView={{
+      opacity: 1,
+      y: 0,
+    }}
+    viewport={{
+      once: true,
+      amount: 0.2,
+    }}
+    transition={{
+      duration: 1,
+      ease,
+    }}
+  >
+    {/* COMILLA */}
+
+    <span
+      className="
+        block
+        h-[42px]
+        font-serif
+        text-[62px]
+        font-light
+        leading-none
+        sm:text-[72px]
+      "
+      style={{
+        color: "rgba(247,244,236,0.55)",
+      }}
+    >
+      “
+    </span>
+
+    {/* FRASE */}
+
+    <blockquote
+      className="
+        mt-1
+        font-serif
+        text-[20px]
+        font-normal
+        leading-[1.55]
+        sm:text-[25px]
+        sm:leading-[1.55]
+        md:text-[28px]
+      "
+      style={{
+        color: palette.white,
+        textShadow:
+          "0 2px 12px rgba(0,0,0,0.45)",
+      }}
+    >
+      No fuiste antes ni despues, fuiste a tiempo. A tiempo para que me enamorara de ti
+    </blockquote>
+
+    {/* SEPARADOR */}
+
+    <div className="mt-5">
+      <Divider />
+    </div>
+
+    {/* REFERENCIA */}
+
+    <p
+      className="
+        mt-3
+        font-serif
+        text-[11px]
+        uppercase
+        tracking-[0.3em]
+        sm:text-[12px]
+      "
+      style={{
+        color: palette.ivory,
+      }}
+    >
+      Jaime Sabines
+    </p>
+
+    
+  </motion.div>
+</div>
+      </motion.div>
+    </section>
   );
 }

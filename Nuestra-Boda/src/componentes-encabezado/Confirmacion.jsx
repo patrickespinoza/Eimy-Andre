@@ -8,41 +8,50 @@ import { useEffect, useMemo, useState } from "react";
 const API_URL =
   "https://script.google.com/macros/s/AKfycbxklU9PTlqxkcu9pBUfWYhByQZ_7kJWuFENeeQhlEW-C6eh2cVbTK3z2AbMJiWVL1ME/exec";
 
-/*
-  Coloca los números con código de país, sin:
-  +, espacios, guiones ni paréntesis.
 
-  Ejemplo México:
-  5215512345678
-*/
+const NUMERO_NOVIA = "528134511817";
+const NUMERO_NOVIO = "528111908085";
 
-const NUMERO_NOVIA = "521XXXXXXXXXX";
-const NUMERO_NOVIO = "521XXXXXXXXXX";
+const NOMBRE_NOVIA = "Eimy";
+const NOMBRE_NOVIO = "Soni";
 
-const NOMBRE_NOVIA = "Allison";
-const NOMBRE_NOVIO = "David";
+/* =========================================
+   PALETA
+========================================= */
 
 const palette = {
-  ink: "#1D2733",
-  inkSoft: "#39434D",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
-  antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
-  warmGray: "#777168",
+  olive: "#3F4A2C",
+  oliveDark: "#303A22",
+  oliveLight: "#59643F",
+
+  white: "#FFFFFF",
+  ivory: "#F7F4EC",
+  ivoryLight: "#FBFAF6",
+
+  beige: "#D7C8AA",
+  beigeDark: "#B7A581",
+
+  ink: "#292B24",
+  gray: "#706E64",
+
   error: "#8B3A3A",
   success: "#49644D",
 };
+
+/* =========================================
+   ANIMACIÓN
+========================================= */
 
 const fadeUp = {
   hidden: {
     opacity: 0,
     y: 24,
   },
+
   show: {
     opacity: 1,
     y: 0,
+
     transition: {
       duration: 0.9,
       ease: [0.22, 1, 0.36, 1],
@@ -55,16 +64,21 @@ const fadeUp = {
 ========================================= */
 
 /*
-  Este decodificador es compatible con un generador que haga:
+  Compatible con el generador que hace:
 
   1. JSON.stringify({ nombre, pases })
-  2. invertir el texto
-  3. convertir a Base64 con btoa()
-  4. colocar el resultado en ?id=...
+  2. Invierte el texto
+  3. btoa()
+  4. Convierte a URL-safe:
+       +  ->  -
+       /  ->  _
+       =  puede eliminarse
+  5. Envía:
+       ?id=XXXXXXXX
 
-  También admite Base64 URL-safe:
-  - en lugar de +
-  _ en lugar de /
+  También mantenemos compatibilidad con:
+
+  ?nombre=Familia López&pases=4
 */
 
 function normalizeBase64(value) {
@@ -103,14 +117,14 @@ function parseInvitationData(encodedId) {
 
   const decodedValue = decodeURIComponent(encodedId);
 
-  /*
-    Intentamos varios formatos para que sea más resistente:
-
-    1. Base64 → texto invertido → JSON.
-    2. Base64 → JSON directo.
-  */
-
   const decodedText = decodeBase64Utf8(decodedValue);
+
+  /*
+    Primero intentamos el formato del generador:
+    Base64 -> invertir -> JSON
+
+    Después dejamos respaldo para Base64 -> JSON.
+  */
 
   const possibleValues = [
     decodedText.split("").reverse().join(""),
@@ -125,15 +139,17 @@ function parseInvitationData(encodedId) {
         return parsedData;
       }
     } catch {
-      // Continúa con el siguiente formato.
+      // Intentamos el siguiente formato.
     }
   }
 
-  throw new Error("El enlace de invitación no tiene un formato válido.");
+  throw new Error(
+    "El enlace de invitación no tiene un formato válido."
+  );
 }
 
 /* =========================================
-   ORNAMENTOS
+   ORNAMENTO DE ESQUINA
 ========================================= */
 
 function CornerOrnament({ className = "" }) {
@@ -162,10 +178,19 @@ function CornerOrnament({ className = "" }) {
         strokeWidth="0.75"
       />
 
-      <circle cx="15" cy="15" r="2" fill="currentColor" />
+      <circle
+        cx="15"
+        cy="15"
+        r="2"
+        fill="currentColor"
+      />
     </svg>
   );
 }
+
+/* =========================================
+   RAMA BOTÁNICA
+========================================= */
 
 function BotanicalBranch({ className = "" }) {
   return (
@@ -237,29 +262,35 @@ function BotanicalBranch({ className = "" }) {
   );
 }
 
-function DecorativeDivider({ compact = false }) {
+/* =========================================
+   SEPARADOR
+========================================= */
+
+function DecorativeDivider({ light = false }) {
+  const color = light
+    ? "rgba(247,244,236,0.55)"
+    : "rgba(63,74,44,0.40)";
+
   return (
     <div className="flex items-center justify-center gap-3">
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className="h-px w-10 sm:w-16"
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: color,
         }}
       />
 
       <span
         className="h-[5px] w-[5px] rotate-45 border"
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: color,
         }}
       />
 
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className="h-px w-10 sm:w-16"
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: color,
         }}
       />
     </div>
@@ -267,44 +298,8 @@ function DecorativeDivider({ compact = false }) {
 }
 
 /* =========================================
-   ICONOS
+   CHECK
 ========================================= */
-
-function EnvelopeIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.25"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="h-6 w-6"
-    >
-      <rect x="3" y="5" width="18" height="14" />
-      <path d="m3 7 9 7 9-7" />
-    </svg>
-  );
-}
-
-function WhatsAppIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.35"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="h-4 w-4"
-    >
-      <path d="M20.5 11.5a8.5 8.5 0 0 1-12.7 7.4L3 20l1.2-4.6A8.5 8.5 0 1 1 20.5 11.5Z" />
-      <path d="M8.2 7.8c.3-.4.6-.4.9-.1l1.1 1.5c.2.3.2.6 0 .9l-.6.8c-.2.3 0 .7.3 1.1.7 1 1.5 1.8 2.6 2.4.4.2.8.3 1.1 0l.8-.8c.3-.3.6-.3.9-.1l1.5 1c.4.2.4.6.2.9-.5 1-1.4 1.6-2.5 1.6-1.6 0-3.8-1.2-5.6-3-1.7-1.7-2.9-3.9-2.9-5.4 0-.9.4-1.9 1.2-2.8Z" />
-    </svg>
-  );
-}
 
 function CheckIcon() {
   return (
@@ -312,7 +307,7 @@ function CheckIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.4"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -323,26 +318,8 @@ function CheckIcon() {
   );
 }
 
-function LockIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="h-4 w-4"
-    >
-      <rect x="5" y="10" width="14" height="10" />
-      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
-
 /* =========================================
-   CAMPO DE ASISTENCIA
+   OPCIÓN DE ASISTENCIA
 ========================================= */
 
 function AttendanceOption({
@@ -355,7 +332,10 @@ function AttendanceOption({
   const isSelected = selectedValue === value;
 
   return (
-    <label
+    <motion.label
+      whileTap={{
+        scale: 0.99,
+      }}
       className="
         relative
         flex
@@ -364,17 +344,18 @@ function AttendanceOption({
         gap-4
         border
         px-5
-        py-4
+        py-5
         text-left
         transition
       "
       style={{
         backgroundColor: isSelected
-          ? "rgba(29,39,51,0.055)"
-          : palette.paperLight,
+          ? "rgba(63,74,44,0.07)"
+          : palette.white,
+
         borderColor: isSelected
-          ? palette.antiqueGold
-          : "rgba(164,134,84,0.3)",
+          ? palette.olive
+          : "rgba(63,74,44,0.22)",
       }}
     >
       <input
@@ -400,15 +381,25 @@ function AttendanceOption({
         "
         style={{
           borderColor: isSelected
-            ? palette.antiqueGoldDark
-            : "rgba(119,113,104,0.6)",
+            ? palette.olive
+            : "rgba(63,74,44,0.45)",
         }}
       >
         {isSelected && (
-          <span
-            className="h-2.5 w-2.5 rounded-full"
+          <motion.span
+            initial={{
+              scale: 0,
+            }}
+            animate={{
+              scale: 1,
+            }}
+            className="
+              h-2.5
+              w-2.5
+              rounded-full
+            "
             style={{
-              backgroundColor: palette.antiqueGoldDark,
+              backgroundColor: palette.olive,
             }}
           />
         )}
@@ -438,77 +429,116 @@ function AttendanceOption({
             sm:text-[13px]
           "
           style={{
-            color: palette.warmGray,
+            color: palette.gray,
           }}
         >
           {description}
         </span>
       </span>
-    </label>
+    </motion.label>
   );
 }
 
 /* =========================================
-   COMPONENTE
+   COMPONENTE PRINCIPAL
 ========================================= */
 
 const Confirmacion = () => {
-  const [nombreInvitado, setNombreInvitado] = useState("");
-  const [pasesAsignados, setPasesAsignados] = useState(1);
-  const [datosDesdeGenerador, setDatosDesdeGenerador] = useState(false);
+  const [nombreInvitado, setNombreInvitado] =
+    useState("");
 
-  const [mensajeInvitado, setMensajeInvitado] = useState("");
-  const [asistencia, setAsistencia] = useState("");
-  const [invitados, setInvitados] = useState(1);
+  const [pasesAsignados, setPasesAsignados] =
+    useState(1);
 
-  const [error, setError] = useState("");
-  const [loadingSide, setLoadingSide] = useState("");
-  const [enviado, setEnviado] = useState(false);
-  const [urlError, setUrlError] = useState("");
+  const [datosDesdeGenerador, setDatosDesdeGenerador] =
+    useState(false);
+
+  const [mensajeInvitado, setMensajeInvitado] =
+    useState("");
+
+  const [asistencia, setAsistencia] =
+    useState("");
+
+  const [invitados, setInvitados] =
+    useState(1);
+
+  const [error, setError] =
+    useState("");
+
+  const [loadingSide, setLoadingSide] =
+    useState("");
+
+  const [enviado, setEnviado] =
+    useState(false);
+
+  const [urlError, setUrlError] =
+    useState("");
 
   /* =========================================
-     LEER Y DECODIFICAR URL
+     LEER Y DESENCRIPTAR DATOS DEL GENERADOR
   ========================================= */
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(
+      window.location.search
+    );
 
     const encodedId = params.get("id");
+
+    /*
+      Compatibilidad con invitaciones anteriores.
+    */
+
     const visibleName = params.get("nombre");
     const visiblePasses = params.get("pases");
 
     try {
       let invitationData = null;
 
+      /*
+        NUEVO FORMATO:
+        ?id=XXXXXXXX
+      */
+
       if (encodedId) {
-        invitationData = parseInvitationData(encodedId);
-      } else if (visibleName || visiblePasses) {
-        /*
-          Respaldo temporal para enlaces anteriores:
+        invitationData =
+          parseInvitationData(encodedId);
+      }
 
-          ?nombre=Familia%20López&pases=4
-        */
+      /*
+        FORMATO ANTERIOR:
+        ?nombre=Familia&pases=4
+      */
 
+      else if (visibleName || visiblePasses) {
         invitationData = {
           nombre: visibleName,
           pases: visiblePasses,
         };
       }
 
+      /*
+        Si entraron directamente a la página
+        sin enlace personalizado.
+      */
+
       if (!invitationData) {
         setDatosDesdeGenerador(false);
         return;
       }
+
+      /* ===============================
+         NOMBRE
+      =============================== */
 
       const decodedName =
         typeof invitationData.nombre === "string"
           ? invitationData.nombre.trim()
           : "";
 
-      /*
-        Aceptamos varias propiedades por compatibilidad:
-        pases, invitados, cantidad o lugares.
-      */
+      /* ===============================
+         PASES
+      =============================== */
 
       const decodedPasses = Number.parseInt(
         invitationData.pases ??
@@ -523,15 +553,30 @@ const Confirmacion = () => {
         setNombreInvitado(decodedName);
       }
 
-      if (!Number.isNaN(decodedPasses) && decodedPasses > 0) {
+      if (
+        !Number.isNaN(decodedPasses) &&
+        decodedPasses > 0
+      ) {
         setPasesAsignados(decodedPasses);
+
+        /*
+          Por defecto colocamos todos
+          los lugares asignados.
+        */
+
         setInvitados(decodedPasses);
       }
 
-      setDatosDesdeGenerador(Boolean(decodedName));
+      setDatosDesdeGenerador(
+        Boolean(decodedName)
+      );
+
       setUrlError("");
     } catch (decodeError) {
-      console.error("No se pudieron leer los datos del enlace:", decodeError);
+      console.error(
+        "No se pudieron leer los datos del enlace:",
+        decodeError
+      );
 
       setUrlError(
         "No pudimos reconocer los datos personalizados de esta invitación."
@@ -542,19 +587,28 @@ const Confirmacion = () => {
   }, []);
 
   /* =========================================
-     AJUSTAR ASISTENTES SEGÚN ASISTENCIA
+     AJUSTAR ASISTENTES
   ========================================= */
 
   useEffect(() => {
-    if (asistencia === "No podré asistir") {
+    if (
+      asistencia === "No podré asistir"
+    ) {
       setInvitados(0);
       return;
     }
 
-    if (asistencia === "Sí asistiré" && invitados < 1) {
+    if (
+      asistencia === "Sí asistiré" &&
+      invitados < 1
+    ) {
       setInvitados(1);
     }
   }, [asistencia, invitados]);
+
+  /* =========================================
+     OPCIONES DE PASES
+  ========================================= */
 
   const availablePasses = useMemo(() => {
     return Array.from(
@@ -566,20 +620,25 @@ const Confirmacion = () => {
   }, [pasesAsignados]);
 
   /* =========================================
-     MENSAJE DE WHATSAPP
+     MENSAJE WHATSAPP
   ========================================= */
 
-  const createWhatsAppMessage = (recipientName) => {
+  const createWhatsAppMessage = (
+    recipientName
+  ) => {
     const attendanceText =
       asistencia === "Sí asistiré"
         ? `Sí asistiré con ${invitados} ${
-            invitados === 1 ? "persona" : "personas"
+            invitados === 1
+              ? "persona"
+              : "personas"
           }.`
         : "Lamentablemente no podré asistir.";
 
-    const optionalMessage = mensajeInvitado.trim()
-      ? `\n\nMensaje: ${mensajeInvitado.trim()}`
-      : "";
+    const optionalMessage =
+      mensajeInvitado.trim()
+        ? `\n\nMensaje: ${mensajeInvitado.trim()}`
+        : "";
 
     return [
       `Hola ${recipientName}.`,
@@ -594,12 +653,16 @@ const Confirmacion = () => {
       .replace(/\n{3,}/g, "\n\n");
   };
 
-  const openWhatsApp = (phoneNumber, recipientName) => {
-    const message = createWhatsAppMessage(recipientName);
+  const openWhatsApp = (
+    phoneNumber,
+    recipientName
+  ) => {
+    const message =
+      createWhatsAppMessage(recipientName);
 
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
+    const whatsappUrl =
+      `https://wa.me/${phoneNumber}` +
+      `?text=${encodeURIComponent(message)}`;
 
     window.location.href = whatsappUrl;
   };
@@ -613,27 +676,47 @@ const Confirmacion = () => {
     phoneNumber,
     recipientName,
   }) => {
+    /*
+      Evita doble envío.
+    */
+
     if (loadingSide) return;
 
+    /* ===============================
+       VALIDACIONES
+    =============================== */
+
     if (!nombreInvitado.trim()) {
-      setError("Escribe el nombre del invitado.");
+      setError(
+        "No pudimos identificar el nombre de esta invitación."
+      );
+
       return;
     }
 
     if (!asistencia) {
-      setError("Selecciona si podrás acompañarnos.");
+      setError(
+        "Selecciona si podrás acompañarnos."
+      );
+
       return;
     }
 
     if (
       asistencia === "Sí asistiré" &&
-      (invitados < 1 || invitados > pasesAsignados)
+      (
+        invitados < 1 ||
+        invitados > pasesAsignados
+      )
     ) {
       setError(
         `Puedes confirmar entre 1 y ${pasesAsignados} ${
-          pasesAsignados === 1 ? "lugar" : "lugares"
+          pasesAsignados === 1
+            ? "lugar"
+            : "lugares"
         }.`
       );
+
       return;
     }
 
@@ -641,42 +724,63 @@ const Confirmacion = () => {
     setEnviado(false);
     setLoadingSide(side);
 
+    /* ===============================
+       INFORMACIÓN PARA GOOGLE SHEETS
+    =============================== */
+
     const confirmationData = {
       nombre: nombreInvitado.trim(),
+
       asistencia,
-      invitados: asistencia === "Sí asistiré" ? invitados : 0,
+
+      invitados:
+        asistencia === "Sí asistiré"
+          ? invitados
+          : 0,
+
       mensaje: mensajeInvitado.trim(),
+
       lado: side,
+
       pasesAsignados,
     };
 
     try {
       /*
-        No agregamos Content-Type: application/json porque la petición
-        utiliza mode: "no-cors".
+        No colocamos Content-Type JSON
+        porque utilizamos no-cors.
 
-        Apps Script puede leer el contenido mediante:
+        Apps Script recibe el JSON desde:
+
         e.postData.contents
       */
 
       await fetch(API_URL, {
         method: "POST",
         mode: "no-cors",
-        body: JSON.stringify(confirmationData),
+        body: JSON.stringify(
+          confirmationData
+        ),
       });
 
       setEnviado(true);
 
       /*
-        Conservamos nombre y pases porque vienen del generador.
-        Solo limpiamos la respuesta y el mensaje.
+        Esperamos un momento para que
+        el invitado vea la confirmación.
       */
 
       window.setTimeout(() => {
-        openWhatsApp(phoneNumber, recipientName);
+        openWhatsApp(
+          phoneNumber,
+          recipientName
+        );
       }, 650);
     } catch (requestError) {
-      console.error("Error enviando la confirmación:", requestError);
+      console.error(
+        "Error enviando la confirmación:",
+        requestError
+      );
 
       setError(
         "No pudimos enviar tu confirmación. Intenta nuevamente en unos momentos."
@@ -697,12 +801,12 @@ const Confirmacion = () => {
       whileInView="show"
       viewport={{
         once: true,
-        amount: 0.08,
+        amount: 0.05,
       }}
       className="
         relative
         flex
-        min-h-[820px]
+        min-h-[900px]
         w-full
         items-center
         justify-center
@@ -715,39 +819,12 @@ const Confirmacion = () => {
         lg:py-32
       "
       style={{
-        background: `
-          linear-gradient(
-            180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 56%,
-            ${palette.paperDark} 100%
-          )
-        `,
+        backgroundColor: palette.olive,
       }}
     >
-      {/* TEXTURA */}
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.16]
-        "
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(
-              0deg,
-              rgba(29,39,51,0.025) 0px,
-              rgba(29,39,51,0.025) 1px,
-              transparent 1px,
-              transparent 5px
-            )
-          `,
-        }}
-      />
-
-      {/* MARCOS */}
+      {/* =====================================
+          MARCO EXTERIOR
+      ===================================== */}
 
       <div
         className="
@@ -759,7 +836,8 @@ const Confirmacion = () => {
           lg:inset-10
         "
         style={{
-          borderColor: "rgba(164,134,84,0.25)",
+          borderColor:
+            "rgba(247,244,236,0.42)",
         }}
       />
 
@@ -773,11 +851,14 @@ const Confirmacion = () => {
           lg:inset-[46px]
         "
         style={{
-          borderColor: "rgba(164,134,84,0.1)",
+          borderColor:
+            "rgba(247,244,236,0.15)",
         }}
       />
 
-      {/* ESQUINAS */}
+      {/* =====================================
+          ESQUINAS
+      ===================================== */}
 
       <CornerOrnament
         className="
@@ -787,7 +868,7 @@ const Confirmacion = () => {
           top-6
           h-16
           w-16
-          text-[#A48654]/25
+          text-[#F7F4EC]/30
           sm:left-9
           sm:top-9
           sm:h-20
@@ -804,7 +885,7 @@ const Confirmacion = () => {
           h-16
           w-16
           rotate-90
-          text-[#A48654]/25
+          text-[#F7F4EC]/30
           sm:right-9
           sm:top-9
           sm:h-20
@@ -821,7 +902,7 @@ const Confirmacion = () => {
           h-16
           w-16
           -rotate-90
-          text-[#A48654]/25
+          text-[#F7F4EC]/30
           sm:bottom-9
           sm:left-9
           sm:h-20
@@ -838,7 +919,7 @@ const Confirmacion = () => {
           h-16
           w-16
           rotate-180
-          text-[#A48654]/25
+          text-[#F7F4EC]/30
           sm:bottom-9
           sm:right-9
           sm:h-20
@@ -846,7 +927,9 @@ const Confirmacion = () => {
         "
       />
 
-      {/* RAMAS */}
+      {/* =====================================
+          RAMAS
+      ===================================== */}
 
       <BotanicalBranch
         className="
@@ -854,13 +937,12 @@ const Confirmacion = () => {
           absolute
           -bottom-16
           -left-8
-          h-[250px]
-          w-[145px]
+          h-[260px]
+          w-[150px]
           -rotate-12
-          text-[#A48654]/10
-          sm:h-[310px]
-          sm:w-[180px]
-          lg:left-2
+          text-[#F7F4EC]/10
+          sm:h-[330px]
+          sm:w-[190px]
         "
       />
 
@@ -870,15 +952,18 @@ const Confirmacion = () => {
           absolute
           -right-8
           -top-16
-          h-[250px]
-          w-[145px]
+          h-[260px]
+          w-[150px]
           rotate-[168deg]
-          text-[#A48654]/10
-          sm:h-[310px]
-          sm:w-[180px]
-          lg:right-2
+          text-[#F7F4EC]/10
+          sm:h-[330px]
+          sm:w-[190px]
         "
       />
+
+      {/* =====================================
+          CONTENIDO
+      ===================================== */}
 
       <div
         className="
@@ -889,9 +974,25 @@ const Confirmacion = () => {
           max-w-5xl
         "
       >
-        {/* ENCABEZADO */}
+        {/* =================================
+            ENCABEZADO
+        ================================= */}
 
         <motion.div
+          initial={{
+            opacity: 0,
+            y: 18,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.9,
+          }}
           className="
             mx-auto
             mb-12
@@ -900,82 +1001,66 @@ const Confirmacion = () => {
             flex-col
             items-center
             text-center
-            sm:mb-16
+            sm:mb-14
           "
-          initial={{
-            opacity: 0,
-            y: 16,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.9,
-          }}
         >
-          <div
-            className="
-              flex
-              h-16
-              w-16
-              items-center
-              justify-center
-              rounded-full
-              border
-            "
-            style={{
-              color: palette.antiqueGoldDark,
-              borderColor: "rgba(164,134,84,0.42)",
-            }}
-          >
-            <EnvelopeIcon />
-          </div>
-
           <p
             className="
-              mt-7
               text-[8px]
               uppercase
-              tracking-[0.44em]
+              tracking-[0.42em]
               sm:text-[10px]
-              sm:tracking-[0.55em]
+              sm:tracking-[0.52em]
             "
             style={{
-              color: palette.antiqueGoldDark,
+              color:
+                "rgba(247,244,236,0.75)",
             }}
           >
             Nos encantará contar contigo
           </p>
 
           <div className="mt-5">
-            <DecorativeDivider />
+            <DecorativeDivider light />
           </div>
 
           <h2
             className="
               mt-7
-              font-serif
-              text-[39px]
+              font-cursiveDancing
+              text-[47px]
               font-normal
-              leading-tight
-              tracking-[-0.025em]
-              sm:text-[54px]
-              md:text-[64px]
+              leading-[1.05]
+              sm:text-[62px]
+              md:text-[70px]
             "
             style={{
-              color: palette.ink,
+              color: palette.ivory,
             }}
           >
-            Confirmación de asistencia
+            Confirmación
           </h2>
 
           <p
             className="
+              mt-2
+              font-serif
+              text-[22px]
+              tracking-[0.02em]
+              sm:text-[27px]
+            "
+            style={{
+              color: palette.white,
+            }}
+          >
+            de asistencia
+          </p>
+
+          <p
+            className="
               mx-auto
-              mt-5
-              max-w-2xl
+              mt-6
+              max-w-xl
               font-serif
               text-[14px]
               italic
@@ -983,17 +1068,39 @@ const Confirmacion = () => {
               sm:text-base
             "
             style={{
-              color: palette.warmGray,
+              color:
+                "rgba(247,244,236,0.78)",
             }}
           >
-            Por favor, confirma tu asistencia y ayúdanos a preparar cada
-            detalle de nuestra celebración.
+            Por favor, confirma tu
+            asistencia y ayúdanos a preparar
+            cada detalle de nuestra
+            celebración.
           </p>
         </motion.div>
 
-        {/* FORMULARIO */}
+        {/* =================================
+            TARJETA BLANCA
+        ================================= */}
 
         <motion.div
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.08,
+          }}
+          transition={{
+            duration: 0.95,
+            delay: 0.1,
+            ease: [0.22, 1, 0.36, 1],
+          }}
           className="
             relative
             mx-auto
@@ -1007,28 +1114,15 @@ const Confirmacion = () => {
             md:px-14
           "
           style={{
-            backgroundColor: "rgba(251,249,244,0.84)",
-            borderColor: "rgba(164,134,84,0.34)",
-            boxShadow: "0 24px 65px rgba(29,39,51,0.08)",
-          }}
-          initial={{
-            opacity: 0,
-            y: 22,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.12,
-          }}
-          transition={{
-            duration: 0.95,
-            delay: 0.12,
-            ease: [0.22, 1, 0.36, 1],
+            backgroundColor: palette.white,
+            borderColor:
+              "rgba(247,244,236,0.75)",
+            boxShadow:
+              "0 25px 70px rgba(20,25,14,0.16)",
           }}
         >
+          {/* Marco interior */}
+
           <div
             className="
               pointer-events-none
@@ -1037,93 +1131,102 @@ const Confirmacion = () => {
               border
             "
             style={{
-              borderColor: "rgba(164,134,84,0.12)",
+              borderColor:
+                "rgba(63,74,44,0.15)",
             }}
           />
 
           <div className="relative z-10">
-            {/* NOMBRE */}
 
-            <div>
-              <div className="flex items-center justify-between gap-4">
-                <label
-                  htmlFor="confirmation-name"
-                  className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.34em]
-                    sm:text-[9px]
-                  "
-                  style={{
-                    color: palette.antiqueGoldDark,
-                  }}
-                >
-                  Nombre del invitado
-                </label>
+            {/* =================================
+                INVITADO
+            ================================= */}
 
-                {datosDesdeGenerador && (
-                  <span
-                    className="
-                      inline-flex
-                      items-center
-                      gap-2
-                      text-[7px]
-                      uppercase
-                      tracking-[0.22em]
-                      sm:text-[8px]
-                    "
-                    style={{
-                      color: palette.warmGray,
-                    }}
-                  >
-                    <LockIcon />
-                    Invitación personalizada
-                  </span>
-                )}
-              </div>
-
-              <input
-                id="confirmation-name"
-                type="text"
-                value={nombreInvitado}
-                onChange={(event) => {
-                  if (!datosDesdeGenerador) {
-                    setNombreInvitado(event.target.value);
-                  }
-                }}
-                readOnly={datosDesdeGenerador}
-                placeholder="Nombre y apellido"
-                autoComplete="name"
+            <div className="text-center">
+              <p
                 className="
-                  mt-4
-                  w-full
-                  border
-                  bg-[#FBF9F4]
-                  px-5
-                  py-4
-                  font-serif
-                  text-base
-                  outline-none
-                  sm:text-lg
+                  text-[8px]
+                  uppercase
+                  tracking-[0.38em]
+                  sm:text-[9px]
                 "
                 style={{
-                  color: palette.ink,
-                  borderColor: "rgba(164,134,84,0.34)",
-                  cursor: datosDesdeGenerador ? "not-allowed" : "text",
+                  color: palette.olive,
                 }}
-              />
+              >
+                Invitación reservada para
+              </p>
+
+              <p
+                className="
+                  mt-4
+                  font-cursiveDancing
+                  text-[34px]
+                  leading-tight
+                  sm:text-[42px]
+                "
+                style={{
+                  color: palette.oliveDark,
+                }}
+              >
+                {nombreInvitado ||
+                  "Invitado especial"}
+              </p>
+
+              {datosDesdeGenerador && (
+                <p
+                  className="
+                    mt-3
+                    text-[8px]
+                    uppercase
+                    tracking-[0.24em]
+                  "
+                  style={{
+                    color: palette.gray,
+                  }}
+                >
+                  Invitación personalizada
+                </p>
+              )}
+
+              {datosDesdeGenerador && (
+                <div
+                  className="
+                    mx-auto
+                    mt-5
+                    inline-flex
+                    border
+                    px-5
+                    py-3
+                  "
+                  style={{
+                    borderColor:
+                      "rgba(63,74,44,0.22)",
+                    backgroundColor:
+                      palette.ivoryLight,
+                  }}
+                >
+                  <p
+                    className="
+                      font-serif
+                      text-[13px]
+                      italic
+                      sm:text-[14px]
+                    "
+                    style={{
+                      color: palette.gray,
+                    }}
+                  >
+                    {pasesAsignados === 1
+                      ? "1 lugar reservado"
+                      : `${pasesAsignados} lugares reservados`}
+                  </p>
+                </div>
+              )}
 
               <AnimatePresence>
                 {urlError && (
                   <motion.p
-                    className="
-                      mt-3
-                      text-[12px]
-                      leading-5
-                    "
-                    style={{
-                      color: palette.error,
-                    }}
                     initial={{
                       opacity: 0,
                       y: 4,
@@ -1135,6 +1238,15 @@ const Confirmacion = () => {
                     exit={{
                       opacity: 0,
                     }}
+                    className="
+                      mt-4
+                      font-serif
+                      text-[12px]
+                      leading-5
+                    "
+                    style={{
+                      color: palette.error,
+                    }}
                   >
                     {urlError}
                   </motion.p>
@@ -1142,7 +1254,9 @@ const Confirmacion = () => {
               </AnimatePresence>
             </div>
 
-            {/* ASISTENCIA */}
+            {/* =================================
+                ASISTENCIA
+            ================================= */}
 
             <div
               className="
@@ -1151,18 +1265,20 @@ const Confirmacion = () => {
                 pt-9
               "
               style={{
-                borderColor: "rgba(164,134,84,0.26)",
+                borderColor:
+                  "rgba(63,74,44,0.18)",
               }}
             >
               <p
                 className="
+                  text-center
                   text-[8px]
                   uppercase
                   tracking-[0.34em]
                   sm:text-[9px]
                 "
                 style={{
-                  color: palette.antiqueGoldDark,
+                  color: palette.olive,
                 }}
               >
                 ¿Podrás acompañarnos?
@@ -1194,19 +1310,14 @@ const Confirmacion = () => {
               </div>
             </div>
 
-            {/* PASES */}
+            {/* =================================
+                NÚMERO DE PERSONAS
+            ================================= */}
 
             <AnimatePresence>
-              {asistencia === "Sí asistiré" && (
+              {asistencia ===
+                "Sí asistiré" && (
                 <motion.div
-                  className="
-                    mt-9
-                    border-t
-                    pt-9
-                  "
-                  style={{
-                    borderColor: "rgba(164,134,84,0.26)",
-                  }}
                   initial={{
                     opacity: 0,
                     height: 0,
@@ -1219,18 +1330,35 @@ const Confirmacion = () => {
                     opacity: 0,
                     height: 0,
                   }}
+                  className="
+                    mt-9
+                    overflow-hidden
+                    border-t
+                    pt-9
+                  "
+                  style={{
+                    borderColor:
+                      "rgba(63,74,44,0.18)",
+                  }}
                 >
-                  <div className="flex items-center justify-between gap-4">
+                  <div
+                    className="
+                      flex
+                      items-center
+                      justify-between
+                      gap-4
+                    "
+                  >
                     <label
                       htmlFor="confirmation-passes"
                       className="
                         text-[8px]
                         uppercase
-                        tracking-[0.34em]
+                        tracking-[0.3em]
                         sm:text-[9px]
                       "
                       style={{
-                        color: palette.antiqueGoldDark,
+                        color: palette.olive,
                       }}
                     >
                       Personas que asistirán
@@ -1240,10 +1368,10 @@ const Confirmacion = () => {
                       className="
                         text-[8px]
                         uppercase
-                        tracking-[0.2em]
+                        tracking-[0.16em]
                       "
                       style={{
-                        color: palette.warmGray,
+                        color: palette.gray,
                       }}
                     >
                       Máximo {pasesAsignados}
@@ -1254,14 +1382,18 @@ const Confirmacion = () => {
                     id="confirmation-passes"
                     value={invitados}
                     onChange={(event) =>
-                      setInvitados(Number(event.target.value))
+                      setInvitados(
+                        Number(
+                          event.target.value
+                        )
+                      )
                     }
                     className="
                       mt-4
                       w-full
                       appearance-none
                       border
-                      bg-[#FBF9F4]
+                      bg-white
                       px-5
                       py-4
                       text-center
@@ -1272,15 +1404,23 @@ const Confirmacion = () => {
                     "
                     style={{
                       color: palette.ink,
-                      borderColor: "rgba(164,134,84,0.34)",
+                      borderColor:
+                        "rgba(63,74,44,0.28)",
                     }}
                   >
-                    {availablePasses.map((passNumber) => (
-                      <option key={passNumber} value={passNumber}>
-                        {passNumber}{" "}
-                        {passNumber === 1 ? "persona" : "personas"}
-                      </option>
-                    ))}
+                    {availablePasses.map(
+                      (passNumber) => (
+                        <option
+                          key={passNumber}
+                          value={passNumber}
+                        >
+                          {passNumber}{" "}
+                          {passNumber === 1
+                            ? "persona"
+                            : "personas"}
+                        </option>
+                      )
+                    )}
                   </select>
 
                   <p
@@ -1293,19 +1433,22 @@ const Confirmacion = () => {
                       sm:text-[13px]
                     "
                     style={{
-                      color: palette.warmGray,
+                      color: palette.gray,
                     }}
                   >
                     Esta invitación tiene{" "}
                     {pasesAsignados === 1
                       ? "1 lugar reservado"
-                      : `${pasesAsignados} lugares reservados`}.
+                      : `${pasesAsignados} lugares reservados`}
+                    .
                   </p>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* MENSAJE */}
+            {/* =================================
+                MENSAJE
+            ================================= */}
 
             <div
               className="
@@ -1314,7 +1457,8 @@ const Confirmacion = () => {
                 pt-9
               "
               style={{
-                borderColor: "rgba(164,134,84,0.26)",
+                borderColor:
+                  "rgba(63,74,44,0.18)",
               }}
             >
               <label
@@ -1326,7 +1470,7 @@ const Confirmacion = () => {
                   sm:text-[9px]
                 "
                 style={{
-                  color: palette.antiqueGoldDark,
+                  color: palette.olive,
                 }}
               >
                 Mensaje para los novios
@@ -1335,18 +1479,25 @@ const Confirmacion = () => {
               <textarea
                 id="confirmation-message"
                 value={mensajeInvitado}
-                onChange={(event) =>
-                  setMensajeInvitado(event.target.value)
-                }
-                placeholder="Escribe un mensaje especial (opcional)"
+                onChange={(event) => {
+                  if (
+                    event.target.value.length <=
+                    500
+                  ) {
+                    setMensajeInvitado(
+                      event.target.value
+                    );
+                  }
+                }}
                 rows={4}
                 maxLength={500}
+                placeholder="Escribe un mensaje para Eimy & Soni..."
                 className="
                   mt-4
                   w-full
                   resize-none
                   border
-                  bg-[#FBF9F4]
+                  bg-white
                   px-5
                   py-4
                   font-serif
@@ -1357,7 +1508,8 @@ const Confirmacion = () => {
                 "
                 style={{
                   color: palette.ink,
-                  borderColor: "rgba(164,134,84,0.34)",
+                  borderColor:
+                    "rgba(63,74,44,0.28)",
                 }}
               />
 
@@ -1368,19 +1520,32 @@ const Confirmacion = () => {
                   text-[10px]
                 "
                 style={{
-                  color: palette.warmGray,
+                  color: palette.gray,
                 }}
               >
                 {mensajeInvitado.length}/500
               </p>
             </div>
 
-            {/* MENSAJES */}
+            {/* =================================
+                ERROR / ÉXITO
+            ================================= */}
 
             <AnimatePresence mode="wait">
               {error && (
                 <motion.div
                   key="confirmation-error"
+                  initial={{
+                    opacity: 0,
+                    y: 5,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                  }}
                   className="
                     mt-7
                     border
@@ -1393,9 +1558,19 @@ const Confirmacion = () => {
                   "
                   style={{
                     color: palette.error,
-                    borderColor: "rgba(139,58,58,0.3)",
-                    backgroundColor: "rgba(139,58,58,0.045)",
+                    borderColor:
+                      "rgba(139,58,58,0.30)",
+                    backgroundColor:
+                      "rgba(139,58,58,0.045)",
                   }}
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              {enviado && !error && (
+                <motion.div
+                  key="confirmation-success"
                   initial={{
                     opacity: 0,
                     y: 5,
@@ -1407,14 +1582,6 @@ const Confirmacion = () => {
                   exit={{
                     opacity: 0,
                   }}
-                >
-                  {error}
-                </motion.div>
-              )}
-
-              {enviado && !error && (
-                <motion.div
-                  key="confirmation-success"
                   className="
                     mt-7
                     flex
@@ -1431,28 +1598,23 @@ const Confirmacion = () => {
                   "
                   style={{
                     color: palette.success,
-                    borderColor: "rgba(73,100,77,0.3)",
-                    backgroundColor: "rgba(73,100,77,0.05)",
-                  }}
-                  initial={{
-                    opacity: 0,
-                    y: 5,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
+                    borderColor:
+                      "rgba(73,100,77,0.30)",
+                    backgroundColor:
+                      "rgba(73,100,77,0.05)",
                   }}
                 >
                   <CheckIcon />
-                  Confirmación registrada. Abriendo WhatsApp…
+
+                  Confirmación registrada.
+                  Abriendo WhatsApp…
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* BOTONES */}
+            {/* =================================
+                BOTONES
+            ================================= */}
 
             <div
               className="
@@ -1462,39 +1624,27 @@ const Confirmacion = () => {
                 sm:grid-cols-2
               "
             >
+              {/* NOVIA */}
+
               <motion.button
                 type="button"
+                disabled={Boolean(
+                  loadingSide
+                )}
                 onClick={() =>
                   enviarConfirmacion({
                     side: "Novia",
-                    phoneNumber: NUMERO_NOVIA,
-                    recipientName: NOMBRE_NOVIA,
+                    phoneNumber:
+                      NUMERO_NOVIA,
+                    recipientName:
+                      NOMBRE_NOVIA,
                   })
                 }
-                disabled={Boolean(loadingSide)}
-                className="
-                  inline-flex
-                  min-h-[58px]
-                  items-center
-                  justify-center
-                  gap-3
-                  border
-                  px-5
-                  py-4
-                  disabled:cursor-not-allowed
-                  disabled:opacity-60
-                "
-                style={{
-                  backgroundColor: palette.ink,
-                  borderColor: palette.ink,
-                  color: palette.paperLight,
-                }}
                 whileHover={
                   loadingSide
                     ? undefined
                     : {
                         y: -2,
-                        backgroundColor: palette.inkSoft,
                       }
                 }
                 whileTap={
@@ -1504,8 +1654,27 @@ const Confirmacion = () => {
                         scale: 0.985,
                       }
                 }
+                className="
+                  inline-flex
+                  min-h-[58px]
+                  items-center
+                  justify-center
+                  border
+                  px-5
+                  py-4
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+                "
+                style={{
+                  backgroundColor:
+                    palette.olive,
+                  borderColor:
+                    palette.olive,
+                  color: palette.white,
+                }}
               >
-                {loadingSide === "Novia" ? (
+                {loadingSide ===
+                "Novia" ? (
                   <span
                     className="
                       h-4
@@ -1518,56 +1687,54 @@ const Confirmacion = () => {
                     "
                   />
                 ) : (
-                  <WhatsAppIcon />
+                  <span
+                    className="
+                      text-[8px]
+                      uppercase
+                      tracking-[0.24em]
+                      sm:text-[9px]
+                    "
+                  >
+                    Confirmar con Eimy
+                  </span>
                 )}
 
-                <span
-                  className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.24em]
-                    sm:text-[9px]
-                  "
-                >
-                  {loadingSide === "Novia"
-                    ? "Enviando"
-                    : `Confirmar con ${NOMBRE_NOVIA}`}
-                </span>
+                {loadingSide ===
+                  "Novia" && (
+                  <span
+                    className="
+                      ml-3
+                      text-[8px]
+                      uppercase
+                      tracking-[0.24em]
+                    "
+                  >
+                    Enviando
+                  </span>
+                )}
               </motion.button>
+
+              {/* NOVIO */}
 
               <motion.button
                 type="button"
+                disabled={Boolean(
+                  loadingSide
+                )}
                 onClick={() =>
                   enviarConfirmacion({
                     side: "Novio",
-                    phoneNumber: NUMERO_NOVIO,
-                    recipientName: NOMBRE_NOVIO,
+                    phoneNumber:
+                      NUMERO_NOVIO,
+                    recipientName:
+                      NOMBRE_NOVIO,
                   })
                 }
-                disabled={Boolean(loadingSide)}
-                className="
-                  inline-flex
-                  min-h-[58px]
-                  items-center
-                  justify-center
-                  gap-3
-                  border
-                  px-5
-                  py-4
-                  disabled:cursor-not-allowed
-                  disabled:opacity-60
-                "
-                style={{
-                  backgroundColor: palette.paperLight,
-                  borderColor: palette.ink,
-                  color: palette.ink,
-                }}
                 whileHover={
                   loadingSide
                     ? undefined
                     : {
                         y: -2,
-                        backgroundColor: palette.paper,
                       }
                 }
                 whileTap={
@@ -1577,35 +1744,63 @@ const Confirmacion = () => {
                         scale: 0.985,
                       }
                 }
+                className="
+                  inline-flex
+                  min-h-[58px]
+                  items-center
+                  justify-center
+                  border
+                  px-5
+                  py-4
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+                "
+                style={{
+                  backgroundColor:
+                    palette.white,
+                  borderColor:
+                    palette.olive,
+                  color: palette.olive,
+                }}
               >
-                {loadingSide === "Novio" ? (
+                {loadingSide ===
+                "Novio" ? (
+                  <>
+                    <span
+                      className="
+                        h-4
+                        w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-[#3F4A2C]/25
+                        border-t-[#3F4A2C]
+                      "
+                    />
+
+                    <span
+                      className="
+                        ml-3
+                        text-[8px]
+                        uppercase
+                        tracking-[0.24em]
+                      "
+                    >
+                      Enviando
+                    </span>
+                  </>
+                ) : (
                   <span
                     className="
-                      h-4
-                      w-4
-                      animate-spin
-                      rounded-full
-                      border-2
-                      border-[#1D2733]/25
-                      border-t-[#1D2733]
+                      text-[8px]
+                      uppercase
+                      tracking-[0.24em]
+                      sm:text-[9px]
                     "
-                  />
-                ) : (
-                  <WhatsAppIcon />
+                  >
+                    Confirmar con Soni
+                  </span>
                 )}
-
-                <span
-                  className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.24em]
-                    sm:text-[9px]
-                  "
-                >
-                  {loadingSide === "Novio"
-                    ? "Enviando"
-                    : `Confirmar con ${NOMBRE_NOVIO}`}
-                </span>
               </motion.button>
             </div>
 
@@ -1622,12 +1817,24 @@ const Confirmacion = () => {
                 sm:text-[13px]
               "
               style={{
-                color: palette.warmGray,
+                color: palette.gray,
               }}
             >
-              Al confirmar, registraremos tu respuesta y te dirigiremos a
-              WhatsApp para enviar el mensaje correspondiente.
+              Al confirmar, registraremos tu
+              respuesta y te dirigiremos a
+              WhatsApp para enviar el mensaje
+              correspondiente.
             </p>
+
+            {/* =================================
+                CIERRE
+            ================================= */}
+
+            <div className="mt-10">
+              <DecorativeDivider />
+
+
+            </div>
           </div>
         </motion.div>
       </div>
