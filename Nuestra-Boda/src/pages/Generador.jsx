@@ -33,7 +33,7 @@ function CopyIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <rect x="9" y="9" width="11" height="11" rx="1.5" />
@@ -51,7 +51,7 @@ function LinkIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <path d="M10 13a5 5 0 0 0 7.07.07l2-2a5 5 0 0 0-7.07-7.07l-1.15 1.15" />
@@ -69,7 +69,7 @@ function CheckIcon() {
       strokeWidth="1.7"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <path d="m5 12 4 4L19 6" />
@@ -87,19 +87,19 @@ function Divider({ light = false }) {
     : "rgba(63,74,44,0.35)";
 
   return (
-    <div className="flex items-center justify-center gap-3">
+    <div className="flex w-full items-center justify-center gap-3">
       <span
-        className="h-px w-10 sm:w-14"
+        className="h-px w-8 sm:w-14"
         style={{ backgroundColor: color }}
       />
 
       <span
-        className="h-[5px] w-[5px] rotate-45 border"
+        className="h-[5px] w-[5px] shrink-0 rotate-45 border"
         style={{ borderColor: color }}
       />
 
       <span
-        className="h-px w-10 sm:w-14"
+        className="h-px w-8 sm:w-14"
         style={{ backgroundColor: color }}
       />
     </div>
@@ -163,9 +163,7 @@ export default function Generador() {
   /* =========================================
      CREAR ID CIFRADO
 
-     IMPORTANTE:
-     Este formato coincide con Portada.jsx
-     y Confirmacion.jsx:
+     MISMO FORMATO DE PORTADA Y CONFIRMACIÓN:
 
      JSON
        ↓
@@ -190,11 +188,8 @@ export default function Generador() {
       .join("");
 
     /*
-      btoa funciona correctamente para los
-      nombres habituales.
-
-      encodeURIComponent/unescape permite
-      soportar acentos y caracteres UTF-8.
+      Convierte correctamente caracteres UTF-8
+      antes de utilizar btoa.
     */
 
     const textoUtf8 = unescape(
@@ -204,16 +199,24 @@ export default function Generador() {
     const base64 = btoa(textoUtf8);
 
     /*
-      Base64 seguro para URL:
-      + -> -
-      / -> _
-      eliminamos =
+      Base64 seguro para URL.
     */
 
     return base64
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/g, "");
+  };
+
+  /* =========================================
+     LIMPIAR RESULTADO ANTERIOR
+  ========================================= */
+
+  const limpiarResultado = () => {
+    setLink("");
+    setMensaje("");
+    setLinkCopiado(false);
+    setMensajeCopiado(false);
   };
 
   /* =========================================
@@ -245,34 +248,25 @@ export default function Generador() {
       return;
     }
 
-    /* ===============================
-       CREAR ID
-    =============================== */
-
     const id = crearId(
       nombreLimpio,
       numeroPases
     );
 
     /*
-      Genera:
-
-      https://tusitio.com/?id=XXXXXXXX
-
-      NO aparecerán:
-      ?nombre=
-      ?pases=
+      El nombre y los pases NO aparecen
+      visibles en la URL.
     */
 
-    const url = `${window.location.origin}/?id=${encodeURIComponent(
-      id
-    )}`;
+    const url = `${
+      window.location.origin
+    }/?id=${encodeURIComponent(id)}`;
 
     setLink(url);
 
-    /* ===============================
+    /* =====================================
        MENSAJE WHATSAPP
-    =============================== */
+    ===================================== */
 
     const textoPases =
       numeroPases === 1
@@ -319,6 +313,8 @@ Eimy & Soni 🤍`;
         textarea.value = texto;
 
         textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "0";
         textarea.style.opacity = "0";
 
         document.body.appendChild(textarea);
@@ -395,14 +391,16 @@ Eimy & Soni 🤍`;
       : `${pasesPreview} LUGARES`;
 
   /* =========================================
-     PREVIEW DEL LINK
+     ID DEL LINK
   ========================================= */
 
   const idPreview = useMemo(() => {
     if (!link) return "";
 
     try {
-      return new URL(link).searchParams.get("id") || "";
+      return (
+        new URL(link).searchParams.get("id") || ""
+      );
     } catch {
       return "";
     }
@@ -414,9 +412,10 @@ Eimy & Soni 🤍`;
         relative
         min-h-screen
         w-full
-        overflow-hidden
-        px-4
-        py-10
+        max-w-full
+        overflow-x-hidden
+        px-3
+        py-8
         sm:px-6
         sm:py-14
         lg:px-10
@@ -435,7 +434,8 @@ Eimy & Soni 🤍`;
         className="
           pointer-events-none
           fixed
-          inset-4
+          inset-2
+          z-0
           border
           sm:inset-7
         "
@@ -449,7 +449,8 @@ Eimy & Soni 🤍`;
         className="
           pointer-events-none
           fixed
-          inset-[21px]
+          inset-[12px]
+          z-0
           border
           sm:inset-[34px]
         "
@@ -467,10 +468,11 @@ Eimy & Soni 🤍`;
         className="
           pointer-events-none
           fixed
-          left-5
-          top-5
-          h-14
-          w-14
+          left-3
+          top-3
+          z-0
+          h-10
+          w-10
           text-[#F7F4EC]/25
           sm:left-8
           sm:top-8
@@ -483,10 +485,11 @@ Eimy & Soni 🤍`;
         className="
           pointer-events-none
           fixed
-          right-5
-          top-5
-          h-14
-          w-14
+          right-3
+          top-3
+          z-0
+          h-10
+          w-10
           rotate-90
           text-[#F7F4EC]/25
           sm:right-8
@@ -505,16 +508,19 @@ Eimy & Soni 🤍`;
           relative
           z-10
           mx-auto
-          mb-12
+          mb-8
+          w-full
           max-w-3xl
+          px-3
           text-center
+          sm:mb-12
         "
       >
         <p
           className="
-            text-[8px]
+            text-[7px]
             uppercase
-            tracking-[0.42em]
+            tracking-[0.30em]
             sm:text-[10px]
             sm:tracking-[0.52em]
           "
@@ -526,17 +532,18 @@ Eimy & Soni 🤍`;
           Eimy & Soni
         </p>
 
-        <div className="mt-5">
+        <div className="mt-4 sm:mt-5">
           <Divider light />
         </div>
 
         <h1
           className="
-            mt-7
+            mt-5
             font-cursiveDancing
-            text-[45px]
+            text-[39px]
             font-normal
             leading-none
+            sm:mt-7
             sm:text-[60px]
           "
           style={{
@@ -548,9 +555,10 @@ Eimy & Soni 🤍`;
 
         <p
           className="
-            mt-3
+            mt-2
             font-serif
-            text-xl
+            text-lg
+            sm:mt-3
             sm:text-2xl
           "
         >
@@ -560,13 +568,16 @@ Eimy & Soni 🤍`;
         <p
           className="
             mx-auto
-            mt-5
+            mt-4
             max-w-xl
+            px-2
             font-serif
-            text-[13px]
+            text-[12px]
             italic
-            leading-6
+            leading-5
+            sm:mt-5
             sm:text-sm
+            sm:leading-6
           "
           style={{
             color:
@@ -579,7 +590,10 @@ Eimy & Soni 🤍`;
       </header>
 
       {/* =====================================
-          GRID
+          GRID PRINCIPAL
+
+          CELULAR: 1 COLUMNA
+          ESCRITORIO: 2 COLUMNAS
       ===================================== */}
 
       <div
@@ -588,10 +602,13 @@ Eimy & Soni 🤍`;
           z-10
           mx-auto
           grid
+          w-full
+          min-w-0
           max-w-6xl
+          grid-cols-1
           items-start
           gap-8
-          lg:grid-cols-[0.92fr_1.08fr]
+          lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]
           lg:gap-10
         "
       >
@@ -601,24 +618,33 @@ Eimy & Soni 🤍`;
 
         <section
           className="
+            w-full
+            min-w-0
+            overflow-hidden
             border
-            p-5
+            p-4
             sm:p-8
           "
           style={{
             backgroundColor: palette.white,
+
             borderColor:
               "rgba(247,244,236,0.55)",
+
             color: palette.ink,
+
             boxShadow:
               "0 22px 60px rgba(20,25,14,0.18)",
           }}
         >
           <p
             className="
-              text-[8px]
+              break-words
+              text-[7px]
               uppercase
-              tracking-[0.34em]
+              tracking-[0.22em]
+              sm:text-[8px]
+              sm:tracking-[0.34em]
             "
             style={{
               color: palette.olive,
@@ -631,7 +657,8 @@ Eimy & Soni 🤍`;
             className="
               mt-3
               font-serif
-              text-2xl
+              text-[22px]
+              leading-tight
               sm:text-3xl
             "
             style={{
@@ -647,15 +674,17 @@ Eimy & Soni 🤍`;
 
           {/* NOMBRE */}
 
-          <div className="mt-8">
+          <div className="mt-7 sm:mt-8">
             <label
               htmlFor="generator-name"
               className="
                 mb-2
                 block
-                text-[9px]
+                text-[8px]
                 uppercase
-                tracking-[0.25em]
+                tracking-[0.18em]
+                sm:text-[9px]
+                sm:tracking-[0.25em]
               "
               style={{
                 color: palette.gray,
@@ -671,30 +700,26 @@ Eimy & Soni 🤍`;
               value={nombre}
               onChange={(e) => {
                 setNombre(e.target.value);
-
-                /*
-                  Si cambian los datos,
-                  eliminamos el link anterior
-                  para evitar enviar uno viejo.
-                */
-
-                setLink("");
-                setMensaje("");
-                setLinkCopiado(false);
-                setMensajeCopiado(false);
+                limpiarResultado();
               }}
               className="
+                block
                 w-full
+                min-w-0
+                max-w-full
                 border
                 bg-white
-                px-4
-                py-4
+                px-3
+                py-3.5
                 font-serif
-                text-[15px]
+                text-[16px]
                 outline-none
                 transition
                 placeholder:text-gray-400
                 focus:ring-1
+                sm:px-4
+                sm:py-4
+                sm:text-[15px]
               "
               style={{
                 borderColor:
@@ -711,9 +736,11 @@ Eimy & Soni 🤍`;
               className="
                 mb-2
                 block
-                text-[9px]
+                text-[8px]
                 uppercase
-                tracking-[0.25em]
+                tracking-[0.18em]
+                sm:text-[9px]
+                sm:tracking-[0.25em]
               "
               style={{
                 color: palette.gray,
@@ -730,22 +757,25 @@ Eimy & Soni 🤍`;
               value={pases}
               onChange={(e) => {
                 setPases(e.target.value);
-                setLink("");
-                setMensaje("");
-                setLinkCopiado(false);
-                setMensajeCopiado(false);
+                limpiarResultado();
               }}
               className="
+                block
                 w-full
+                min-w-0
+                max-w-full
                 border
                 bg-white
-                px-4
-                py-4
+                px-3
+                py-3.5
                 font-serif
-                text-[15px]
+                text-[16px]
                 outline-none
                 transition
                 focus:ring-1
+                sm:px-4
+                sm:py-4
+                sm:text-[15px]
               "
               style={{
                 borderColor:
@@ -760,17 +790,26 @@ Eimy & Soni 🤍`;
             type="button"
             onClick={generarLink}
             className="
-              mt-7
+              mt-6
+              flex
               w-full
+              min-w-0
+              items-center
+              justify-center
               border
-              px-6
+              px-3
               py-4
-              text-[9px]
+              text-center
+              text-[8px]
               uppercase
-              tracking-[0.27em]
+              tracking-[0.16em]
               transition
               hover:opacity-90
               active:scale-[0.99]
+              sm:mt-7
+              sm:px-6
+              sm:text-[9px]
+              sm:tracking-[0.27em]
             "
             style={{
               backgroundColor: palette.olive,
@@ -788,9 +827,14 @@ Eimy & Soni 🤍`;
           {link && (
             <div
               className="
-                mt-8
+                mt-7
+                min-w-0
+                max-w-full
+                overflow-hidden
                 border-t
-                pt-7
+                pt-6
+                sm:mt-8
+                sm:pt-7
               "
               style={{
                 borderColor:
@@ -800,6 +844,7 @@ Eimy & Soni 🤍`;
               <div
                 className="
                   flex
+                  min-w-0
                   items-center
                   gap-2
                 "
@@ -808,9 +853,13 @@ Eimy & Soni 🤍`;
 
                 <p
                   className="
-                    text-[8px]
+                    min-w-0
+                    break-words
+                    text-[7px]
                     uppercase
-                    tracking-[0.28em]
+                    tracking-[0.16em]
+                    sm:text-[8px]
+                    sm:tracking-[0.28em]
                   "
                   style={{
                     color: palette.olive,
@@ -823,12 +872,20 @@ Eimy & Soni 🤍`;
               <div
                 className="
                   mt-3
+                  block
+                  w-full
+                  min-w-0
+                  max-w-full
+                  overflow-hidden
                   break-all
                   border
-                  p-4
+                  p-3
                   font-mono
-                  text-[11px]
-                  leading-5
+                  text-[9px]
+                  leading-[1.55]
+                  sm:p-4
+                  sm:text-[11px]
+                  sm:leading-5
                 "
                 style={{
                   backgroundColor:
@@ -838,6 +895,9 @@ Eimy & Soni 🤍`;
                     "rgba(63,74,44,0.20)",
 
                   color: palette.gray,
+
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-all",
                 }}
               >
                 {link}
@@ -846,18 +906,20 @@ Eimy & Soni 🤍`;
               <p
                 className="
                   mt-3
+                  max-w-full
+                  break-words
                   font-serif
-                  text-[11px]
+                  text-[10px]
                   italic
                   leading-5
+                  sm:text-[11px]
                 "
                 style={{
                   color: palette.gray,
                 }}
               >
-                El nombre y el número de
-                lugares no aparecen visibles
-                en la URL.
+                El nombre y el número de lugares no
+                aparecen visibles en la URL.
               </p>
 
               <button
@@ -867,33 +929,39 @@ Eimy & Soni 🤍`;
                   mt-4
                   flex
                   w-full
+                  min-w-0
                   items-center
                   justify-center
                   gap-2
                   border
-                  px-5
+                  px-3
                   py-3.5
-                  text-[9px]
+                  text-center
+                  text-[8px]
                   uppercase
-                  tracking-[0.23em]
+                  tracking-[0.15em]
                   transition
                   hover:bg-black/[0.025]
+                  sm:px-5
+                  sm:text-[9px]
+                  sm:tracking-[0.23em]
                 "
                 style={{
                   borderColor:
                     palette.olive,
+
                   color: palette.olive,
                 }}
               >
                 {linkCopiado ? (
                   <>
                     <CheckIcon />
-                    Link copiado
+                    <span>Link copiado</span>
                   </>
                 ) : (
                   <>
                     <CopyIcon />
-                    Copiar link
+                    <span>Copiar link</span>
                   </>
                 )}
               </button>
@@ -907,9 +975,14 @@ Eimy & Soni 🤍`;
           {link && (
             <div
               className="
-                mt-8
+                mt-7
+                min-w-0
+                max-w-full
+                overflow-hidden
                 border-t
-                pt-7
+                pt-6
+                sm:mt-8
+                sm:pt-7
               "
               style={{
                 borderColor:
@@ -918,9 +991,12 @@ Eimy & Soni 🤍`;
             >
               <p
                 className="
-                  text-[8px]
+                  break-words
+                  text-[7px]
                   uppercase
-                  tracking-[0.28em]
+                  tracking-[0.16em]
+                  sm:text-[8px]
+                  sm:tracking-[0.28em]
                 "
                 style={{
                   color: palette.olive,
@@ -933,16 +1009,17 @@ Eimy & Soni 🤍`;
                 className="
                   mt-2
                   font-serif
-                  text-[12px]
+                  text-[11px]
                   italic
                   leading-5
+                  sm:text-[12px]
                 "
                 style={{
                   color: palette.gray,
                 }}
               >
-                Puedes editar el mensaje antes
-                de copiarlo.
+                Puedes editar el mensaje antes de
+                copiarlo.
               </p>
 
               <textarea
@@ -953,21 +1030,31 @@ Eimy & Soni 🤍`;
                 rows={14}
                 className="
                   mt-4
+                  block
                   w-full
+                  min-w-0
+                  max-w-full
                   resize-y
+                  overflow-x-hidden
                   border
                   bg-white
-                  p-4
+                  p-3
                   font-serif
-                  text-[13px]
+                  text-[16px]
                   leading-6
                   outline-none
                   focus:ring-1
+                  sm:p-4
+                  sm:text-[13px]
                 "
                 style={{
                   borderColor:
                     "rgba(63,74,44,0.28)",
+
                   color: palette.ink,
+
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
                 }}
               />
 
@@ -978,17 +1065,22 @@ Eimy & Soni 🤍`;
                   mt-3
                   flex
                   w-full
+                  min-w-0
                   items-center
                   justify-center
                   gap-2
                   border
-                  px-6
+                  px-3
                   py-4
-                  text-[9px]
+                  text-center
+                  text-[8px]
                   uppercase
-                  tracking-[0.24em]
+                  tracking-[0.13em]
                   transition
                   hover:opacity-90
+                  sm:px-6
+                  sm:text-[9px]
+                  sm:tracking-[0.24em]
                 "
                 style={{
                   backgroundColor:
@@ -1003,12 +1095,15 @@ Eimy & Soni 🤍`;
                 {mensajeCopiado ? (
                   <>
                     <CheckIcon />
-                    Mensaje copiado
+                    <span>Mensaje copiado</span>
                   </>
                 ) : (
                   <>
                     <CopyIcon />
-                    Copiar mensaje para WhatsApp
+
+                    <span className="leading-4">
+                      Copiar mensaje para WhatsApp
+                    </span>
                   </>
                 )}
               </button>
@@ -1023,18 +1118,33 @@ Eimy & Soni 🤍`;
         <section
           className="
             flex
+            w-full
+            min-w-0
+            max-w-full
             flex-col
             items-center
+            overflow-hidden
             lg:sticky
             lg:top-8
           "
         >
-          <div className="mb-5 text-center">
+          <div
+            className="
+              mb-4
+              w-full
+              min-w-0
+              px-2
+              text-center
+              sm:mb-5
+            "
+          >
             <p
               className="
-                text-[8px]
+                text-[7px]
                 uppercase
-                tracking-[0.34em]
+                tracking-[0.20em]
+                sm:text-[8px]
+                sm:tracking-[0.34em]
               "
               style={{
                 color:
@@ -1046,9 +1156,13 @@ Eimy & Soni 🤍`;
 
             <h2
               className="
+                mx-auto
                 mt-2
+                max-w-full
+                break-words
                 font-cursiveDancing
-                text-[35px]
+                text-[30px]
+                leading-tight
                 sm:text-[40px]
               "
               style={{
@@ -1066,15 +1180,20 @@ Eimy & Soni 🤍`;
           <div
             className="
               relative
+              mx-auto
               w-full
-              max-w-[430px]
+              min-w-0
+              max-w-[340px]
               overflow-hidden
               border
-              p-2
+              p-1.5
+              min-[390px]:max-w-[360px]
+              sm:max-w-[430px]
               sm:p-3
             "
             style={{
               backgroundColor: palette.ivory,
+
               borderColor:
                 "rgba(247,244,236,0.50)",
 
@@ -1087,6 +1206,7 @@ Eimy & Soni 🤍`;
                 relative
                 aspect-[9/16]
                 w-full
+                min-w-0
                 overflow-hidden
               "
               style={{
@@ -1121,13 +1241,14 @@ Eimy & Soni 🤍`;
                 }}
               />
 
-              {/* MARCO */}
+              {/* MARCOS */}
 
               <div
                 className="
                   absolute
-                  inset-4
+                  inset-3
                   border
+                  sm:inset-4
                 "
                 style={{
                   borderColor:
@@ -1138,8 +1259,9 @@ Eimy & Soni 🤍`;
               <div
                 className="
                   absolute
-                  inset-[20px]
+                  inset-[16px]
                   border
+                  sm:inset-[20px]
                 "
                 style={{
                   borderColor:
@@ -1154,22 +1276,27 @@ Eimy & Soni 🤍`;
                   absolute
                   inset-0
                   flex
+                  min-w-0
                   flex-col
                   items-center
                   justify-between
-                  px-8
-                  py-14
+                  px-5
+                  py-9
                   text-center
+                  sm:px-8
+                  sm:py-14
                 "
               >
                 {/* ARRIBA */}
 
-                <div>
+                <div className="w-full min-w-0">
                   <p
                     className="
-                      text-[7px]
+                      text-[6px]
                       uppercase
-                      tracking-[0.38em]
+                      tracking-[0.24em]
+                      sm:text-[7px]
+                      sm:tracking-[0.38em]
                     "
                     style={{
                       color:
@@ -1181,11 +1308,14 @@ Eimy & Soni 🤍`;
 
                   <p
                     className="
-                      mt-5
+                      mt-3
                       font-serif
-                      text-[12px]
+                      text-[10px]
                       uppercase
-                      tracking-[0.20em]
+                      tracking-[0.15em]
+                      sm:mt-5
+                      sm:text-[12px]
+                      sm:tracking-[0.20em]
                     "
                     style={{
                       color: palette.ivory,
@@ -1197,12 +1327,14 @@ Eimy & Soni 🤍`;
 
                 {/* CENTRO */}
 
-                <div>
+                <div className="w-full min-w-0">
                   <p
                     className="
+                      break-words
                       font-cursiveDancing
-                      text-[49px]
+                      text-[39px]
                       leading-[0.9]
+                      sm:text-[49px]
                     "
                     style={{
                       color: palette.white,
@@ -1218,8 +1350,9 @@ Eimy & Soni 🤍`;
                     className="
                       my-1
                       font-serif
-                      text-[13px]
+                      text-[11px]
                       italic
+                      sm:text-[13px]
                     "
                     style={{
                       color:
@@ -1231,9 +1364,11 @@ Eimy & Soni 🤍`;
 
                   <p
                     className="
+                      break-words
                       font-cursiveDancing
-                      text-[49px]
+                      text-[39px]
                       leading-[0.9]
+                      sm:text-[49px]
                     "
                     style={{
                       color: palette.white,
@@ -1248,12 +1383,22 @@ Eimy & Soni 🤍`;
 
                 {/* INVITADO */}
 
-                <div className="w-full">
+                <div
+                  className="
+                    w-full
+                    min-w-0
+                    max-w-full
+                  "
+                >
                   <p
                     className="
-                      text-[7px]
+                      break-words
+                      text-[5px]
                       uppercase
-                      tracking-[0.27em]
+                      tracking-[0.16em]
+                      min-[390px]:text-[6px]
+                      sm:text-[7px]
+                      sm:tracking-[0.27em]
                     "
                     style={{
                       color:
@@ -1265,13 +1410,22 @@ Eimy & Soni 🤍`;
 
                   <p
                     className="
-                      mt-3
+                      mx-auto
+                      mt-2
+                      max-w-full
+                      break-words
+                      px-1
                       font-cursiveDancing
-                      text-[27px]
+                      text-[22px]
                       leading-tight
+                      min-[390px]:text-[24px]
+                      sm:mt-3
+                      sm:text-[27px]
                     "
                     style={{
                       color: palette.white,
+
+                      overflowWrap: "anywhere",
 
                       textShadow:
                         "0 2px 10px rgba(0,0,0,0.35)",
@@ -1283,11 +1437,15 @@ Eimy & Soni 🤍`;
                   <div
                     className="
                       mx-auto
-                      mt-4
+                      mt-3
                       inline-block
+                      max-w-full
                       border
-                      px-4
-                      py-2
+                      px-3
+                      py-1.5
+                      sm:mt-4
+                      sm:px-4
+                      sm:py-2
                     "
                     style={{
                       borderColor:
@@ -1296,9 +1454,12 @@ Eimy & Soni 🤍`;
                   >
                     <p
                       className="
-                        text-[7px]
+                        break-words
+                        text-[6px]
                         uppercase
-                        tracking-[0.25em]
+                        tracking-[0.17em]
+                        sm:text-[7px]
+                        sm:tracking-[0.25em]
                       "
                       style={{
                         color: palette.ivory,
@@ -1319,11 +1480,17 @@ Eimy & Soni 🤍`;
           {link && (
             <div
               className="
-                mt-6
+                mt-5
                 w-full
-                max-w-[430px]
+                min-w-0
+                max-w-[340px]
+                overflow-hidden
                 border
-                p-5
+                p-4
+                min-[390px]:max-w-[360px]
+                sm:mt-6
+                sm:max-w-[430px]
+                sm:p-5
               "
               style={{
                 borderColor:
@@ -1335,9 +1502,12 @@ Eimy & Soni 🤍`;
             >
               <p
                 className="
-                  text-[8px]
+                  break-words
+                  text-[7px]
                   uppercase
-                  tracking-[0.27em]
+                  tracking-[0.18em]
+                  sm:text-[8px]
+                  sm:tracking-[0.27em]
                 "
                 style={{
                   color:
@@ -1347,16 +1517,26 @@ Eimy & Soni 🤍`;
                 Datos protegidos
               </p>
 
+              {/* En celular una columna.
+                  Desde sm, dos columnas. */}
+
               <div
                 className="
                   mt-4
                   grid
-                  grid-cols-2
+                  min-w-0
+                  grid-cols-1
                   gap-3
+                  sm:grid-cols-2
                 "
               >
                 <div
-                  className="border p-3"
+                  className="
+                    min-w-0
+                    overflow-hidden
+                    border
+                    p-3
+                  "
                   style={{
                     borderColor:
                       "rgba(247,244,236,0.18)",
@@ -1366,7 +1546,8 @@ Eimy & Soni 🤍`;
                     className="
                       text-[7px]
                       uppercase
-                      tracking-[0.22em]
+                      tracking-[0.18em]
+                      sm:tracking-[0.22em]
                     "
                     style={{
                       color:
@@ -1379,11 +1560,16 @@ Eimy & Soni 🤍`;
                   <p
                     className="
                       mt-2
+                      max-w-full
+                      break-words
                       font-serif
-                      text-sm
+                      text-[13px]
+                      leading-5
+                      sm:text-sm
                     "
                     style={{
                       color: palette.ivory,
+                      overflowWrap: "anywhere",
                     }}
                   >
                     {nombrePreview}
@@ -1391,7 +1577,12 @@ Eimy & Soni 🤍`;
                 </div>
 
                 <div
-                  className="border p-3"
+                  className="
+                    min-w-0
+                    overflow-hidden
+                    border
+                    p-3
+                  "
                   style={{
                     borderColor:
                       "rgba(247,244,236,0.18)",
@@ -1401,7 +1592,8 @@ Eimy & Soni 🤍`;
                     className="
                       text-[7px]
                       uppercase
-                      tracking-[0.22em]
+                      tracking-[0.18em]
+                      sm:tracking-[0.22em]
                     "
                     style={{
                       color:
@@ -1415,7 +1607,8 @@ Eimy & Soni 🤍`;
                     className="
                       mt-2
                       font-serif
-                      text-sm
+                      text-[13px]
+                      sm:text-sm
                     "
                     style={{
                       color: palette.ivory,
@@ -1426,21 +1619,58 @@ Eimy & Soni 🤍`;
                 </div>
               </div>
 
-              <p
+              <div
                 className="
                   mt-4
-                  break-all
-                  font-mono
-                  text-[9px]
-                  leading-4
+                  w-full
+                  min-w-0
+                  overflow-hidden
+                  border-t
+                  pt-4
                 "
                 style={{
-                  color:
-                    "rgba(247,244,236,0.42)",
+                  borderColor:
+                    "rgba(247,244,236,0.12)",
                 }}
               >
-                ID: {idPreview}
-              </p>
+                <p
+                  className="
+                    mb-2
+                    text-[7px]
+                    uppercase
+                    tracking-[0.18em]
+                  "
+                  style={{
+                    color:
+                      "rgba(247,244,236,0.55)",
+                  }}
+                >
+                  ID cifrado
+                </p>
+
+                <p
+                  className="
+                    block
+                    w-full
+                    min-w-0
+                    max-w-full
+                    break-all
+                    font-mono
+                    text-[8px]
+                    leading-4
+                    sm:text-[9px]
+                  "
+                  style={{
+                    color:
+                      "rgba(247,244,236,0.42)",
+
+                    overflowWrap: "anywhere",
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {idPreview}
+                </p>
+              </div>
             </div>
           )}
 
@@ -1451,18 +1681,26 @@ Eimy & Soni 🤍`;
           {link && (
             <div
               className="
-                mt-8
+                mt-7
                 w-full
-                max-w-[430px]
+                min-w-0
+                max-w-[340px]
+                overflow-hidden
+                min-[390px]:max-w-[360px]
+                sm:mt-8
+                sm:max-w-[430px]
               "
             >
               <p
                 className="
                   mb-3
+                  px-2
                   text-center
-                  text-[8px]
+                  text-[7px]
                   uppercase
-                  tracking-[0.3em]
+                  tracking-[0.18em]
+                  sm:text-[8px]
+                  sm:tracking-[0.3em]
                 "
                 style={{
                   color:
@@ -1474,8 +1712,12 @@ Eimy & Soni 🤍`;
 
               <div
                 className="
+                  w-full
+                  min-w-0
+                  overflow-hidden
                   rounded-2xl
-                  p-4
+                  p-3
+                  sm:p-4
                 "
                 style={{
                   backgroundColor: "#E9E5DC",
@@ -1490,10 +1732,12 @@ Eimy & Soni 🤍`;
                   className="
                     mb-4
                     flex
+                    min-w-0
                     items-center
-                    gap-3
+                    gap-2.5
                     border-b
                     pb-3
+                    sm:gap-3
                   "
                   style={{
                     borderColor:
@@ -1505,11 +1749,13 @@ Eimy & Soni 🤍`;
                       flex
                       h-9
                       w-9
+                      shrink-0
                       items-center
                       justify-center
                       rounded-full
                       font-serif
-                      text-xs
+                      text-[10px]
+                      sm:text-xs
                     "
                     style={{
                       backgroundColor:
@@ -1521,11 +1767,14 @@ Eimy & Soni 🤍`;
                     E&S
                   </div>
 
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p
                       className="
+                        max-w-full
+                        truncate
                         font-serif
-                        text-[13px]
+                        text-[12px]
+                        sm:text-[13px]
                       "
                       style={{
                         color: palette.ink,
@@ -1535,9 +1784,7 @@ Eimy & Soni 🤍`;
                     </p>
 
                     <p
-                      className="
-                        text-[9px]
-                      "
+                      className="text-[9px]"
                       style={{
                         color: palette.gray,
                       }}
@@ -1552,12 +1799,17 @@ Eimy & Soni 🤍`;
                 <div
                   className="
                     ml-auto
-                    max-w-[94%]
+                    w-full
+                    min-w-0
+                    max-w-[96%]
+                    overflow-hidden
                     rounded-xl
                     rounded-tr-sm
-                    px-4
+                    px-3
                     py-3
                     shadow-sm
+                    sm:max-w-[94%]
+                    sm:px-4
                   "
                   style={{
                     backgroundColor: "#D9FDD3",
@@ -1565,13 +1817,18 @@ Eimy & Soni 🤍`;
                 >
                   <p
                     className="
+                      max-w-full
                       whitespace-pre-wrap
                       break-words
-                      text-[12px]
-                      leading-5
+                      text-[11px]
+                      leading-[1.65]
+                      sm:text-[12px]
+                      sm:leading-5
                     "
                     style={{
                       color: "#1D2733",
+                      overflowWrap: "anywhere",
+                      wordBreak: "break-word",
                     }}
                   >
                     {mensaje}
@@ -1603,17 +1860,23 @@ Eimy & Soni 🤍`;
           relative
           z-10
           mx-auto
-          mt-16
+          mt-12
+          w-full
+          max-w-full
+          px-3
           text-center
+          sm:mt-16
         "
       >
         <Divider light />
 
         <p
           className="
-            mt-6
+            mt-5
             font-cursiveDancing
-            text-[30px]
+            text-[28px]
+            sm:mt-6
+            sm:text-[30px]
           "
           style={{
             color: palette.ivory,
