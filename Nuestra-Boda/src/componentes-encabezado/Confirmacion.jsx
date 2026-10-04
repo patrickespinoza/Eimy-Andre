@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 ========================================= */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbxklU9PTlqxkcu9pBUfWYhByQZ_7kJWuFENeeQhlEW-C6eh2cVbTK3z2AbMJiWVL1ME/exec";
+  "https://script.google.com/macros/s/AKfycbwduCR9l2Z8IVPtC38HCtpFFhLu7mbrQ4DzPHEtuH-Kr_Mck8f6RkKWespYGBD-oNyQhw/exec";
 
 
 const NUMERO_NOVIA = "528134511817";
@@ -1066,6 +1066,7 @@ const Confirmacion = () => {
               italic
               leading-7
               sm:text-base
+              px-4
             "
             style={{
               color:

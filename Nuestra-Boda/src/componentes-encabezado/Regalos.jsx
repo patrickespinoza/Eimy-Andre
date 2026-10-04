@@ -759,6 +759,7 @@ export default function Regalos() {
               italic
               leading-8
               sm:text-[17px]
+              px-4
             "
             style={{
               color: palette.gray,
@@ -1296,6 +1297,7 @@ export default function Regalos() {
               italic
               leading-7
               sm:text-base
+              px-4
             "
             style={{
               color: palette.gray,

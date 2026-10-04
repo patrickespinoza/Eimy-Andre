@@ -594,6 +594,7 @@ export default function Galeria() {
               leading-[1.9]
               sm:text-[16px]
               sm:leading-[2]
+              px-4
             "
             style={{
               color: "rgba(247,244,236,0.82)",
@@ -616,6 +617,7 @@ export default function Galeria() {
               leading-[1.9]
               sm:text-[16px]
               sm:leading-[2]
+              px-4
             "
             style={{
               color: "rgba(247,244,236,0.82)",
@@ -639,6 +641,7 @@ export default function Galeria() {
               leading-[1.9]
               sm:text-[16px]
               sm:leading-[2]
+              px-4
             "
             style={{
               color: "rgba(247,244,236,0.82)",
@@ -1144,6 +1147,7 @@ export default function Galeria() {
               italic
               leading-7
               sm:text-[15px]
+              px-4
             "
             style={{
               color: "rgba(247,244,236,0.62)",

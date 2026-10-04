@@ -591,6 +591,7 @@ const Album = () => {
               leading-7
               sm:text-[17px]
               sm:leading-8
+              px-4
             "
             style={{
               color: "rgba(247,244,236,0.84)",

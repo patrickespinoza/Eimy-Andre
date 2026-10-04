@@ -8,7 +8,7 @@ import html2canvas from "html2canvas";
 ========================================= */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbxQTHIUXU3wWSw_mg7wvwbjwLbzskGcgGaGKzuY_yUK1r-RfPfXtSB7WD4CfZ6W7f5QJg/exec";
+  "https://script.google.com/macros/s/AKfycbwduCR9l2Z8IVPtC38HCtpFFhLu7mbrQ4DzPHEtuH-Kr_Mck8f6RkKWespYGBD-oNyQhw/exec";
 
 const palette = {
   olive: "#3F4A2C",
@@ -979,6 +979,7 @@ const Preguntas = () => {
               italic
               leading-7
               sm:text-base
+              px-4
             "
             style={{
               color: palette.gray,
@@ -1746,6 +1747,7 @@ const Preguntas = () => {
             leading-7
             sm:mt-12
             sm:text-base
+            px-4
           "
           style={{
             color: palette.gray,

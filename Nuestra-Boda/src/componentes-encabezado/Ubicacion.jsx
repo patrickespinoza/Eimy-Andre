@@ -725,6 +725,7 @@ export default function EventoDireccion() {
               italic
               leading-7
               sm:text-[15px]
+              px-4
             "
             style={{
               color: "rgba(247,244,236,0.68)",

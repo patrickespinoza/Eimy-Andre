@@ -2283,11 +2283,11 @@ export default function Portada() {
 
               font-cursiveDancing
 
-              text-[38px]
+              text-[28px]
 
               leading-tight
 
-              sm:text-[52px]
+              sm:text-[42px]
 
             "
 

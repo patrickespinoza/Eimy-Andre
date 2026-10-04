@@ -950,6 +950,7 @@ const DressCodePremium = () => {
               italic
               leading-7
               sm:text-[16px]
+              px-4
             "
             style={{
               color: "rgba(255,255,255,0.82)",
