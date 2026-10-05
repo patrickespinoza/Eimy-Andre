@@ -1062,10 +1062,10 @@ const Confirmacion = () => {
               mt-6
               max-w-xl
               font-serif
-              text-[14px]
+              text-[24px]
               italic
               leading-7
-              sm:text-base
+              sm:text-xl
               px-4
             "
             style={{
@@ -1074,7 +1074,7 @@ const Confirmacion = () => {
             }}
           >
             Por favor, confirma tu
-            asistencia y ayúdanos a preparar
+            asistencia antes del 31 de Octubre y ayúdanos a preparar
             cada detalle de nuestra
             celebración.
           </p>

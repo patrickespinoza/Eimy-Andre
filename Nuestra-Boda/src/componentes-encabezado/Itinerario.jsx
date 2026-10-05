@@ -7,7 +7,9 @@ import { motion } from "framer-motion";
    - Fondo blanco / marfil
    - Verde olivo
    - Estilo clásico
-   - Solo 2 momentos
+   - Ceremonia religiosa
+   - Ceremonia civil
+   - Recepción
    - Sin degradados
 ========================================= */
 
@@ -39,6 +41,13 @@ const events = [
     title: "Ceremonia Religiosa",
     subtitle: "El comienzo de nuestro para siempre",
     icon: "church",
+  },
+  {
+    time: "6:30",
+    period: "p.m.",
+    title: "Ceremonia Civil",
+    subtitle: "Unimos nuestras vidas ante la ley",
+    icon: "rings",
   },
   {
     time: "7:00",
@@ -187,42 +196,104 @@ function EventIcon({ type }) {
     "aria-hidden": true,
   };
 
-  /* IGLESIA */
+  /* =========================================
+     IGLESIA
+  ========================================= */
 
   if (type === "church") {
     return (
       <svg {...commonProps}>
+        {/* Cruz */}
         <path d="M16 3v5" />
         <path d="M13.5 5.5h5" />
 
+        {/* Techo */}
         <path d="M9 14 16 8l7 6" />
 
+        {/* Edificio central */}
         <path d="M10.5 13.2V27h11V13.2" />
 
+        {/* Laterales */}
         <path d="M6 18h4.5" />
         <path d="M21.5 18H26" />
 
         <path d="M7.5 18v9" />
         <path d="M24.5 18v9" />
 
+        {/* Puerta */}
         <path d="M14 27v-6a2 2 0 0 1 4 0v6" />
 
+        {/* Base */}
         <path d="M5 27h22" />
       </svg>
     );
   }
 
-  /* COPA */
+  /* =========================================
+     ANILLOS
+     CEREMONIA CIVIL
+  ========================================= */
+
+  if (type === "rings") {
+    return (
+      <svg {...commonProps}>
+        {/* Anillo izquierdo */}
+        <circle
+          cx="12.5"
+          cy="18"
+          r="7"
+        />
+
+        {/* Anillo derecho */}
+        <circle
+          cx="19.5"
+          cy="18"
+          r="7"
+        />
+
+        {/* Diamante */}
+        <path d="M16 4.5 19 8l-3 3-3-3 3-3.5Z" />
+
+        {/* Unión */}
+        <path d="M16 11v2.2" />
+      </svg>
+    );
+  }
+
+  /* =========================================
+     COPA
+     RECEPCIÓN
+  ========================================= */
+
+  if (type === "glass") {
+    return (
+      <svg {...commonProps}>
+        {/* Copa */}
+        <path d="M9 5h14l-1.4 8.3A5.7 5.7 0 0 1 16 18a5.7 5.7 0 0 1-5.6-4.7L9 5Z" />
+
+        {/* Tallo */}
+        <path d="M16 18v8" />
+
+        {/* Base */}
+        <path d="M11.5 27h9" />
+
+        {/* Nivel de bebida */}
+        <path d="M10.2 10h11.6" />
+      </svg>
+    );
+  }
+
+  /* =========================================
+     ICONO DE RESPALDO
+  ========================================= */
 
   return (
     <svg {...commonProps}>
-      <path d="M9 5h14l-1.4 8.3A5.7 5.7 0 0 1 16 18a5.7 5.7 0 0 1-5.6-4.7L9 5Z" />
-
-      <path d="M16 18v8" />
-
-      <path d="M11.5 27h9" />
-
-      <path d="M10.2 10h11.6" />
+      <circle
+        cx="16"
+        cy="16"
+        r="8"
+      />
     </svg>
   );
 }
@@ -231,7 +302,11 @@ function EventIcon({ type }) {
    EVENTO
 ========================================= */
 
-function TimelineEvent({ event, index, isLast }) {
+function TimelineEvent({
+  event,
+  index,
+  isLast,
+}) {
   return (
     <motion.div
       className="
@@ -276,7 +351,8 @@ function TimelineEvent({ event, index, isLast }) {
           color: palette.beigeDark,
         }}
       >
-        Momento {String(index + 1).padStart(2, "0")}
+        Momento{" "}
+        {String(index + 1).padStart(2, "0")}
       </p>
 
       {/* =====================================
@@ -437,8 +513,6 @@ function TimelineEvent({ event, index, isLast }) {
             backgroundColor: "rgba(63,74,44,0.25)",
           }}
         >
-          {/* ROMBO CENTRAL */}
-
           <span
             className="
               absolute
@@ -665,8 +739,6 @@ export default function ItinerarioRelojCentral() {
             ease,
           }}
         >
-          {/* TEXTO PEQUEÑO */}
-
           <p
             className="
               text-[8px]
@@ -682,13 +754,9 @@ export default function ItinerarioRelojCentral() {
             Nuestro gran día
           </p>
 
-          {/* DIVISOR */}
-
           <div className="mt-5">
             <DecorativeDivider />
           </div>
-
-          {/* TÍTULO */}
 
           <h2
             className="
@@ -707,8 +775,6 @@ export default function ItinerarioRelojCentral() {
             Itinerario
           </h2>
 
-          {/* FRASE */}
-
           <p
             className="
               mx-auto
@@ -724,7 +790,8 @@ export default function ItinerarioRelojCentral() {
               color: palette.gray,
             }}
           >
-            Dos momentos, un mismo día
+            Tres momentos, un mismo día
+            <br />
             y una historia que recordaremos para siempre.
           </p>
         </motion.div>
@@ -771,10 +838,10 @@ export default function ItinerarioRelojCentral() {
           <div>
             <p
               className="
-                text-[8px]
+                text-[15px]
                 uppercase
                 tracking-[0.42em]
-                sm:text-[9px]
+                sm:text-[16px]
               "
               style={{
                 color: palette.beigeDark,
@@ -824,10 +891,10 @@ export default function ItinerarioRelojCentral() {
             <p
               className="
                 mt-3
-                text-[9px]
+                text-[15px]
                 uppercase
                 tracking-[0.36em]
-                sm:text-[10px]
+                sm:text-[16px]
               "
               style={{
                 color: palette.oliveLight,
@@ -839,7 +906,7 @@ export default function ItinerarioRelojCentral() {
         </motion.div>
 
         {/* =====================================
-            LOS DOS MOMENTOS
+            LOS TRES MOMENTOS
         ===================================== */}
 
         <div
@@ -907,7 +974,6 @@ export default function ItinerarioRelojCentral() {
           >
             Esperamos vivir cada momento contigo.
           </p>
-
         </motion.div>
       </div>
     </section>

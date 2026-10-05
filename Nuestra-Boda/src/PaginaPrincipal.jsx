@@ -63,15 +63,16 @@ export default function PaginaPrincipal() {
 
 <DressCodePremium/>
 
+<Regalos/>
+
 <Album/>
 
 <Preguntas/>
 
-<Regalos/>
+<FraseFinal/>
 
 <Confirmacion/>
 
-<FraseFinal/>
   
 
       </div>      

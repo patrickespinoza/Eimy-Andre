@@ -1136,7 +1136,7 @@ const DressCodePremium = () => {
                 color: palette.ink,
               }}
             >
-              Por ello, será una celebración solo para adultos.
+              Por ello, respetuosamente será una celebración solo para adultos.
               Agradecemos su comprensión.
             </p>
 

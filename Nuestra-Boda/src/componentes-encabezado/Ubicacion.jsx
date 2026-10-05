@@ -214,10 +214,10 @@ function LocationBlock({
 
       <p
         className="
-          text-[8px]
+          text-[15px]
           uppercase
           tracking-[0.44em]
-          sm:text-[10px]
+          sm:text-[20px]
           sm:tracking-[0.5em]
         "
         style={{
@@ -259,7 +259,7 @@ function LocationBlock({
       <div className="mt-7">
         <p
           className="
-            text-[8px]
+            text-[15px]
             uppercase
             tracking-[0.36em]
           "
@@ -554,10 +554,10 @@ export default function EventoDireccion() {
         >
           <p
             className="
-              text-[8px]
+              text-[15px]
               uppercase
               tracking-[0.48em]
-              sm:text-[10px]
+              sm:text-[20px]
               sm:tracking-[0.55em]
             "
             style={{
@@ -663,7 +663,7 @@ export default function EventoDireccion() {
               color: palette.beige,
             }}
           >
-            E & A
+            E & S
           </span>
 
           <span

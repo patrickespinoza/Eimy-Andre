@@ -1279,7 +1279,7 @@ const Album = () => {
                     color: palette.olive,
                   }}
                 >
-                  Eimy & Andre
+                  Eimy & Soni
                 </p>
               </div>
             </motion.div>

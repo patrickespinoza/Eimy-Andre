@@ -1882,7 +1882,7 @@ Eimy & Soni 🤍`;
             color: palette.ivory,
           }}
         >
-          E & A
+          E & S
         </p>
       </footer>
     </main>

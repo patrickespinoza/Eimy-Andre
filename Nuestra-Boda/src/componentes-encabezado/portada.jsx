@@ -1171,7 +1171,7 @@ export default function Portada() {
 
                     >
 
-                      Eimy Edith
+                      Eimy
 
                     </p>
 
@@ -1223,7 +1223,7 @@ export default function Portada() {
 
                     >
 
-                      Andre Soni
+                      Soni
 
                     </p>
 
@@ -1627,7 +1627,7 @@ export default function Portada() {
 
                         </span>
 
-                        A
+                        S
 
                       </span>
 
@@ -2259,7 +2259,7 @@ export default function Portada() {
 
               >
 
-                A
+                S
 
               </span>
 
