@@ -682,7 +682,7 @@ export default function EventoDireccion() {
         <LocationBlock
           label="Recepción"
           place="Hacienda San Valentin"
-          time="7:00 p.m."
+          time="6:30 p.m."
           address="Manuel Doblado No. 306, Col. Ampliación Lázaro Cárdenas, Escobedo, N. L."
           href="https://maps.app.goo.gl/qTxdFBF6L8q2A75q9"
           delay={0.1}
